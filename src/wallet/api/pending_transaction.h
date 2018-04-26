@@ -67,4 +67,4 @@ private:
 
 }
 
-namespace Bitmonero = Monero;
+namespace ToklioCoin = ToklioCoin;

@@ -353,4 +353,4 @@ void WalletManagerFactory::setLogCategories(const std::string &categories)
 
 }
 
-namespace Bitmonero = Monero;
+namespace ToklioCoin = ToklioCoin;

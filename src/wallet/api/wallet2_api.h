@@ -1012,5 +1012,5 @@ struct WalletManagerFactory
 
 }
 
-namespace Bitmonero = Monero;
+namespace ToklioCoin = ToklioCoin;
 

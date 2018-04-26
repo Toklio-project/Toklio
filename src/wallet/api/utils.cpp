@@ -58,4 +58,4 @@ void onStartup()
 
 } // namespace
 
-namespace Bitmonero = Monero;
+namespace ToklioCoin = ToklioCoin;

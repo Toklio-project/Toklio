@@ -226,7 +226,7 @@ private:
 
 } // namespace
 
-namespace Bitmonero = Monero;
+namespace ToklioCoin = ToklioCoin;
 
 #endif
 
