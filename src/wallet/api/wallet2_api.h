@@ -1012,5 +1012,5 @@ struct WalletManagerFactory
 
 }
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;
 

@@ -190,5 +190,5 @@ std::vector<std::set<uint32_t>> PendingTransactionImpl::subaddrIndices() const
 
 }
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;
 

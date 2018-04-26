@@ -73,4 +73,4 @@ private:
 
 }
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;

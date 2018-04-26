@@ -58,4 +58,4 @@ void onStartup()
 
 } // namespace
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;

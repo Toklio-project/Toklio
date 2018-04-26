@@ -178,4 +178,4 @@ AddressBookImpl::~AddressBookImpl()
 
 } // namespace
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;

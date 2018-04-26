@@ -2031,4 +2031,4 @@ void WalletImpl::keyReuseMitigation2(bool mitigation)
 
 } // namespace
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;

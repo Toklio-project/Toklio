@@ -140,4 +140,4 @@ uint64_t TransactionInfoImpl::unlockTime() const
 
 } // namespace
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;

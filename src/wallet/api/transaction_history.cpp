@@ -245,4 +245,4 @@ void TransactionHistoryImpl::refresh()
 
 } // namespace
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;

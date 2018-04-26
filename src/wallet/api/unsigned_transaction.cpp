@@ -317,5 +317,5 @@ uint64_t UnsignedTransactionImpl::minMixinCount() const
 
 } // namespace
 
-namespace ToklioCoin = ToklioCoin;
+namespace BitToklioCoin = ToklioCoin;
 
