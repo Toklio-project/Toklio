@@ -33,7 +33,7 @@ As with many development projects, the repository on Github is considered to be 
 
 ToklioCoin is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially.
 
-The ToklioCoin donation Monero address is: `48s5FmUCHAK49BWHT6JpHqNuokkE4wfRAdgVk6VVcNLHRDFfxpGb1HuG6wqbWnPYmzF8feyMq39s7F37RJca8h9aKey8cm3` (viewkey: `f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501`)
+The ToklioCoin donation Monero address is: `48s5FmUCHAK49BWHT6JpHqNuokkE4wfRAdgVk6VVcNLHRDFfxpGb1HuG6wqbWnPYmzF8feyMq39s7F37RJca8h9aKey8cm3`
 
 The Bitcoin donation address is: `3HJ1AYmEu7Bi1iJL7be8f4RnzHTnjiH7L6`
 
