@@ -51,7 +51,7 @@
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "wallet.simplewallet"
 // Hardcode ToklioCoin's donation address (see #1447)
-constexpr const char MONERO_DONATION_ADDR[] = "48s5FmUCHAK49BWHT6JpHqNuokkE4wfRAdgVk6VVcNLHRDFfxpGb1HuG6wqbWnPYmzF8feyMq39s7F37RJca8h9aKey8cm3";
+constexpr const char MONERO_DONATION_ADDR[] = "TK3YDt8P1oC6KuLVqewEG7MSc1n2Z62rRgNgnqLfBYVHPGDYkzH3YmjJz8W3f16nGJRQgZzaGBu5zH18aL4qYfEz1yhXJQ6zt";
 
 /*!
  * \namespace cryptonote
