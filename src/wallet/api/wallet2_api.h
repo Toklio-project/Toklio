@@ -39,7 +39,7 @@
 #include <iostream>
 
 //  Public interface for libwallet library
-namespace Monero {
+namespace ToklioCoin {
 
 enum NetworkType : uint8_t {
     MAINNET = 0,

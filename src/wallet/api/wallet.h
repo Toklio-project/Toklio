@@ -40,7 +40,7 @@
 #include <boost/thread/condition_variable.hpp>
 
 
-namespace Monero {
+namespace ToklioCoin {
 class TransactionHistoryImpl;
 class PendingTransactionImpl;
 class UnsignedTransactionImpl;

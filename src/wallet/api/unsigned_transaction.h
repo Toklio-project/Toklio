@@ -35,7 +35,7 @@
 #include <vector>
 
 
-namespace Monero {
+namespace ToklioCoin {
 
 class WalletImpl;
 class UnsignedTransactionImpl : public UnsignedTransaction

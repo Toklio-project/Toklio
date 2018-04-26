@@ -35,7 +35,7 @@
 
 using namespace std;
 
-namespace Monero {
+namespace ToklioCoin {
 namespace Utils {
 
 bool isAddressLocal(const std::string &address)

@@ -42,7 +42,7 @@
 
 using namespace epee;
 
-namespace Monero {
+namespace ToklioCoin {
 
 TransactionHistory::~TransactionHistory() {}
 

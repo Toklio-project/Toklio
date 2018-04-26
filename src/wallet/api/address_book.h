@@ -31,7 +31,7 @@
 #include "wallet/api/wallet2_api.h"
 #include "wallet/wallet2.h"
 
-namespace Monero {
+namespace ToklioCoin {
 
 class WalletImpl;
 

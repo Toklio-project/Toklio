@@ -33,7 +33,7 @@
 
 using namespace std;
 
-namespace Monero {
+namespace ToklioCoin {
 
 TransactionInfo::~TransactionInfo() {}
 

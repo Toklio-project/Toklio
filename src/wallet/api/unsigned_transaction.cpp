@@ -42,7 +42,7 @@
 
 using namespace std;
 
-namespace Monero {
+namespace ToklioCoin {
 
 UnsignedTransaction::~UnsignedTransaction() {}
 
