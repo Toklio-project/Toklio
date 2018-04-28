@@ -40,7 +40,7 @@
 #include <boost/thread/condition_variable.hpp>
 
 
-namespace ToklioCoin {
+namespace Toklio {
 class TransactionHistoryImpl;
 class PendingTransactionImpl;
 class UnsignedTransactionImpl;
@@ -226,7 +226,7 @@ private:
 
 } // namespace
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;
 
 #endif
 

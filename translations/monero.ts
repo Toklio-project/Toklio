@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name>ToklioCoin::AddressBookImpl</name>
+    <name>Toklio::AddressBookImpl</name>
     <message>
         <location filename="../src/wallet/api/address_book.cpp" line="53"/>
         <source>Invalid destination address</source>
@@ -25,7 +25,7 @@
     </message>
 </context>
 <context>
-    <name>ToklioCoin::PendingTransactionImpl</name>
+    <name>Toklio::PendingTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/pending_transaction.cpp" line="90"/>
         <source>Attempting to save transaction to file, but specified file(s) exist. Exiting to not risk overwriting. File:</source>
@@ -68,7 +68,7 @@
     </message>
 </context>
 <context>
-    <name>ToklioCoin::UnsignedTransactionImpl</name>
+    <name>Toklio::UnsignedTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/unsigned_transaction.cpp" line="75"/>
         <source>This is a watch only wallet</source>
@@ -1138,7 +1138,7 @@ This transaction will unlock on block %llu, in approximately %s days (assuming 2
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="679"/>
-        <source>Current fee is %s tokliocoin per kB</source>
+        <source>Current fee is %s toklio per kB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1682,7 +1682,7 @@ If the &quot;tag_description&quot; argument is specified, the tag &lt;tag_name&g
  confirm-missing-payment-id &lt;1|0&gt;
  ask-password &lt;1|0&gt;
  unit &lt;monero|millinero|micronero|nanonero|piconero&gt;
-   Set the default tokliocoin (sub-)unit.
+   Set the default toklio (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
@@ -2148,7 +2148,7 @@ Otherwise, you prove the reserve of the smallest possible amount above &lt;amoun
 To start synchronizing with the daemon, use the &quot;refresh&quot; command.
 Use the &quot;help&quot; command to see the list of available commands.
 Use &quot;help &lt;command&gt;&quot; to see a command&apos;s documentation.
-Always use the &quot;exit&quot; command when closing tokliocoin-wallet-cli to save 
+Always use the &quot;exit&quot; command when closing toklio-wallet-cli to save 
 your current session&apos;s state. Otherwise, you might need to synchronize 
 your wallet again (your wallet keys are NOT at risk in any case).
 </source>
@@ -3667,7 +3667,7 @@ Outputs per *: </source>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="129"/>
-        <source>The newly created transaction will not be relayed to the tokliocoin network</source>
+        <source>The newly created transaction will not be relayed to the toklio network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3687,7 +3687,7 @@ Outputs per *: </source>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="6787"/>
-        <source>This is the command line tokliocoin wallet. It needs to connect to a tokliocoin
+        <source>This is the command line toklio wallet. It needs to connect to a toklio
 daemon to work correctly.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3930,7 +3930,7 @@ daemon to work correctly.</source>
     </message>
     <message>
         <location filename="../src/wallet/wallet_rpc_server.cpp" line="2870"/>
-        <source>This is the RPC tokliocoin wallet. It needs to connect to a tokliocoin
+        <source>This is the RPC toklio wallet. It needs to connect to a toklio
 daemon to work correctly.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4038,7 +4038,7 @@ daemon to work correctly.</source>
     </message>
     <message>
         <location filename="../src/wallet/wallet_args.cpp" line="138"/>
-        <source>This is the command line tokliocoin wallet. It needs to connect to a tokliocoin
+        <source>This is the command line toklio wallet. It needs to connect to a toklio
 daemon to work correctly.</source>
         <translation type="unfinished"></translation>
     </message>

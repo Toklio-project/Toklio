@@ -35,7 +35,7 @@
 #include <vector>
 
 
-namespace ToklioCoin {
+namespace Toklio {
 
 class WalletImpl;
 class PendingTransactionImpl : public PendingTransaction
@@ -67,4 +67,4 @@ private:
 
 }
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;

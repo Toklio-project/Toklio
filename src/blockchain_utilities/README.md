@@ -1,6 +1,6 @@
-# ToklioCoin Blockchain Utilities
+# Toklio Blockchain Utilities
 
-Copyright (c) 2014-2018, The ToklioCoin Project
+Copyright (c) 2014-2018, The Toklio Project
 
 ## Introduction
 
@@ -12,16 +12,16 @@ See also each utility's "--help" option.
 
 ### Export an existing blockchain database
 
-`$ tokliocoin-blockchain-export`
+`$ toklio-blockchain-export`
 
 This loads the existing blockchain and exports it to `$MONERO_DATA_DIR/export/blockchain.raw`
 
 ### Import the exported file
 
-`$ tokliocoin-blockchain-import`
+`$ toklio-blockchain-import`
 
 This imports blocks from `$MONERO_DATA_DIR/export/blockchain.raw` (exported using the
-`tokliocoin-blockchain-export` tool as described above) into the current database.
+`toklio-blockchain-export` tool as described above) into the current database.
 
 Defaults: `--batch on`, `--batch size 20000`, `--verify on`
 
@@ -30,14 +30,14 @@ Batch size refers to number of blocks and can be adjusted for performance based 
 Verification should only be turned off if importing from a trusted blockchain.
 
 If you encounter an error like "resizing not supported in batch mode", you can just re-run
-the `tokliocoin-blockchain-import` command again, and it will restart from where it left off.
+the `toklio-blockchain-import` command again, and it will restart from where it left off.
 
 ```bash
 ## use default settings to import blockchain.raw into database
-$ tokliocoin-blockchain-import
+$ toklio-blockchain-import
 
 ## fast import with large batch size, database mode "fastest", verification off
-$ tokliocoin-blockchain-import --batch-size 20000 --database lmdb#fastest --verify off
+$ toklio-blockchain-import --batch-size 20000 --database lmdb#fastest --verify off
 
 ```
 
@@ -80,9 +80,9 @@ LMDB flags (more than one may be specified):
 ## Examples:
 
 ```
-$ tokliocoin-blockchain-import --database lmdb#fastest
+$ toklio-blockchain-import --database lmdb#fastest
 
-$ tokliocoin-blockchain-import --database lmdb#nosync
+$ toklio-blockchain-import --database lmdb#nosync
 
-$ tokliocoin-blockchain-import --database lmdb#nosync,nometasync
+$ toklio-blockchain-import --database lmdb#nosync,nometasync
 ```

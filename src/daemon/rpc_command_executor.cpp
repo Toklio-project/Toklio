@@ -1,4 +1,4 @@
-// Copyright (c) 2018, The ToklioCoin Project
+// Copyright (c) 2018, The Toklio Project
 // 
 // All rights reserved.
 // 
@@ -1144,10 +1144,10 @@ bool t_rpc_command_executor::print_status()
   bool daemon_is_alive = m_rpc_client->check_connection();
 
   if(daemon_is_alive) {
-    tools::success_msg_writer() << "tokliocoind is running";
+    tools::success_msg_writer() << "tokliod is running";
   }
   else {
-    tools::fail_msg_writer() << "tokliocoind is NOT running";
+    tools::fail_msg_writer() << "tokliod is NOT running";
   }
 
   return true;

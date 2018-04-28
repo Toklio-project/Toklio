@@ -39,7 +39,7 @@
 #include <iostream>
 
 //  Public interface for libwallet library
-namespace ToklioCoin {
+namespace Toklio {
 
 enum NetworkType : uint8_t {
     MAINNET = 0,
@@ -1012,5 +1012,5 @@ struct WalletManagerFactory
 
 }
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;
 

@@ -42,7 +42,7 @@
 
 using namespace std;
 
-namespace ToklioCoin {
+namespace Toklio {
 
 UnsignedTransaction::~UnsignedTransaction() {}
 
@@ -317,5 +317,5 @@ uint64_t UnsignedTransactionImpl::minMixinCount() const
 
 } // namespace
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;
 

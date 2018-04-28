@@ -1,39 +1,39 @@
-# ToklioCoin
+# Toklio
 
-Copyright (c) 2014-2018 The ToklioCoin Project.   
+Copyright (c) 2014-2018 The Toklio Project.   
 Portions Copyright (c) 2012-2013 The Cryptonote developers.
 
 ## Development resources
 
 - Web: [tokl.io](https://tokl.io)
-- GitHub: [https://github.com/ToklioCoin](https://github.com/ToklioCoin)
+- GitHub: [https://github.com/Toklio](https://github.com/Toklio)
 
 
 | License   | [![License](https://img.shields.io/badge/license-BSD3-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 ## Introduction
 
-ToklioCoin is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
+Toklio is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
 
-**Privacy:** ToklioCoin uses a cryptographically sound system to allow you to send and receive funds without your transactions being easily revealed on the blockchain (the ledger of transactions that everyone has). This ensures that your purchases, receipts, and all transfers remain absolutely private by default.
+**Privacy:** Toklio uses a cryptographically sound system to allow you to send and receive funds without your transactions being easily revealed on the blockchain (the ledger of transactions that everyone has). This ensures that your purchases, receipts, and all transfers remain absolutely private by default.
 
 **Security:** Using the power of a distributed peer-to-peer consensus network, every transaction on the network is cryptographically secured. Individual wallets have a 25 word mnemonic seed that is only displayed once, and can be written down to backup the wallet. Wallet files are encrypted with a passphrase to ensure they are useless if stolen.
 
-**Untraceability:** By taking advantage of ring signatures, a special property of a certain type of cryptography, ToklioCoin is able to ensure that transactions are not only untraceable, but have an optional measure of ambiguity that ensures that transactions cannot easily be tied back to an individual user or computer.
+**Untraceability:** By taking advantage of ring signatures, a special property of a certain type of cryptography, Toklio is able to ensure that transactions are not only untraceable, but have an optional measure of ambiguity that ensures that transactions cannot easily be tied back to an individual user or computer.
 
 ## About this project
 
-This is the core implementation of ToklioCoin. It is open source and completely free to use without restrictions, except for those specified in the license agreement below. There are no restrictions on anyone creating an alternative implementation of ToklioCoin that uses the protocol and network in a compatible manner.
+This is the core implementation of Toklio. It is open source and completely free to use without restrictions, except for those specified in the license agreement below. There are no restrictions on anyone creating an alternative implementation of Toklio that uses the protocol and network in a compatible manner.
 
 As with many development projects, the repository on Github is considered to be the "staging" area for the latest changes. Before changes are merged into that branch on the main repository, they are tested by individual developers in their own branches, submitted as a pull request, and then subsequently tested by contributors who focus on testing and code reviews. That having been said, the repository should be carefully considered before using it in a production environment, unless there is a patch in the repository for a particular show-stopping issue you are experiencing. It is generally a better idea to use a tagged release for stability.
 
-**Anyone is welcome to contribute to ToklioCoin's codebase!** If you have a fix or code change, feel free to submit it as a pull request directly to the "master" branch. In cases where the change is relatively small or does not affect other parts of the codebase it may be merged in immediately by any one of the collaborators. On the other hand, if the change is particularly large or complex, it is expected that it will be discussed at length either well in advance of the pull request being submitted, or even directly on the pull request.
+**Anyone is welcome to contribute to Toklio's codebase!** If you have a fix or code change, feel free to submit it as a pull request directly to the "master" branch. In cases where the change is relatively small or does not affect other parts of the codebase it may be merged in immediately by any one of the collaborators. On the other hand, if the change is particularly large or complex, it is expected that it will be discussed at length either well in advance of the pull request being submitted, or even directly on the pull request.
 
 ## Supporting the project
 
-ToklioCoin is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially.
+Toklio is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially.
 
-The ToklioCoin donation Monero address is: `48s5FmUCHAK49BWHT6JpHqNuokkE4wfRAdgVk6VVcNLHRDFfxpGb1HuG6wqbWnPYmzF8feyMq39s7F37RJca8h9aKey8cm3`
+The Toklio donation Monero address is: `48s5FmUCHAK49BWHT6JpHqNuokkE4wfRAdgVk6VVcNLHRDFfxpGb1HuG6wqbWnPYmzF8feyMq39s7F37RJca8h9aKey8cm3`
 
 The Bitcoin donation address is: `3HJ1AYmEu7Bi1iJL7be8f4RnzHTnjiH7L6`
 
@@ -51,10 +51,10 @@ If you want to help out, see [CONTRIBUTING](CONTRIBUTING.md) for a set of guidel
 
 ## Scheduled software upgrades
 
-ToklioCoin uses a fixed-schedule software upgrade (hard fork) mechanism to implement new features. This means that users of ToklioCoin (end users and service providers) should run current versions and upgrade their software on a regular schedule. Software upgrades occur during the months of April and October. The required software for these upgrades will be available prior to the scheduled date. Please check the repository prior to this date for the proper ToklioCoin software version. Below is the historical schedule and the projected schedule for the next upgrade.
+Toklio uses a fixed-schedule software upgrade (hard fork) mechanism to implement new features. This means that users of Toklio (end users and service providers) should run current versions and upgrade their software on a regular schedule. Software upgrades occur during the months of April and October. The required software for these upgrades will be available prior to the scheduled date. Please check the repository prior to this date for the proper Toklio software version. Below is the historical schedule and the projected schedule for the next upgrade.
 
 
-## Compiling ToklioCoin from source
+## Compiling Toklio from source
 
 ### Dependencies
 
@@ -95,15 +95,15 @@ build the library binary manually. This can be done with the following command `
 
 Clone recursively to pull-in needed submodule(s):
 
-`$ git clone --recursive https://github.com/ToklioCoin/ToklioCoin`
+`$ git clone --recursive https://github.com/Toklio/Toklio`
 
 If you already have a repo cloned, initialize and update:
 
-`$ cd ToklioCoin && git submodule init && git submodule update`
+`$ cd Toklio && git submodule init && git submodule update`
 
 ### Build instructions
 
-ToklioCoin uses the CMake build system and a top-level [Makefile](Makefile) that
+Toklio uses the CMake build system and a top-level [Makefile](Makefile) that
 invokes cmake commands as needed.
 
 #### On Linux and OS X
@@ -111,7 +111,7 @@ invokes cmake commands as needed.
 * Install the dependencies
 * Change to the root of the source code directory and build:
 
-        cd ToklioCoin
+        cd Toklio
         make
 
     *Optional*: If your machine has several cores and enough memory, enable
@@ -124,9 +124,9 @@ invokes cmake commands as needed.
 
 * The resulting executables can be found in `build/release/bin`
 
-* Add `PATH="$PATH:$HOME/ToklioCoin/build/release/bin"` to `.profile`
+* Add `PATH="$PATH:$HOME/Toklio/build/release/bin"` to `.profile`
 
-* Run ToklioCoin with `tokliocoind --detach`
+* Run Toklio with `tokliod --detach`
 
 * **Optional**: build and run the test suite to verify the binaries:
 
@@ -152,7 +152,7 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 
 * `apt-get update && apt-get upgrade` to install all of the latest software
 
-* Install the dependencies for ToklioCoin from the 'Debian' column in the table above.
+* Install the dependencies for Toklio from the 'Debian' column in the table above.
 
 * Increase the system swap size:
 ```	
@@ -161,10 +161,10 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 	CONF_SWAPSIZE=1024  
 	sudo /etc/init.d/dphys-swapfile start  
 ```
-* Clone ToklioCoin and checkout most recent release version:
+* Clone Toklio and checkout most recent release version:
 ```
-        git clone https://github.com/ToklioCoin/ToklioCoin.git
-	cd ToklioCoin
+        git clone https://github.com/Toklio/Toklio.git
+	cd Toklio
 	git checkout tags/v0.11.1.0
 ```
 * Build:
@@ -175,15 +175,15 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 
 * The resulting executables can be found in `build/release/bin`
 
-* Add `PATH="$PATH:$HOME/ToklioCoin/build/release/bin"` to `.profile`
+* Add `PATH="$PATH:$HOME/Toklio/build/release/bin"` to `.profile`
 
-* Run ToklioCoin with `tokliocoind --detach`
+* Run Toklio with `tokliod --detach`
 
 * You may wish to reduce the size of the swap file after the build has finished, and delete the boost directory from your home directory
 
 #### *Note for Raspbian Jessie users:*
 
-If you are using the older Raspbian Jessie image, compiling ToklioCoin is a bit more complicated. The version of Boost available in the Debian Jessie repositories is too old to use with ToklioCoin, and thus you must compile a newer version yourself. The following explains the extra steps, and has been tested on a Raspberry Pi 2 with a clean install of minimal Raspbian Jessie.
+If you are using the older Raspbian Jessie image, compiling Toklio is a bit more complicated. The version of Boost available in the Debian Jessie repositories is too old to use with Toklio, and thus you must compile a newer version yourself. The following explains the extra steps, and has been tested on a Raspberry Pi 2 with a clean install of minimal Raspbian Jessie.
 
 * As before, `apt-get update && apt-get upgrade` to install all of the latest software, and increase the system swap size
 
@@ -194,7 +194,7 @@ If you are using the older Raspbian Jessie image, compiling ToklioCoin is a bit 
 	sudo /etc/init.d/dphys-swapfile start  
 ```
 
-* Then, install the dependencies for ToklioCoin except `libunwind` and `libboost-all-dev`
+* Then, install the dependencies for Toklio except `libunwind` and `libboost-all-dev`
 
 * Install the latest version of boost (this may first require invoking `apt-get remove --purge libboost*` to remove a previous version if you're not using a clean install):
 ```
@@ -211,7 +211,7 @@ If you are using the older Raspbian Jessie image, compiling ToklioCoin is a bit 
 ```
 * Wait ~4 hours
 
-* From here, follow the [general Raspberry Pi instructions](#on-the-raspberry-pi) from the "Clone ToklioCoin and checkout most recent release version" step.
+* From here, follow the [general Raspberry Pi instructions](#on-the-raspberry-pi) from the "Clone Toklio and checkout most recent release version" step.
 
 #### On Windows:
 
@@ -264,9 +264,9 @@ application.
 
 ### On FreeBSD:
 
-The project can be built from scratch by following instructions for Linux above. If you are running ToklioCoin in a jail you need to add the flag: `allow.sysvipc=1` to your jail configuration, otherwise lmdb will throw the error message: `Failed to open lmdb environment: Function not implemented`.
+The project can be built from scratch by following instructions for Linux above. If you are running Toklio in a jail you need to add the flag: `allow.sysvipc=1` to your jail configuration, otherwise lmdb will throw the error message: `Failed to open lmdb environment: Function not implemented`.
 
-We expect to add ToklioCoin into the ports tree in the near future, which will aid in managing installations using ports or packages.
+We expect to add Toklio into the ports tree in the near future, which will aid in managing installations using ports or packages.
 
 ### On OpenBSD:
 
@@ -281,7 +281,7 @@ The doxygen and graphviz packages are optional and require the xbase set.
 The Boost package has a bug that will prevent librpc.a from building correctly. In order to fix this, you will have to Build boost yourself from scratch. Follow the directions here (under "Building Boost"):
 https://github.com/bitcoin/bitcoin/blob/master/doc/build-openbsd.md
 
-You will have to add the serialization, date_time, and regex modules to Boost when building as they are needed by ToklioCoin.
+You will have to add the serialization, date_time, and regex modules to Boost when building as they are needed by Toklio.
 
 To build: `env CC=egcc CXX=eg++ CPP=ecpp DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/path/to/the/boost/you/built make release-static-64`
 
@@ -356,7 +356,7 @@ cmake ..
 doas make install
 ```
 
-Build ToklioCoin: `env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local make release-static`
+Build Toklio: `env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local make release-static`
 
 ### On Solaris:
 
@@ -372,11 +372,11 @@ Then you can run make as usual.
 ### On Linux for Android (using docker):
 
         # Build image (select android64.Dockerfile for aarch64)
-        cd utils/build_scripts/ && docker build -f android32.Dockerfile -t ToklioCoin-android .
+        cd utils/build_scripts/ && docker build -f android32.Dockerfile -t Toklio-android .
         # Create container
-        docker create -it --name ToklioCoin-android ToklioCoin-android bash
+        docker create -it --name Toklio-android Toklio-android bash
         # Get binaries
-        docker cp ToklioCoin-android:/opt/android/ToklioCoin/build/release/bin .
+        docker cp Toklio-android:/opt/android/Toklio/build/release/bin .
 
 ### Building portable statically linked binaries
 
@@ -390,15 +390,15 @@ By default, in either dynamically or statically linked builds, binaries target t
 * ```make release-static-win64``` builds binaries on 64-bit Windows portable across 64-bit Windows systems
 * ```make release-static-win32``` builds binaries on 64-bit or 32-bit Windows portable across 32-bit Windows systems
 
-## Running tokliocoind
+## Running tokliod
 
 The build places the binary in `bin/` sub-directory within the build directory
 from which cmake was invoked (repository root by default). To run in
 foreground:
 
-    ./bin/tokliocoind
+    ./bin/tokliod
 
-To list all available options, run `./bin/tokliocoind --help`.  Options can be
+To list all available options, run `./bin/tokliod --help`.  Options can be
 specified either on the command line or in a configuration file passed by the
 `--config-file` argument.  To specify an option in the configuration file, add
 a line with the syntax `argumentname=value`, where `argumentname` is the name
@@ -406,17 +406,17 @@ of the argument without the leading dashes, for example `log-level=1`.
 
 To run in background:
 
-    ./bin/tokliocoind --log-file tokliocoind.log --detach
+    ./bin/tokliod --log-file tokliod.log --detach
 
 To run as a systemd service, copy
-[tokliocoind.service](utils/systemd/tokliocoind.service) to `/etc/systemd/system/` and
-[tokliocoind.conf](utils/conf/tokliocoind.conf) to `/etc/`. The [example
-service](utils/systemd/tokliocoind.service) assumes that the user `ToklioCoin` exists
+[tokliod.service](utils/systemd/tokliod.service) to `/etc/systemd/system/` and
+[tokliod.conf](utils/conf/tokliod.conf) to `/etc/`. The [example
+service](utils/systemd/tokliod.service) assumes that the user `Toklio` exists
 and its home is the data directory specified in the [example
-config](utils/conf/tokliocoind.conf).
+config](utils/conf/tokliod.conf).
 
 If you're on Mac, you may need to add the `--max-concurrency 1` option to
-tokliocoin-wallet-cli, and possibly tokliocoind, if you get crashes refreshing.
+toklio-wallet-cli, and possibly tokliod, if you get crashes refreshing.
 
 ## Internationalization
 
@@ -424,29 +424,29 @@ See [README.i18n.md](README.i18n.md).
 
 ## Using Tor
 
-While ToklioCoin isn't made to integrate with Tor, it can be used wrapped with torsocks, by
+While Toklio isn't made to integrate with Tor, it can be used wrapped with torsocks, by
 setting the following configuration parameters and environment variables:
 
 * `--p2p-bind-ip 127.0.0.1` on the command line or `p2p-bind-ip=127.0.0.1` in
-  tokliocoind.conf to disable listening for connections on external interfaces.
-* `--no-igd` on the command line or `no-igd=1` in tokliocoind.conf to disable IGD
+  tokliod.conf to disable listening for connections on external interfaces.
+* `--no-igd` on the command line or `no-igd=1` in tokliod.conf to disable IGD
   (UPnP port forwarding negotiation), which is pointless with Tor.
 * `DNS_PUBLIC=tcp` or `DNS_PUBLIC=tcp://x.x.x.x` where x.x.x.x is the IP of the
   desired DNS server, for DNS requests to go over TCP, so that they are routed
-  through Tor. When IP is not specified, tokliocoind uses the default list of
+  through Tor. When IP is not specified, tokliod uses the default list of
   servers defined in [src/common/dns_utils.cpp](src/common/dns_utils.cpp).
-* `TORSOCKS_ALLOW_INBOUND=1` to tell torsocks to allow tokliocoind to bind to interfaces
+* `TORSOCKS_ALLOW_INBOUND=1` to tell torsocks to allow tokliod to bind to interfaces
    to accept connections from the wallet. On some Linux systems, torsocks
    allows binding to localhost by default, so setting this variable is only
    necessary to allow binding to local LAN/VPN interfaces to allow wallets to
    connect from remote hosts. On other systems, it may be needed for local wallets
    as well.
 * Do NOT pass `--detach` when running through torsocks with systemd, (see
-  [utils/systemd/tokliocoind.service](utils/systemd/tokliocoind.service) for details).
+  [utils/systemd/tokliod.service](utils/systemd/tokliod.service) for details).
 
-Example command line to start tokliocoind through Tor:
+Example command line to start tokliod through Tor:
 
-    DNS_PUBLIC=tcp torsocks tokliocoind --p2p-bind-ip 127.0.0.1 --no-igd
+    DNS_PUBLIC=tcp torsocks tokliod --p2p-bind-ip 127.0.0.1 --no-igd
 
 ### Using Tor on Tails
 
@@ -455,12 +455,12 @@ to add a rule to allow this connection too, in addition to telling torsocks to
 allow inbound connections. Full example:
 
     sudo iptables -I OUTPUT 2 -p tcp -d 127.0.0.1 -m tcp --dport 18081 -j ACCEPT
-    DNS_PUBLIC=tcp torsocks ./tokliocoind --p2p-bind-ip 127.0.0.1 --no-igd --rpc-bind-ip 127.0.0.1 \
+    DNS_PUBLIC=tcp torsocks ./tokliod --p2p-bind-ip 127.0.0.1 --no-igd --rpc-bind-ip 127.0.0.1 \
         --data-dir /home/amnesia/Persistent/your/directory/to/the/blockchain
 
 ## Debugging
 
-This section contains general instructions for debugging failed installs or problems encountered with ToklioCoin. First ensure you are running the latest version built from the Github repo.
+This section contains general instructions for debugging failed installs or problems encountered with Toklio. First ensure you are running the latest version built from the Github repo.
 
 ### Obtaining stack traces and core dumps on Unix systems
 
@@ -473,7 +473,7 @@ Run the build.
 Once it stalls, enter the following command:
 
 ```
-gdb /path/to/tokliocoind `pidof tokliocoind` 
+gdb /path/to/tokliod `pidof tokliod` 
 ```
 
 Type `thread apply all bt` within gdb in order to obtain the stack trace
@@ -486,27 +486,27 @@ Enter `echo core | sudo tee /proc/sys/kernel/core_pattern` to stop cores from be
 
 Run the build.
 
-When it terminates with an output along the lines of "Segmentation fault (core dumped)", there should be a core dump file in the same directory as tokliocoind. It may be named just `core`, or `core.xxxx` with numbers appended.
+When it terminates with an output along the lines of "Segmentation fault (core dumped)", there should be a core dump file in the same directory as tokliod. It may be named just `core`, or `core.xxxx` with numbers appended.
 
 You can now analyse this core dump with `gdb` as follows:
 
-`gdb /path/to/tokliocoind /path/to/dumpfile`
+`gdb /path/to/tokliod /path/to/dumpfile`
 
 Print the stack trace with `bt`
 
-* To run ToklioCoin within gdb:
+* To run Toklio within gdb:
 
-Type `gdb /path/to/tokliocoind`
+Type `gdb /path/to/tokliod`
 
 Pass command-line options with `--args` followed by the relevant arguments
 
-Type `run` to run tokliocoind
+Type `run` to run tokliod
 
 ### Analysing memory corruption
 
 We use the tool `valgrind` for this.
 
-Run with `valgrind /path/to/tokliocoind`. It will be slow.
+Run with `valgrind /path/to/tokliod`. It will be slow.
 
 ### LMDB
 
@@ -514,7 +514,7 @@ Instructions for debugging suspected blockchain corruption as per @HYC
 
 There is an `mdb_stat` command in the LMDB source that can print statistics about the database but it's not routinely built. This can be built with the following command:
 
-`cd ~/ToklioCoin/external/db_drivers/liblmdb && make`
+`cd ~/Toklio/external/db_drivers/liblmdb && make`
 
 The output of `mdb_stat -ea <path to blockchain dir>` will indicate inconsistencies in the blocks, block_heights and block_info table.
 

@@ -56,7 +56,7 @@ using namespace cryptonote;
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "WalletAPI"
 
-namespace ToklioCoin {
+namespace Toklio {
 
 namespace {
     // copy-pasted from simplewallet
@@ -2031,4 +2031,4 @@ void WalletImpl::keyReuseMitigation2(bool mitigation)
 
 } // namespace
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;

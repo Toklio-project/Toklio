@@ -47,7 +47,7 @@ namespace epee {
     unsigned int g_test_dbg_lock_sleep = 0;
 }
 
-namespace ToklioCoin {
+namespace Toklio {
 
 Wallet *WalletManagerImpl::createWallet(const std::string &path, const std::string &password,
                                     const std::string &language, NetworkType nettype)
@@ -353,4 +353,4 @@ void WalletManagerFactory::setLogCategories(const std::string &categories)
 
 }
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;

@@ -1,31 +1,31 @@
-name: tokliocoin
+name: toklio
 version: 0.1.0-1
-summary: "ToklioCoin: the secure, private, untraceable cryptocurrency https://tokl.io"
+summary: "Toklio: the secure, private, untraceable cryptocurrency https://tokl.io"
 description: |
-    ToklioCoin is a private, secure, untraceable, decentralised digital currency.
+    Toklio is a private, secure, untraceable, decentralised digital currency.
     You are your bank, you control your funds, and nobody can trace your transfers
     unless you allow them to do so.
 grade: devel
 confinement: strict
 
 apps:
-    tokliocoind:
+    tokliod:
         daemon: forking
         command: |
-          tokliocoind-wrapper --detach --data-dir ${SNAP_COMMON} --config-file ${SNAP_USER_DATA}/etc/tokliocoind.conf
+          tokliod-wrapper --detach --data-dir ${SNAP_COMMON} --config-file ${SNAP_USER_DATA}/etc/tokliod.conf
         plugs:
             - network
             - network-bind
-    tokliocoin-wallet-rpc:
+    toklio-wallet-rpc:
         command: |
-          tokliocoin-wallet-rpc --log-file ${SNAP_USER_DATA}
+          toklio-wallet-rpc --log-file ${SNAP_USER_DATA}
         plugs:
             - home
             - network
             - network-bind
-    tokliocoin-wallet-cli:
+    toklio-wallet-cli:
         command: |
-          tokliocoin-wallet-cli --log-file ${SNAP_USER_DATA}
+          toklio-wallet-cli --log-file ${SNAP_USER_DATA}
         plugs:
             - home
             - network
@@ -71,8 +71,8 @@ parts:
         plugin: dump
         source: .
         organize:
-            contrib/snap/tokliocoind.conf: etc/tokliocoind.conf
-            contrib/snap/tokliocoind-wrapper: bin/tokliocoind-wrapper
+            contrib/snap/tokliod.conf: etc/tokliod.conf
+            contrib/snap/tokliod-wrapper: bin/tokliod-wrapper
         prime:
             - etc
             - bin

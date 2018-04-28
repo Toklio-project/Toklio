@@ -34,7 +34,7 @@
 
 #include <vector>
 
-namespace ToklioCoin {
+namespace Toklio {
   
 SubaddressAccount::~SubaddressAccount() {}
   

@@ -1,4 +1,4 @@
-// Copyright (c) 2018, The ToklioCoin Project
+// Copyright (c) 2018, The Toklio Project
 // 
 // All rights reserved.
 // 
@@ -1897,7 +1897,7 @@ namespace cryptonote
   bool core_rpc_server::on_update(const COMMAND_RPC_UPDATE::request& req, COMMAND_RPC_UPDATE::response& res)
   {
     PERF_TIMER(on_update);
-    static const char software[] = "tokliocoin";
+    static const char software[] = "toklio";
 #ifdef BUILD_TAG
     static const char buildtag[] = BOOST_PP_STRINGIZE(BUILD_TAG);
     static const char subdir[] = "cli";

@@ -19,11 +19,11 @@ To update ts files after changing source code:
 
 To add a new language, eg Spanish (ISO code es):
 
-    cp translations/tokliocoin.ts translations/tokliocoin_es.ts
+    cp translations/toklio.ts translations/toklio_es.ts
 
 To edit translations for Spanish:
 
-    linguist translations/tokliocoin_es.ts
+    linguist translations/toklio_es.ts
 
 To build translations after modifying them:
 
@@ -31,7 +31,7 @@ To build translations after modifying them:
 
 To test a translation:
 
-    LANG=es ./build/release/bin/tokliocoin-wallet-cli
+    LANG=es ./build/release/bin/toklio-wallet-cli
 
 To add new translatable strings in the source code:
 

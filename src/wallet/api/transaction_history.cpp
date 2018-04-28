@@ -42,7 +42,7 @@
 
 using namespace epee;
 
-namespace ToklioCoin {
+namespace Toklio {
 
 TransactionHistory::~TransactionHistory() {}
 
@@ -245,4 +245,4 @@ void TransactionHistoryImpl::refresh()
 
 } // namespace
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;

@@ -42,7 +42,7 @@
 
 using namespace std;
 
-namespace ToklioCoin {
+namespace Toklio {
 
 PendingTransaction::~PendingTransaction() {}
 
@@ -190,5 +190,5 @@ std::vector<std::set<uint32_t>> PendingTransactionImpl::subaddrIndices() const
 
 }
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;
 

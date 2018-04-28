@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The ToklioCoin Project
+# Copyright (c) 2018, The Toklio Project
 #
 # All rights reserved.
 #
@@ -61,5 +61,5 @@ target_link_libraries(simplewallet
     ${EXTRA_LIBRARIES})
 set_property(TARGET simplewallet
   PROPERTY
-    OUTPUT_NAME "tokliocoin-wallet-cli")
+    OUTPUT_NAME "toklio-wallet-cli")
 install(TARGETS simplewallet DESTINATION bin)

@@ -1,5 +1,5 @@
 #!/bin/bash
 
 
-rlwrap tokliocoin-wallet-cli --wallet-file wallet_01.bin --password "" --testnet --trusted-daemon --daemon-address localhost:38081  --log-file wallet_01.log
+rlwrap toklio-wallet-cli --wallet-file wallet_01.bin --password "" --testnet --trusted-daemon --daemon-address localhost:38081  --log-file wallet_01.log
 

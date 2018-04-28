@@ -35,7 +35,7 @@
 
 using namespace std;
 
-namespace ToklioCoin {
+namespace Toklio {
 namespace Utils {
 
 bool isAddressLocal(const std::string &address)
@@ -58,4 +58,4 @@ void onStartup()
 
 } // namespace
 
-namespace BitToklioCoin = ToklioCoin;
+namespace BitToklio = Toklio;

@@ -1,4 +1,4 @@
-// Copyright (c) 2018, The ToklioCoin Project
+// Copyright (c) 2018, The Toklio Project
 // 
 // All rights reserved.
 // 
@@ -50,7 +50,7 @@
 
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "wallet.simplewallet"
-// Hardcode ToklioCoin's donation address (see #1447)
+// Hardcode Toklio's donation address (see #1447)
 constexpr const char MONERO_DONATION_ADDR[] = "TK3dU1gAgiG44fA8SujghtgSSLpow6gdDRc8K1n8StvRe6zwWGtEszkEHPqbUMoxMv4EhigcSg9LZ15rYGuMTwxo13cRNqpsK";
 
 /*!

@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The ToklioCoin Project
+# Copyright (c) 2018, The Toklio Project
 #
 # All rights reserved.
 #
