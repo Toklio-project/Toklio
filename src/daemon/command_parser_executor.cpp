@@ -27,6 +27,7 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "common/dns_utils.h"
+#include "common/command_line.h"
 #include "version.h"
 #include "daemon/command_parser_executor.h"
 
@@ -315,7 +316,7 @@ bool t_command_parser_executor::start_mining(const std::vector<std::string>& arg
     return true;
   }
   if(nettype != cryptonote::MAINNET)
-    std::cout << "Mining to a " << (nettype == cryptonote::TESTNET ? "testnet" : "stagenet") << "address, make sure this is intentional!" << std::endl;
+    std::cout << "Mining to a " << (nettype == cryptonote::TESTNET ? "testnet" : "stagenet") << " address, make sure this is intentional!" << std::endl;
   uint64_t threads_count = 1;
   bool do_background_mining = false;  
   bool ignore_battery = false;  
@@ -326,12 +327,26 @@ bool t_command_parser_executor::start_mining(const std::vector<std::string>& arg
   
   if(args.size() == 4)
   {
-    ignore_battery = args[3] == "true";
+    if(args[3] == "true" || command_line::is_yes(args[3]) || args[3] == "1")
+    {
+      ignore_battery = true;
+    }
+    else if(args[3] != "false" && !command_line::is_no(args[3]) && args[3] != "0")
+    {
+      return false;
+    }
   }  
   
   if(args.size() >= 3)
   {
-    do_background_mining = args[2] == "true";
+    if(args[2] == "true" || command_line::is_yes(args[2]) || args[2] == "1")
+    {
+      do_background_mining = true;
+    }
+    else if(args[2] != "false" && !command_line::is_no(args[2]) && args[2] != "0")
+    {
+      return false;
+    }
   }
   
   if(args.size() >= 2)
@@ -380,8 +395,6 @@ bool t_command_parser_executor::set_limit(const std::vector<std::string>& args)
       std::cout << "failed to parse argument" << std::endl;
       return false;
   }
-  if (limit > 0)
-    limit *= 1024;
 
   return m_executor.set_limit(limit, limit);
 }
@@ -400,8 +413,6 @@ bool t_command_parser_executor::set_limit_up(const std::vector<std::string>& arg
       std::cout << "failed to parse argument" << std::endl;
       return false;
   }
-  if (limit > 0)
-    limit *= 1024;
 
   return m_executor.set_limit(0, limit);
 }
@@ -420,8 +431,6 @@ bool t_command_parser_executor::set_limit_down(const std::vector<std::string>& a
       std::cout << "failed to parse argument" << std::endl;
       return false;
   }
-  if (limit > 0)
-    limit *= 1024;
 
   return m_executor.set_limit(limit, 0);
 }
