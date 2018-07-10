@@ -8,4 +8,4 @@
 	branch = monero
 [submodule "external/rapidjson"]
 	path = external/rapidjson
-	url = https://github.com/Tencent/rapidjson
+	url = git://github.com/Tencent/rapidjson.git
