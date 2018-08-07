@@ -1559,8 +1559,8 @@ Denna transaktion låses upp vid block %llu, om ungefär %s dagar (förutsatt en
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1622"/>
-        <source>Donate &lt;amount&gt; to the development team (donate.getmonero.org).</source>
-        <translation>Donera &lt;belopp&gt; till utvecklingsteamet (donate.getmonero.org).</translation>
+        <source>Donate &lt;amount&gt; to the development team (donate.tokl.io).</source>
+        <translation>Donera &lt;belopp&gt; till utvecklingsteamet (donate.tokl.io).</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1625"/>
@@ -1703,7 +1703,7 @@ Om argumentet &quot;tag_description&quot; anges, så tilldelas taggen &lt;taggna
  confirm-missing-payment-id &lt;1|0>
  ask-password &lt;1|0>
  unit &lt;monero|millinero|micronero|nanonero|piconero>
-   Set the default monero (sub-)unit.
+   Set the default Toklio (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
@@ -1738,7 +1738,7 @@ Om argumentet &quot;tag_description&quot; anges, så tilldelas taggen &lt;taggna
  confirm-missing-payment-id &lt;1|0>
  ask-password &lt;1|0>
  unit &lt;monero|millinero|micronero|nanonero|piconero>
-   Ange standardvärde för moneroenhet.
+   Ange standardvärde för Toklioenhet.
  min-outputs-count [n]
    Försök att behålla åtminstone så många utgångar med åtminstone värdet min-outputs-value.
  min-outputs-value [n]
@@ -2610,7 +2610,7 @@ Varning: Några ingångsnycklar som spenderas kommer från </translation>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1923"/>
         <source>monero, millinero, micronero, nanonero, piconero</source>
-        <translation>monero, millinero, micronero, nanonero, piconero</translation>
+        <translation>Toklio, millinero, micronero, nanonero, piconero</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1975"/>
@@ -3781,7 +3781,7 @@ Utgångar per *: </translation>
         <location filename="../src/simplewallet/simplewallet.cpp" line="6787"/>
         <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Detta är kommandoradsplånboken för Monero. Den måste ansluta till en Monero-
+        <translation>Detta är kommandoradsplånboken för Toklio. Den måste ansluta till en Toklio-
 daemon för att fungera korrekt.</translation>
     </message>
     <message>
@@ -4025,7 +4025,7 @@ daemon för att fungera korrekt.</translation>
         <location filename="../src/wallet/wallet_rpc_server.cpp" line="2870"/>
         <source>This is the RPC Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Detta är RPC-plånboken för Toklio. Den måste ansluta till en Monero-
+        <translation>Detta är RPC-plånboken för Toklio. Den måste ansluta till en Toklio-
 daemon för att fungera korrekt.</translation>
     </message>
     <message>
@@ -4134,7 +4134,7 @@ daemon för att fungera korrekt.</translation>
         <location filename="../src/wallet/wallet_args.cpp" line="138"/>
         <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Detta är kommandoradsplånboken för Monero. Den måste ansluta till en Monero-
+        <translation>Detta är kommandoradsplånboken för Toklio. Den måste ansluta till en Toklio-
 daemon för att fungera korrekt.</translation>
     </message>
     <message>

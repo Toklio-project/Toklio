@@ -344,8 +344,8 @@ namespace dns_utils
 // TODO: parse the string in a less stupid way, probably with regex
 std::string address_from_txt_record(const std::string& s)
 {
-  // make sure the txt record has "oa1:xmr" and find it
-  auto pos = s.find("oa1:xmr");
+  // make sure the txt record has "oa1:tokl" and find it
+  auto pos = s.find("oa1:tokl");
   if (pos == std::string::npos)
     return {};
   // search from there to find "recipient_address="
@@ -374,7 +374,7 @@ std::string address_from_txt_record(const std::string& s)
  *
  * gets the monero address from the TXT record of the DNS entry associated
  * with <url>.  If this lookup fails, or the TXT record does not contain an
- * XMR address in the correct format, returns an empty string.  <dnssec_valid>
+ * TOKL address in the correct format, returns an empty string.  <dnssec_valid>
  * will be set true or false according to whether or not the DNS query passes
  * DNSSEC validation.
  *
