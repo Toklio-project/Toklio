@@ -43,7 +43,7 @@
 
 using namespace std;
 
-namespace Toklio {
+namespace Monero {
 
 PendingTransaction::~PendingTransaction() {}
 
@@ -243,5 +243,5 @@ std::vector<std::string> PendingTransactionImpl::signersKeys() const {
 
 }
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;
 

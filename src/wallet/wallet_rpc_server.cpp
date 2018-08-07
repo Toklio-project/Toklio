@@ -63,7 +63,7 @@ namespace
   const command_line::arg_descriptor<std::string> arg_wallet_dir = {"wallet-dir", "Directory for newly created wallets"};
   const command_line::arg_descriptor<bool> arg_prompt_for_password = {"prompt-for-password", "Prompts for password when not provided", false};
 
-  constexpr const char default_rpc_username[] = "toklio";
+  constexpr const char default_rpc_username[] = "monero";
 
   boost::optional<tools::password_container> password_prompter(const char *prompt, bool verify)
   {
@@ -616,7 +616,7 @@ namespace tools
           }
           if (addresses.empty())
           {
-            er.message = std::string("No Monero address found at ") + url;
+            er.message = std::string("No Toklio address found at ") + url;
             return {};
           }
           return addresses[0];
@@ -1593,7 +1593,7 @@ namespace tools
         }
         if (addresses.empty())
         {
-          er.message = std::string("No Monero address found at ") + url;
+          er.message = std::string("No Toklio address found at ") + url;
           return {};
         }
         return addresses[0];
@@ -2365,7 +2365,7 @@ namespace tools
         }
         if (addresses.empty())
         {
-          er.message = std::string("No Monero address found at ") + url;
+          er.message = std::string("No Toklio address found at ") + url;
           return {};
         }
         return addresses[0];
@@ -3143,7 +3143,7 @@ int main(int argc, char** argv) {
   std::tie(vm, should_terminate) = wallet_args::main(
     argc, argv,
     "toklio-wallet-rpc [--wallet-file=<file>|--generate-from-json=<file>|--wallet-dir=<directory>] [--rpc-bind-port=<port>]",
-    tools::wallet_rpc_server::tr("This is the RPC toklio wallet. It needs to connect to a toklio\ndaemon to work correctly."),
+    tools::wallet_rpc_server::tr("This is the RPC Toklio wallet. It needs to connect to a Toklio\ndaemon to work correctly."),
     desc_params,
     po::positional_options_description(),
     [](const std::string &s, bool emphasis){ epee::set_console_color(emphasis ? epee::console_color_white : epee::console_color_default, true); std::cout << s << std::endl; if (emphasis) epee::reset_console_color(); },

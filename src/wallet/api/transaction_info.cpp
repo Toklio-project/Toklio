@@ -33,7 +33,7 @@
 
 using namespace std;
 
-namespace Toklio {
+namespace Monero {
 
 TransactionInfo::~TransactionInfo() {}
 
@@ -140,4 +140,4 @@ uint64_t TransactionInfoImpl::unlockTime() const
 
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

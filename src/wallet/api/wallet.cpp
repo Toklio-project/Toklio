@@ -56,7 +56,7 @@ using namespace cryptonote;
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "WalletAPI"
 
-namespace Toklio {
+namespace Monero {
 
 namespace {
     // copy-pasted from simplewallet
@@ -72,7 +72,7 @@ namespace {
     std::string get_default_ringdb_path(cryptonote::network_type nettype)
     {
       boost::filesystem::path dir = tools::get_default_data_dir();
-      // remove .bitmonero, replace with .shared-ringdb
+      // remove .Toklio, replace with .shared-ringdb
       dir = dir.remove_filename();
       dir /= ".shared-ringdb";
       if (nettype == cryptonote::TESTNET)
@@ -2205,6 +2205,20 @@ void WalletImpl::keyReuseMitigation2(bool mitigation)
     m_wallet->key_reuse_mitigation2(mitigation);
 }
 
+bool WalletImpl::lockKeysFile()
+{
+    return m_wallet->lock_keys_file();
+}
+
+bool WalletImpl::unlockKeysFile()
+{
+    return m_wallet->unlock_keys_file();
+}
+
+bool WalletImpl::isKeysFileLocked()
+{
+    return m_wallet->is_keys_file_locked();
+}
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

@@ -33,7 +33,7 @@
 #include "net/http_client.h"
 #include <string>
 
-namespace Toklio {
+namespace Monero {
 
 class WalletManagerImpl : public WalletManager
 {
@@ -97,4 +97,4 @@ private:
 
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

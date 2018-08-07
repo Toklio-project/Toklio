@@ -35,7 +35,7 @@
 #include <vector>
 
 
-namespace Toklio {
+namespace Monero {
 
 class WalletImpl;
 class UnsignedTransactionImpl : public UnsignedTransaction
@@ -72,4 +72,4 @@ private:
 
 }
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

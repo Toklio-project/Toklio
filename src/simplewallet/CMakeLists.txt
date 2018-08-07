@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Toklio Project
+# Copyright (c) 2014-2018, The Monero Project
 #
 # All rights reserved.
 #
@@ -48,7 +48,6 @@ target_link_libraries(simplewallet
     cncrypto
     common
     mnemonics
-    epee
     ${EPEE_READLINE}
     version
     ${Boost_CHRONO_LIBRARY}

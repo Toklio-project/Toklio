@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR">
 <context>
-    <name>Toklio::AddressBookImpl</name>
+    <name>Monero::AddressBookImpl</name>
     <message>
         <location filename="../src/wallet/api/address_book.cpp" line="53"/>
         <source>Invalid destination address</source>
@@ -25,7 +25,7 @@
     </message>
 </context>
 <context>
-    <name>Toklio::PendingTransactionImpl</name>
+    <name>Monero::PendingTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/pending_transaction.cpp" line="90"/>
         <source>Attempting to save transaction to file, but specified file(s) exist. Exiting to not risk overwriting. File:</source>
@@ -68,7 +68,7 @@
     </message>
 </context>
 <context>
-    <name>Toklio::UnsignedTransactionImpl</name>
+    <name>Monero::UnsignedTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/unsigned_transaction.cpp" line="75"/>
         <source>This is a watch only wallet</source>
@@ -122,7 +122,7 @@
     </message>
 </context>
 <context>
-    <name>Toklio::WalletImpl</name>
+    <name>Monero::WalletImpl</name>
     <message>
         <location filename="../src/wallet/api/wallet.cpp" line="1111"/>
         <source>payment id has invalid format, expected 16 or 64 character hex string: </source>
@@ -1147,8 +1147,8 @@ Cette transaction sera déverrouillée au bloc %llu, dans approximativement %s j
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="679"/>
-        <source>Current fee is %s monero per kB</source>
-        <translation>Les frais sont actuellement de %s monero par kO</translation>
+        <source>Current fee is %s Toklio per kB</source>
+        <translation>Les frais sont actuellement de %s Toklio par kO</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="695"/>
@@ -1559,8 +1559,8 @@ Cette transaction sera déverrouillée au bloc %llu, dans approximativement %s j
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1622"/>
-        <source>Donate &lt;amount&gt; to the development team (donate.getmonero.org).</source>
-        <translation>Donner &lt;montant&gt; à l&apos;équipe de développement (donate.getmonero.org).</translation>
+        <source>Donate &lt;amount&gt; to the development team (donate.tokl.io).</source>
+        <translation>Donner &lt;montant&gt; à l&apos;équipe de développement (donate.tokl.io).</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1625"/>
@@ -1703,7 +1703,7 @@ Si l&apos;argument &quot;tag_description&quot; est spécifié, le texte arbitrai
  confirm-missing-payment-id &lt;1|0&gt;
  ask-password &lt;1|0&gt;
  unit &lt;monero|millinero|micronero|nanonero|piconero&gt;
-   Set the default monero (sub-)unit.
+   Set the default Toklio (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
@@ -1738,7 +1738,7 @@ Si l&apos;argument &quot;tag_description&quot; est spécifié, le texte arbitrai
  confirm-missing-payment-id &lt;1|0&gt;
  ask-password &lt;1|0&gt;
  unit &lt;monero|millinero|micronero|nanonero|piconero&gt;
-   Définir la (sous-)unité monero par défaut.
+   Définir la (sous-)unité Toklio par défaut.
  min-outputs-count [n]
    Essayer de garder au moins ce nombre de sorties d&apos;une valeur d&apos;au moins min-outputs-value.
  min-outputs-value [n]
@@ -3760,8 +3760,8 @@ Sorties par * : </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="129"/>
-        <source>The newly created transaction will not be relayed to the monero network</source>
-        <translation>La transaction nouvellement créée ne sera pas transmise au réseau monero</translation>
+        <source>The newly created transaction will not be relayed to the Toklio network</source>
+        <translation>La transaction nouvellement créée ne sera pas transmise au réseau Toklio</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="171"/>
@@ -3780,10 +3780,10 @@ Sorties par * : </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="6787"/>
-        <source>This is the command line monero wallet. It needs to connect to a monero
+        <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Ceci est le portefeuille monero en ligne de commande. Il a besoin de se
-connecter à un démon monero pour fonctionner correctement.</translation>
+        <translation>Ceci est le portefeuille Toklio en ligne de commande. Il a besoin de se
+connecter à un démon Toklio pour fonctionner correctement.</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="6801"/>
@@ -4024,10 +4024,10 @@ connecter à un démon monero pour fonctionner correctement.</translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet_rpc_server.cpp" line="2870"/>
-        <source>This is the RPC monero wallet. It needs to connect to a monero
+        <source>This is the RPC Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Ceci est le portefeuille monero par RPC. Il a besoin de se
-connecter à un démon monero pour fonctionner correctement.</translation>
+        <translation>Ceci est le portefeuille Toklio par RPC. Il a besoin de se
+connecter à un démon Toklio pour fonctionner correctement.</translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet_rpc_server.cpp" line="2893"/>
@@ -4133,10 +4133,10 @@ connecter à un démon monero pour fonctionner correctement.</translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet_args.cpp" line="138"/>
-        <source>This is the command line monero wallet. It needs to connect to a monero
+        <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Ceci est le portefeuille monero en ligne de commande. Il a besoin de se
-connecter à un démon monero pour fonctionner correctement.</translation>
+        <translation>Ceci est le portefeuille Toklio en ligne de commande. Il a besoin de se
+connecter à un démon Toklio pour fonctionner correctement.</translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet_args.cpp" line="161"/>

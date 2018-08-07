@@ -112,7 +112,7 @@ BOOST_CLASS_VERSION(blackball_state_t, 1)
 static std::string get_default_db_path()
 {
   boost::filesystem::path dir = tools::get_default_data_dir();
-  // remove .bitmonero, replace with .shared-ringdb
+  // remove .Toklio, replace with .shared-ringdb
   dir = dir.remove_filename();
   dir /= ".shared-ringdb";
   return dir.string();

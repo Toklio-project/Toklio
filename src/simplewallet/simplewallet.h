@@ -1,4 +1,4 @@
-// Copyright (c) 2018, The Toklio Project
+// Copyright (c) 2014-2018, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -50,8 +50,8 @@
 
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "wallet.simplewallet"
-// Hardcode Toklio's donation address (see #1447)
-constexpr const char MONERO_DONATION_ADDR[] = "TK3dU1gAgiG44fA8SujghtgSSLpow6gdDRc8K1n8StvRe6zwWGtEszkEHPqbUMoxMv4EhigcSg9LZ15rYGuMTwxo13cRNqpsK";
+// Hardcode Monero's donation address (see #1447)
+constexpr const char MONERO_DONATION_ADDR[] = "TK27JdU4i88GuUp6pQceBkWzUxgz3pNPQfoWvQZJCuGs8XadWQSbtYZ6H7of1zcLqd7gsxxr3Qpt7bwkNgEKt3VU2LMu2x9oD";
 
 /*!
  * \namespace cryptonote
@@ -137,6 +137,7 @@ namespace cryptonote
     bool set_key_reuse_mitigation2(const std::vector<std::string> &args = std::vector<std::string>());
     bool set_subaddress_lookahead(const std::vector<std::string> &args = std::vector<std::string>());
     bool set_segregation_height(const std::vector<std::string> &args = std::vector<std::string>());
+    bool set_ignore_fractional_outputs(const std::vector<std::string> &args = std::vector<std::string>());
     bool help(const std::vector<std::string> &args = std::vector<std::string>());
     bool start_mining(const std::vector<std::string> &args);
     bool stop_mining(const std::vector<std::string> &args);
@@ -152,7 +153,8 @@ namespace cryptonote
     bool transfer(const std::vector<std::string> &args);
     bool transfer_new(const std::vector<std::string> &args);
     bool locked_transfer(const std::vector<std::string> &args);
-    bool sweep_main(uint64_t below, const std::vector<std::string> &args);
+    bool locked_sweep_all(const std::vector<std::string> &args);
+    bool sweep_main(uint64_t below, bool locked, const std::vector<std::string> &args);
     bool sweep_all(const std::vector<std::string> &args);
     bool sweep_below(const std::vector<std::string> &args);
     bool sweep_single(const std::vector<std::string> &args);

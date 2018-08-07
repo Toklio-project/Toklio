@@ -42,7 +42,7 @@
 
 using namespace epee;
 
-namespace Toklio {
+namespace Monero {
 
 TransactionHistory::~TransactionHistory() {}
 
@@ -245,4 +245,4 @@ void TransactionHistoryImpl::refresh()
 
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

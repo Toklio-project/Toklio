@@ -1,6 +1,6 @@
 # Toklio
 
-Copyright (c) 2014-2018 The Toklio Project.   
+Copyright (c) 2014-2018 The Monero Project.   
 Portions Copyright (c) 2012-2013 The Cryptonote developers.
 
 ## Development resources
@@ -33,7 +33,7 @@ As with many development projects, the repository on Github is considered to be 
 
 Toklio is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially.
 
-The Toklio donation Monero address is: `48s5FmUCHAK49BWHT6JpHqNuokkE4wfRAdgVk6VVcNLHRDFfxpGb1HuG6wqbWnPYmzF8feyMq39s7F37RJca8h9aKey8cm3`
+The Toklio donation Monero address is: `TK27JdU4i88GuUp6pQceBkWzUxgz3pNPQfoWvQZJCuGs8XadWQSbtYZ6H7of1zcLqd7gsxxr3Qpt7bwkNgEKt3VU2LMu2x9oD`
 
 The Bitcoin donation address is: `3HJ1AYmEu7Bi1iJL7be8f4RnzHTnjiH7L6`
 

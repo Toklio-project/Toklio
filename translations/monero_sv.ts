@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
-    <name>Toklio::AddressBookImpl</name>
+    <name>Monero::AddressBookImpl</name>
     <message>
         <location filename="../src/wallet/api/address_book.cpp" line="53"/>
         <source>Invalid destination address</source>
@@ -25,7 +25,7 @@
     </message>
 </context>
 <context>
-    <name>Toklio::PendingTransactionImpl</name>
+    <name>Monero::PendingTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/pending_transaction.cpp" line="90"/>
         <source>Attempting to save transaction to file, but specified file(s) exist. Exiting to not risk overwriting. File:</source>
@@ -68,7 +68,7 @@
     </message>
 </context>
 <context>
-    <name>Toklio::UnsignedTransactionImpl</name>
+    <name>Monero::UnsignedTransactionImpl</name>
     <message>
         <location filename="../src/wallet/api/unsigned_transaction.cpp" line="75"/>
         <source>This is a watch only wallet</source>
@@ -122,7 +122,7 @@
     </message>
 </context>
 <context>
-    <name>Toklio::WalletImpl</name>
+    <name>Monero::WalletImpl</name>
     <message>
         <location filename="../src/wallet/api/wallet.cpp" line="1111"/>
         <source>payment id has invalid format, expected 16 or 64 character hex string: </source>
@@ -1147,8 +1147,8 @@ Denna transaktion låses upp vid block %llu, om ungefär %s dagar (förutsatt en
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="679"/>
-        <source>Current fee is %s monero per kB</source>
-        <translation>Aktuell avgift är %s monero per kB</translation>
+        <source>Current fee is %s Toklio per kB</source>
+        <translation>Aktuell avgift är %s Toklio per kB</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="695"/>
@@ -1559,8 +1559,8 @@ Denna transaktion låses upp vid block %llu, om ungefär %s dagar (förutsatt en
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1622"/>
-        <source>Donate &lt;amount&gt; to the development team (donate.getmonero.org).</source>
-        <translation>Donera &lt;belopp&gt; till utvecklingsteamet (donate.getmonero.org).</translation>
+        <source>Donate &lt;amount&gt; to the development team (donate.tokl.io).</source>
+        <translation>Donera &lt;belopp&gt; till utvecklingsteamet (donate.tokl.io).</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="1625"/>
@@ -1703,7 +1703,7 @@ Om argumentet &quot;tag_description&quot; anges, så tilldelas taggen &lt;taggna
  confirm-missing-payment-id &lt;1|0>
  ask-password &lt;1|0>
  unit &lt;monero|millinero|micronero|nanonero|piconero>
-   Set the default monero (sub-)unit.
+   Set the default Toklio (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
@@ -1738,7 +1738,7 @@ Om argumentet &quot;tag_description&quot; anges, så tilldelas taggen &lt;taggna
  confirm-missing-payment-id &lt;1|0>
  ask-password &lt;1|0>
  unit &lt;monero|millinero|micronero|nanonero|piconero>
-   Ange standardvärde för moneroenhet.
+   Ange standardvärde för Toklioenhet.
  min-outputs-count [n]
    Försök att behålla åtminstone så många utgångar med åtminstone värdet min-outputs-value.
  min-outputs-value [n]
@@ -3759,8 +3759,8 @@ Utgångar per *: </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="129"/>
-        <source>The newly created transaction will not be relayed to the toklio network</source>
-        <translation>Den nyss skapade transaktionen kommer inte att skickas vidare till toklio-nätverket</translation>
+        <source>The newly created transaction will not be relayed to the Toklio network</source>
+        <translation>Den nyss skapade transaktionen kommer inte att skickas vidare till Toklio-nätverket</translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="171"/>
@@ -3779,9 +3779,9 @@ Utgångar per *: </translation>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="6787"/>
-        <source>This is the command line toklio wallet. It needs to connect to a toklio
+        <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Detta är kommandoradsplånboken för toklio. Den måste ansluta till en Toklio-
+        <translation>Detta är kommandoradsplånboken för Toklio. Den måste ansluta till en Toklio-
 daemon för att fungera korrekt.</translation>
     </message>
     <message>
@@ -4023,9 +4023,9 @@ daemon för att fungera korrekt.</translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet_rpc_server.cpp" line="2870"/>
-        <source>This is the RPC toklio wallet. It needs to connect to a toklio
+        <source>This is the RPC Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
-        <translation>Detta är RPC-plånboken för toklio. Den måste ansluta till en Toklio-
+        <translation>Detta är RPC-plånboken för Toklio. Den måste ansluta till en Toklio-
 daemon för att fungera korrekt.</translation>
     </message>
     <message>
@@ -4132,7 +4132,7 @@ daemon för att fungera korrekt.</translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet_args.cpp" line="138"/>
-        <source>This is the command line toklio wallet. It needs to connect to a toklio
+        <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
         <translation>Detta är kommandoradsplånboken för Toklio. Den måste ansluta till en Toklio-
 daemon för att fungera korrekt.</translation>

@@ -32,7 +32,7 @@
 #include <string>
 #include <ctime>
 
-namespace Toklio {
+namespace Monero {
 
 class TransactionHistoryImpl;
 
@@ -84,4 +84,4 @@ private:
 
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

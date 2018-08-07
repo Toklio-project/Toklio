@@ -37,7 +37,7 @@
 
 #include <vector>
 
-namespace Toklio {
+namespace Monero {
   
 AddressBook::~AddressBook() {}
   
@@ -178,4 +178,4 @@ AddressBookImpl::~AddressBookImpl()
 
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;

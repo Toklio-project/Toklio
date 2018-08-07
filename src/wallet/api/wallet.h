@@ -40,7 +40,7 @@
 #include <boost/thread/condition_variable.hpp>
 
 
-namespace Toklio {
+namespace Monero {
 class TransactionHistoryImpl;
 class PendingTransactionImpl;
 class UnsignedTransactionImpl;
@@ -188,6 +188,9 @@ public:
     virtual void segregatePreForkOutputs(bool segregate) override;
     virtual void segregationHeight(uint64_t height) override;
     virtual void keyReuseMitigation2(bool mitigation) override;
+    virtual bool lockKeysFile() override;
+    virtual bool unlockKeysFile() override;
+    virtual bool isKeysFileLocked() override;
 
 private:
     void clearStatus() const;
@@ -248,7 +251,7 @@ private:
 
 } // namespace
 
-namespace BitToklio = Toklio;
+namespace Bitmonero = Monero;
 
 #endif
 

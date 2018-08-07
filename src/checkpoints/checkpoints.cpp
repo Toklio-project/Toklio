@@ -161,19 +161,20 @@ namespace cryptonote
 
   bool checkpoints::init_default_checkpoints(network_type nettype)
   {
+    /*
     if (nettype == TESTNET)
     {
-      /*ADD_CHECKPOINT(0,     "48ca7cd3c8de5b6a4d53d2861fbdaedca141553559f9be9520068053cda8430b");
-      ADD_CHECKPOINT(1000000, "46b690b710a07ea051bc4a6b6842ac37be691089c0f7758cfeec4d5fc0b4a258");*/
+      ADD_CHECKPOINT(0,     "48ca7cd3c8de5b6a4d53d2861fbdaedca141553559f9be9520068053cda8430b");
+      ADD_CHECKPOINT(1000000, "46b690b710a07ea051bc4a6b6842ac37be691089c0f7758cfeec4d5fc0b4a258");
       return true;
     }
     if (nettype == STAGENET)
     {
-      /*ADD_CHECKPOINT(0,       "76ee3cc98646292206cd3e86f74d88b4dcc1d937088645e9b0cbca84b7ce74eb");
-      ADD_CHECKPOINT(10000,   "1f8b0ce313f8b9ba9a46108bfd285c45ad7c2176871fd41c3a690d4830ce2fd5");*/
+      ADD_CHECKPOINT(0,       "76ee3cc98646292206cd3e86f74d88b4dcc1d937088645e9b0cbca84b7ce74eb");
+      ADD_CHECKPOINT(10000,   "1f8b0ce313f8b9ba9a46108bfd285c45ad7c2176871fd41c3a690d4830ce2fd5");
       return true;
     }
-    /*ADD_CHECKPOINT(1,     "771fbcd656ec1464d3a02ead5e18644030007a0fc664c0a964d30922821a8148");
+    ADD_CHECKPOINT(1,     "771fbcd656ec1464d3a02ead5e18644030007a0fc664c0a964d30922821a8148");
     ADD_CHECKPOINT(10,    "c0e3b387e47042f72d8ccdca88071ff96bff1ac7cde09ae113dbb7ad3fe92381");
     ADD_CHECKPOINT(100,   "ac3e11ca545e57c49fca2b4e8c48c03c23be047c43e471e1394528b1f9f80b2d");
     ADD_CHECKPOINT(1000,  "5acfc45acffd2b2e7345caf42fa02308c5793f15ec33946e969e829f40b03876");
@@ -207,8 +208,8 @@ namespace cryptonote
     ADD_CHECKPOINT(1390000, "a8f5649dd4ded60eedab475f2bec8c934681c07e3cf640e9be0617554f13ff6c");
     ADD_CHECKPOINT(1450000, "ac94e8860093bc7c83e4e91215cba1d663421ecf4067a0ae609c3a8b52bcfac2");
     ADD_CHECKPOINT(1530000, "01759bce497ec38e63c78b1038892169203bb78f87e488172f6b854fcd63ba7e");
-    */
-
+    ADD_CHECKPOINT(1579000, "7d0d7a2346373afd41ed1e744a939fc5d474a7dbaa257be5c6fff4009e789241");
+*/
     return true;
   }
 
@@ -253,23 +254,23 @@ namespace cryptonote
     std::vector<std::string> records;
 
     // All four MoneroPulse domains have DNSSEC on and valid
-    static const std::vector<std::string> dns_urls = {/* "checkpoints.moneropulse.se"
+    static const std::vector<std::string> dns_urls = { "checkpoints.moneropulse.se"
 						     , "checkpoints.moneropulse.org"
 						     , "checkpoints.moneropulse.net"
 						     , "checkpoints.moneropulse.co"
-    */};
+    };
 
-    static const std::vector<std::string> testnet_dns_urls = { /*"testpoints.moneropulse.se"
+    static const std::vector<std::string> testnet_dns_urls = { "testpoints.moneropulse.se"
 							     , "testpoints.moneropulse.org"
 							     , "testpoints.moneropulse.net"
 							     , "testpoints.moneropulse.co"
-    */};
+    };
 
-    static const std::vector<std::string> stagenet_dns_urls = { /*"stagenetpoints.moneropulse.se"
+    static const std::vector<std::string> stagenet_dns_urls = { "stagenetpoints.moneropulse.se"
                    , "stagenetpoints.moneropulse.org"
                    , "stagenetpoints.moneropulse.net"
                    , "stagenetpoints.moneropulse.co"
-    */};
+    };
 
     if (!tools::dns_utils::load_txt_records_from_dns(records, nettype == TESTNET ? testnet_dns_urls : nettype == STAGENET ? stagenet_dns_urls : dns_urls))
       return true; // why true ?

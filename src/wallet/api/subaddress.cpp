@@ -34,7 +34,7 @@
 
 #include <vector>
 
-namespace Toklio {
+namespace Monero {
   
 Subaddress::~Subaddress() {}
   

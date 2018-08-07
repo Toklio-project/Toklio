@@ -1,4 +1,4 @@
-// Copyright (c) 2018, The Toklio Project
+// Copyright (c) 2014-2018, The Monero Project
 //
 // All rights reserved.
 //
@@ -121,19 +121,25 @@ static const struct {
   // version 1 from the start of the blockchain
   { 1, 1, 0, 1341378000 },
 
-  // version 2 starts from block 624634, which is on or around the 23rd of November, 2015. Fork time finalised on 2015-11-20. No fork voting occurs for the v2 fork.
-  { 2, 10, 0, 1445355000 },
+  // version 2 starts from block 20, which is on or around the 20th of March, 2016. Fork time finalised on 2015-09-20. No fork voting occurs for the v2 fork.
+  { 2, 20, 0, 1442763710 },
 
-  // versions 3-5 were passed in rapid succession from September 18th, 2016
-  { 3, 20, 0, 1472415034 },
-  { 4, 30, 0, 1472415035 },
-  { 5, 40, 0, 1472415036 + 86400*180 }, // add 5 months on testnet to shut the update warning up since there's a large gap to v6
+  // version 3 starts from block 40, which is on or around the 24th of September, 2016. Fork time finalised on 2016-03-21.
+  { 3, 40, 0, 1458558528 },
+  
+  // version 4 starts from block 60, which is on or around the 5th of January, 2017. Fork time finalised on 2016-09-18.
+  { 4, 60, 0, 1483574400 },
+  
+  // version 5 starts from block 80, which is on or around the 15th of April, 2017. Fork time finalised on 2017-03-14.
+  { 5, 80, 0, 1489520158 },  
 
-  { 6, 50, 0, 1501709789 },
-  { 7, 60, 0, 1512211236 },
-  { 8, 70, 0, 1515967497 },
+  // version 6 starts from block 100, which is on or around the 16th of September, 2017. Fork time finalised on 2017-08-18.
+  { 6, 100, 0, 1503046577 },
+
+  // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
+  { 7, 120, 0, 1521303150 },
 };
-static const uint64_t testnet_hard_fork_version_1_till = 9;
+static const uint64_t testnet_hard_fork_version_1_till = 19;
 
 static const struct {
   uint8_t version;
@@ -144,13 +150,23 @@ static const struct {
   // version 1 from the start of the blockchain
   { 1, 1, 0, 1341378000 },
 
-  // versions 2-7 in rapid succession from March 13th, 2018
-  { 2, 32000, 0, 1521000000 },
-  { 3, 33000, 0, 1521120000 },
-  { 4, 34000, 0, 1521240000 },
-  { 5, 35000, 0, 1521360000 },
-  { 6, 36000, 0, 1521480000 },
-  { 7, 37000, 0, 1521600000 },
+  // version 2 starts from block 20, which is on or around the 20th of March, 2016. Fork time finalised on 2015-09-20. No fork voting occurs for the v2 fork.
+  { 2, 20, 0, 1442763710 },
+
+  // version 3 starts from block 40, which is on or around the 24th of September, 2016. Fork time finalised on 2016-03-21.
+  { 3, 40, 0, 1458558528 },
+  
+  // version 4 starts from block 60, which is on or around the 5th of January, 2017. Fork time finalised on 2016-09-18.
+  { 4, 60, 0, 1483574400 },
+  
+  // version 5 starts from block 80, which is on or around the 15th of April, 2017. Fork time finalised on 2017-03-14.
+  { 5, 80, 0, 1489520158 },  
+
+  // version 6 starts from block 100, which is on or around the 16th of September, 2017. Fork time finalised on 2017-08-18.
+  { 6, 100, 0, 1503046577 },
+
+  // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
+  { 7, 120, 0, 1521303150 },
 };
 
 //------------------------------------------------------------------
@@ -330,7 +346,7 @@ uint64_t Blockchain::get_current_blockchain_height() const
 //------------------------------------------------------------------
 //FIXME: possibly move this into the constructor, to avoid accidentally
 //       dereferencing a null BlockchainDB pointer
-bool Blockchain::init(BlockchainDB* db, const network_type nettype, bool offline, const cryptonote::test_options *test_options)
+bool Blockchain::init(BlockchainDB* db, const network_type nettype, bool offline, const cryptonote::test_options *test_options, difficulty_type fixed_difficulty)
 {
   LOG_PRINT_L3("Blockchain::" << __func__);
   CRITICAL_REGION_LOCAL(m_tx_pool);
@@ -352,6 +368,7 @@ bool Blockchain::init(BlockchainDB* db, const network_type nettype, bool offline
 
   m_nettype = test_options != NULL ? FAKECHAIN : nettype;
   m_offline = offline;
+  m_fixed_difficulty = fixed_difficulty;
   if (m_hardfork == nullptr)
   {
     if (m_nettype ==  FAKECHAIN || m_nettype == STAGENET)
@@ -795,6 +812,11 @@ bool Blockchain::get_block_by_hash(const crypto::hash &h, block &blk, bool *orph
 // less blocks than desired if there aren't enough.
 difficulty_type Blockchain::get_difficulty_for_next_block()
 {
+  if (m_fixed_difficulty)
+  {
+    return m_db->height() ? m_fixed_difficulty : 1;
+  }
+
   LOG_PRINT_L3("Blockchain::" << __func__);
 
   crypto::hash top_hash = get_tail_id();
@@ -1006,6 +1028,11 @@ bool Blockchain::switch_to_alternative_blockchain(std::list<blocks_ext_by_hash::
 // an alternate chain.
 difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std::list<blocks_ext_by_hash::iterator>& alt_chain, block_extended_info& bei) const
 {
+  if (m_fixed_difficulty)
+  {
+    return m_db->height() ? m_fixed_difficulty : 1;
+  }
+
   LOG_PRINT_L3("Blockchain::" << __func__);
   std::vector<uint64_t> timestamps;
   std::vector<difficulty_type> cumulative_difficulties;
@@ -1985,14 +2012,14 @@ void Blockchain::get_output_key_mask_unlocked(const uint64_t& amount, const uint
 //------------------------------------------------------------------
 bool Blockchain::get_output_distribution(uint64_t amount, uint64_t from_height, uint64_t to_height, uint64_t &start_height, std::vector<uint64_t> &distribution, uint64_t &base) const
 {
-  // rct outputs don't exist before v3
+  // rct outputs don't exist before v4
   if (amount == 0)
   {
     switch (m_nettype)
     {
-      case STAGENET: start_height = stagenet_hard_forks[2].height; break;
-      case TESTNET: start_height = testnet_hard_forks[2].height; break;
-      case MAINNET: start_height = mainnet_hard_forks[2].height; break;
+      case STAGENET: start_height = stagenet_hard_forks[3].height; break;
+      case TESTNET: start_height = testnet_hard_forks[3].height; break;
+      case MAINNET: start_height = mainnet_hard_forks[3].height; break;
       default: return false;
     }
   }
@@ -2000,11 +2027,40 @@ bool Blockchain::get_output_distribution(uint64_t amount, uint64_t from_height, 
     start_height = 0;
   base = 0;
 
+  if (to_height > 0 && to_height < from_height)
+    return false;
+
   const uint64_t real_start_height = start_height;
   if (from_height > start_height)
     start_height = from_height;
 
-  return m_db->get_output_distribution(amount, start_height, to_height, distribution, base);
+  distribution.clear();
+  uint64_t db_height = m_db->height();
+  if (db_height == 0)
+    return false;
+  if (to_height == 0)
+    to_height = db_height - 1;
+  if (start_height >= db_height || to_height >= db_height)
+    return false;
+  if (amount == 0)
+  {
+    std::vector<uint64_t> heights;
+    heights.reserve(to_height + 1 - start_height);
+    uint64_t real_start_height = start_height > 0 ? start_height-1 : start_height;
+    for (uint64_t h = real_start_height; h <= to_height; ++h)
+      heights.push_back(h);
+    distribution = m_db->get_block_cumulative_rct_outputs(heights);
+    if (start_height > 0)
+    {
+      base = distribution[0];
+      distribution.erase(distribution.begin());
+    }
+    return true;
+  }
+  else
+  {
+    return m_db->get_output_distribution(amount, start_height, to_height, distribution, base);
+  }
 }
 //------------------------------------------------------------------
 // This function takes a list of block hashes from another node
@@ -2217,7 +2273,8 @@ bool Blockchain::find_blockchain_supplement(const std::list<crypto::hash>& qbloc
   CRITICAL_REGION_LOCAL(m_blockchain_lock);
 
   bool result = find_blockchain_supplement(qblock_ids, resp.m_block_ids, resp.start_height, resp.total_height);
-  resp.cumulative_difficulty = m_db->get_block_cumulative_difficulty(resp.total_height - 1);
+  if (result)
+    resp.cumulative_difficulty = m_db->get_block_cumulative_difficulty(resp.total_height - 1);
 
   return result;
 }
@@ -3323,6 +3380,7 @@ bool Blockchain::handle_block_to_main_chain(const block& bl, const crypto::hash&
   if(bl.prev_id != get_tail_id())
   {
     MERROR_VER("Block with id: " << id << std::endl << "has wrong prev_id: " << bl.prev_id << std::endl << "expected: " << get_tail_id());
+    bvc.m_verifivation_failed = true;
 leave:
     m_db->block_txn_stop();
     return false;
@@ -3624,6 +3682,7 @@ leave:
     {
       //TODO: figure out the best way to deal with this failure
       LOG_ERROR("Error adding block with hash: " << id << " to blockchain, what = " << e.what());
+      bvc.m_verifivation_failed = true;
       return_tx_to_pool(txs);
       return false;
     }
@@ -3653,6 +3712,7 @@ leave:
 
   // appears to be a NOP *and* is called elsewhere.  wat?
   m_tx_pool.on_blockchain_inc(new_height, id);
+  get_difficulty_for_next_block(); // just to cache it
 
   return true;
 }
@@ -3736,7 +3796,7 @@ void Blockchain::check_against_checkpoints(const checkpoints& points, bool enfor
       }
       else
       {
-        LOG_ERROR("WARNING: local blockchain failed to pass a ToklioPulse checkpoint, and you could be on a fork. You should either sync up from scratch, OR download a fresh blockchain bootstrap, OR enable checkpoint enforcing with the --enforce-dns-checkpointing command-line option");
+        LOG_ERROR("WARNING: local blockchain failed to pass a MoneroPulse checkpoint, and you could be on a fork. You should either sync up from scratch, OR download a fresh blockchain bootstrap, OR enable checkpoint enforcing with the --enforce-dns-checkpointing command-line option");
       }
     }
   }
@@ -4405,6 +4465,39 @@ HardFork::State Blockchain::get_hard_fork_state() const
   return m_hardfork->get_state();
 }
 
+const std::vector<HardFork::Params>& Blockchain::get_hard_fork_heights(network_type nettype)
+{
+  static const std::vector<HardFork::Params> mainnet_heights = []()
+  {
+    std::vector<HardFork::Params> heights;
+    for (const auto& i : mainnet_hard_forks)
+      heights.emplace_back(i.version, i.height, i.threshold, i.time);
+    return heights;
+  }();
+  static const std::vector<HardFork::Params> testnet_heights = []()
+  {
+    std::vector<HardFork::Params> heights;
+    for (const auto& i : testnet_hard_forks)
+      heights.emplace_back(i.version, i.height, i.threshold, i.time);
+    return heights;
+  }();
+  static const std::vector<HardFork::Params> stagenet_heights = []()
+  {
+    std::vector<HardFork::Params> heights;
+    for (const auto& i : stagenet_hard_forks)
+      heights.emplace_back(i.version, i.height, i.threshold, i.time);
+    return heights;
+  }();
+  static const std::vector<HardFork::Params> dummy;
+  switch (nettype)
+  {
+    case MAINNET: return mainnet_heights;
+    case TESTNET: return testnet_heights;
+    case STAGENET: return stagenet_heights;
+    default: return dummy;
+  }
+}
+
 bool Blockchain::get_hard_fork_voting_info(uint8_t version, uint32_t &window, uint32_t &votes, uint32_t &threshold, uint64_t &earliest_height, uint8_t &voting) const
 {
   return m_hardfork->get_voting_info(version, window, votes, threshold, earliest_height, voting);
@@ -4420,9 +4513,9 @@ std::map<uint64_t, std::tuple<uint64_t, uint64_t, uint64_t>> Blockchain:: get_ou
   return m_db->get_output_histogram(amounts, unlocked, recent_cutoff, min_count);
 }
 
-std::list<std::pair<Blockchain::block_extended_info,uint64_t>> Blockchain::get_alternative_chains() const
+std::list<std::pair<Blockchain::block_extended_info,std::vector<crypto::hash>>> Blockchain::get_alternative_chains() const
 {
-  std::list<std::pair<Blockchain::block_extended_info,uint64_t>> chains;
+  std::list<std::pair<Blockchain::block_extended_info,std::vector<crypto::hash>>> chains;
 
   for (const auto &i: m_alternative_chains)
   {
@@ -4438,15 +4531,16 @@ std::list<std::pair<Blockchain::block_extended_info,uint64_t>> Blockchain::get_a
     }
     if (!found)
     {
-      uint64_t length = 1;
+      std::vector<crypto::hash> chain;
       auto h = i.second.bl.prev_id;
+      chain.push_back(top);
       blocks_ext_by_hash::const_iterator prev;
       while ((prev = m_alternative_chains.find(h)) != m_alternative_chains.end())
       {
+        chain.push_back(h);
         h = prev->second.bl.prev_id;
-        ++length;
       }
-      chains.push_back(std::make_pair(i.second, length));
+      chains.push_back(std::make_pair(i.second, chain));
     }
   }
   return chains;
