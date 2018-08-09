@@ -172,15 +172,15 @@ namespace cryptonote
       ADD_CHECKPOINT(0,       "76ee3cc98646292206cd3e86f74d88b4dcc1d937088645e9b0cbca84b7ce74eb");
       ADD_CHECKPOINT(10000,   "1f8b0ce313f8b9ba9a46108bfd285c45ad7c2176871fd41c3a690d4830ce2fd5");
       return true;
-    }
-    ADD_CHECKPOINT(1,     "771fbcd656ec1464d3a02ead5e18644030007a0fc664c0a964d30922821a8148");
-    ADD_CHECKPOINT(10,    "c0e3b387e47042f72d8ccdca88071ff96bff1ac7cde09ae113dbb7ad3fe92381");
-    ADD_CHECKPOINT(100,   "ac3e11ca545e57c49fca2b4e8c48c03c23be047c43e471e1394528b1f9f80b2d");
-    ADD_CHECKPOINT(1000,  "5acfc45acffd2b2e7345caf42fa02308c5793f15ec33946e969e829f40b03876");
-    ADD_CHECKPOINT(10000, "c758b7c81f928be3295d45e230646de8b852ec96a821eac3fea4daf3fcac0ca2");
-    ADD_CHECKPOINT(22231, "7cb10e29d67e1c069e6e11b17d30b809724255fee2f6868dc14cfc6ed44dfb25");
-    ADD_CHECKPOINT(29556, "53c484a8ed91e4da621bb2fa88106dbde426fe90d7ef07b9c1e5127fb6f3a7f6");
-    ADD_CHECKPOINT(50000, "0fe8758ab06a8b9cb35b7328fd4f757af530a5d37759f9d3e421023231f7b31c");
+    }*/
+    ADD_CHECKPOINT(1,     "fbb3f0e217f37c3f4f3b46b7816827b5bc5a23ed8c92cb4a717e06725680677f");
+    ADD_CHECKPOINT(1000,    "b800b5056bfd2ad9a430803c99e837812557745aadf8ba2bc3486dbf681493b9");
+    ADD_CHECKPOINT(5000,   "f0d38c8ed745d0d32688040bd959e5fabc433fb41536f4169648488859806647");
+    ADD_CHECKPOINT(10000,  "f89ed960be38bdd9aa817935aaf4f73578970d98e02a4272e2febfef1e183e3a");
+    ADD_CHECKPOINT(20000, "2a83db69e5e9fdbd6d2377073bd4c8c1fe709e70349fecbda08c9d21accdc9ba");
+    ADD_CHECKPOINT(40000, "96b44eb190d324f753be8f4f1748f862f964bd2fa527664c79d9a15496b8bf51");
+    ADD_CHECKPOINT(71200, "d25f97ac52c679a95b41567a0f49e2cc3faabd8f25f1de1125662554e036f021");
+    /*ADD_CHECKPOINT(50000, "0fe8758ab06a8b9cb35b7328fd4f757af530a5d37759f9d3e421023231f7b31c");
     ADD_CHECKPOINT(80000, "a62dcd7b536f22e003ebae8726e9e7276f63d594e264b6f0cd7aab27b66e75e3");
     ADD_CHECKPOINT(202612, "bbd604d2ba11ba27935e006ed39c9bfdd99b76bf4a50654bc1e1e61217962698");
     ADD_CHECKPOINT(202613, "e2aa337e78df1f98f462b3b1e560c6b914dec47b610698b7b7d1e3e86b6197c2");
@@ -252,9 +252,9 @@ namespace cryptonote
   {
     std::vector<std::string> records;
 
-    // All four MoneroPulse domains have DNSSEC on and valid
-    static const std::vector<std::string> dns_urls = { "checkpoints.moneropulse.se"
-						     , "checkpoints.moneropulse.org"
+    // All four ToklioPulse domains have DNSSEC on and valid
+    static const std::vector<std::string> dns_urls = { "checkpoints.tokl.io"
+						     , "checkpoints2.tokl.io"
 						     , "checkpoints.moneropulse.net"
 						     , "checkpoints.moneropulse.co"
     };

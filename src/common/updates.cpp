@@ -44,12 +44,12 @@ namespace tools
 
     MDEBUG("Checking updates for " << buildtag << " " << software);
 
-    // All four MoneroPulse domains have DNSSEC on and valid
+    // All four ToklioPulse domains have DNSSEC on and valid
     static const std::vector<std::string> dns_urls = {
-        "updates.moneropulse.org",
-        "updates.moneropulse.net",
+        "updates.tokl.io",
+        /*"updates.moneropulse.net",
         "updates.moneropulse.co",
-        "updates.moneropulse.se"
+        "updates.moneropulse.se"*/
     };
 
     if (!tools::dns_utils::load_txt_records_from_dns(records, dns_urls))
