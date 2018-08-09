@@ -255,8 +255,8 @@ namespace cryptonote
     // All four ToklioPulse domains have DNSSEC on and valid
     static const std::vector<std::string> dns_urls = { "checkpoints.tokl.io"
 						     , "checkpoints2.tokl.io"
-						     , "checkpoints.moneropulse.net"
-						     , "checkpoints.moneropulse.co"
+						     /*, "checkpoints.moneropulse.net"
+						     , "checkpoints.moneropulse.co"*/
     };
 
     static const std::vector<std::string> testnet_dns_urls = { "testpoints.moneropulse.se"
