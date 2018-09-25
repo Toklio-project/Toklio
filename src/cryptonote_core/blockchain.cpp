@@ -138,6 +138,8 @@ static const struct {
 
   // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
   { 7, 120, 0, 1521303150 },
+  { 8, 140, 0, 1515967498 },
+  { 9, 160, 0, 1515967498 },
 };
 static const uint64_t testnet_hard_fork_version_1_till = 19;
 
@@ -167,6 +169,8 @@ static const struct {
 
   // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
   { 7, 120, 0, 1521303150 },
+  { 8, 140, 0, 1515967498 },
+  { 9, 160, 0, 1515967498 },
 };
 
 //------------------------------------------------------------------
