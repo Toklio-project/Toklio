@@ -133,7 +133,7 @@ bool gen_rct_tx_validation_base::generate_with(std::vector<test_event_entry>& ev
       CHECK_AND_ASSERT_MES(r, false, "Failed to generate key derivation");
       crypto::secret_key amount_key;
       crypto::derivation_to_scalar(derivation, o, amount_key);
-      if (rct_txes[n].rct_signatures.type == rct::RCTTypeSimple || rct_txes[n].rct_signatures.type == rct::RCTTypeSimpleBulletproof)
+      if (rct_txes[n].rct_signatures.type == rct::RCTTypeSimple || rct_txes[n].rct_signatures.type == rct::RCTTypeBulletproof)
         rct::decodeRctSimple(rct_txes[n].rct_signatures, rct::sk2rct(amount_key), o, rct_tx_masks[o+n*4], hw::get_device("default"));
       else
         rct::decodeRct(rct_txes[n].rct_signatures, rct::sk2rct(amount_key), o, rct_tx_masks[o+n*4], hw::get_device("default"));
@@ -505,4 +505,3 @@ bool gen_rct_tx_rct_altered_extra::generate(std::vector<test_event_entry>& event
   return generate_with(events, out_idx, mixin, amount_paid, false,
     NULL, [&failed](transaction &tx) {std::string extra_nonce; crypto::hash pid = crypto::null_hash; set_payment_id_to_tx_extra_nonce(extra_nonce, pid); if (!add_extra_nonce_to_tx_extra(tx.extra, extra_nonce)) failed = true; }) && !failed;
 }
-

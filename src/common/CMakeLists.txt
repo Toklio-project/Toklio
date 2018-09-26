@@ -33,12 +33,15 @@ set(common_sources
   command_line.cpp
   dns_utils.cpp
   download.cpp
+  error.cpp
+  expect.cpp
   util.cpp
   i18n.cpp
   password.cpp
   perf_timer.cpp
   threadpool.cpp
-  updates.cpp)
+  updates.cpp
+  aligned.c)
 
 if (STACK_TRACE)
   list(APPEND common_sources stack_trace.cpp)
@@ -54,6 +57,8 @@ set(common_private_headers
   common_fwd.h
   dns_utils.h
   download.h
+  error.h
+  expect.h
   http_connection.h
   int-util.h
   pod-class.h
@@ -67,7 +72,8 @@ set(common_private_headers
   perf_timer.h
   stack_trace.h
   threadpool.h
-  updates.h)
+  updates.h
+  aligned.h)
 
 monero_private_headers(common
   ${common_private_headers})

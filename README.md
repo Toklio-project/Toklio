@@ -33,13 +33,13 @@ As with many development projects, the repository on Github is considered to be 
 
 Toklio is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially.
 
-The Toklio donation Monero address is: `TK27JdU4i88GuUp6pQceBkWzUxgz3pNPQfoWvQZJCuGs8XadWQSbtYZ6H7of1zcLqd7gsxxr3Qpt7bwkNgEKt3VU2LMu2x9oD`
+The Toklio donation Toklio address is: `TK27JdU4i88GuUp6pQceBkWzUxgz3pNPQfoWvQZJCuGs8XadWQSbtYZ6H7of1zcLqd7gsxxr3Qpt7bwkNgEKt3VU2LMu2x9oD`
 
 The Bitcoin donation address is: `3HJ1AYmEu7Bi1iJL7be8f4RnzHTnjiH7L6`
 
 Core development funding and/or some supporting services are also graciously provided by sponsors:
 
-There are also several mining pools that kindly donate a portion of their fees, [a list of them can be found on our Bitcointalk post](https://bitcointalk.org/index.php).
+There are also several mining pools that kindly donate a portion of their fees, [a list of them can be found on our Bitcointalk post](https://bitcointalk.org/index.php?topic=4552543).
 
 ## License
 
@@ -55,7 +55,6 @@ Toklio uses a fixed-schedule software upgrade (hard fork) mechanism to implement
 
 
 ## Compiling Toklio from source
-
 ### Dependencies
 
 The following table summarizes the tools and libraries required to build. A
@@ -70,14 +69,14 @@ library archives (`.a`).
 | Dep          | Min. version  | Vendored | Debian/Ubuntu pkg  | Arch pkg     | Fedora            | Optional | Purpose        |
 | ------------ | ------------- | -------- | ------------------ | ------------ | ----------------- | -------- | -------------- |
 | GCC          | 4.7.3         | NO       | `build-essential`  | `base-devel` | `gcc`             | NO       |                |
-| CMake        | 3.0.0         | NO       | `cmake`            | `cmake`      | `cmake`           | NO       |                |
+| CMake        | 3.5           | NO       | `cmake`            | `cmake`      | `cmake`           | NO       |                |
 | pkg-config   | any           | NO       | `pkg-config`       | `base-devel` | `pkgconf`         | NO       |                |
 | Boost        | 1.58          | NO       | `libboost-all-dev` | `boost`      | `boost-devel`     | NO       | C++ libraries  |
 | OpenSSL      | basically any | NO       | `libssl-dev`       | `openssl`    | `openssl-devel`   | NO       | sha256 sum     |
 | libzmq       | 3.0.0         | NO       | `libzmq3-dev`      | `zeromq`     | `cppzmq-devel`    | NO       | ZeroMQ library |
+| OpenPGM      | ?             | NO       | `libpgm-dev`       | `libpgm`     | `openpgm-devel`   | NO       | For ZeroMQ     |
 | libunbound   | 1.4.16        | YES      | `libunbound-dev`   | `unbound`    | `unbound-devel`   | NO       | DNS resolver   |
-| libsodium    | ?             | NO       | `libsodium-dev`    | ?            | `libsodium-devel` | NO       | libsodium      |
-| libminiupnpc | 2.0           | YES      | `libminiupnpc-dev` | `miniupnpc`  | `miniupnpc-devel` | YES      | NAT punching   |
+| libsodium    | ?             | NO       | `libsodium-dev`    | `libsodium`  | `libsodium-devel` | NO       | cryptography   |
 | libunwind    | any           | NO       | `libunwind8-dev`   | `libunwind`  | `libunwind-devel` | YES      | Stack traces   |
 | liblzma      | any           | NO       | `liblzma-dev`      | `xz`         | `xz-devel`        | YES      | For libunwind  |
 | libreadline  | 6.3.0         | NO       | `libreadline6-dev` | `readline`   | `readline-devel`  | YES      | Input editing  |
@@ -93,13 +92,13 @@ library archives (`.a`).
 build the library binary manually. This can be done with the following command ```sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake . && sudo make && sudo mv libg* /usr/lib/ ```
 
 Debian / Ubuntu one liner for all dependencies  
-``` sudo apt update && sudo apt install build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libminiupnpc-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpcsclite-dev ```
+``` sudo apt update && sudo apt install build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpcsclite-dev libpgm-dev```
 
 ### Cloning the repository
 
 Clone recursively to pull-in needed submodule(s):
 
-`$ git clone --recursive https://github.com/Toklio/Toklio`
+`$ git clone --recursive https://github.com/Toklio-project/Toklio`
 
 If you already have a repo cloned, initialize and update:
 
@@ -116,6 +115,7 @@ invokes cmake commands as needed.
 * Change to the root of the source code directory, change to the most recent release branch, and build:
 
         cd Toklio
+        git checkout v0.13.0.0
         make
 
     *Optional*: If your machine has several cores and enough memory, enable
@@ -127,7 +127,7 @@ invokes cmake commands as needed.
     https://github.com/zeromq/cppzmq to `/usr/local/include` should fix that error.
     
     *Note*: The instructions above will compile the most stable release of the
-    Monero software. If you would like to use and test the most recent software,
+    Toklio software. If you would like to use and test the most recent software,
     use ```git checkout master```. The master branch may contain updates that are
     both unstable and incompatible with release software, though testing is always 
     encouraged. 
@@ -175,9 +175,9 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 ```
 * Clone Toklio and checkout most recent release version:
 ```
-        git clone https://github.com/Toklio/Toklio.git
+        git clone https://github.com/Toklio-project/Toklio.git
 	cd Toklio
-
+	git checkout tags/v0.13.0.0
 ```
 * Build:
 ```
@@ -219,7 +219,7 @@ If you are using the older Raspbian Jessie image, compiling Toklio is a bit more
 ```
 * Wait ~8 hours
 ```
-	sudo ./bjam install
+	sudo ./bjam cxxflags=-fPIC cflags=-fPIC -a install
 ```
 * Wait ~4 hours
 
@@ -228,14 +228,14 @@ If you are using the older Raspbian Jessie image, compiling Toklio is a bit more
 #### On Windows:
 
 Binaries for Windows are built on Windows using the MinGW toolchain within
-[MSYS2 environment](http://msys2.github.io). The MSYS2 environment emulates a
+[MSYS2 environment](https://www.msys2.org). The MSYS2 environment emulates a
 POSIX system. The toolchain runs within the environment and *cross-compiles*
 binaries that can run outside of the environment as a regular Windows
 application.
 
 **Preparing the build environment**
 
-* Download and install the [MSYS2 installer](http://msys2.github.io), either the 64-bit or the 32-bit package, depending on your system.
+* Download and install the [MSYS2 installer](https://www.msys2.org), either the 64-bit or the 32-bit package, depending on your system.
 * Open the MSYS shell via the `MSYS2 Shell` shortcut
 * Update packages using pacman:  
 
@@ -266,17 +266,17 @@ application.
 
 * To git clone, run:
 
-        git clone --recursive https://github.com/monero-project/monero.git
+        git clone --recursive https://github.com/Toklio-project/Toklio.git
 
 **Building**
 
 * Change to the cloned directory, run:
 	
-        cd monero
+        cd Toklio
 
-* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.12.1.0'. If you dont care about the version and just want binaries from master, skip this step:
+* If you would like a specific [version/tag](https://github.com/Toklio-project/Toklio/tags), do a git checkout for that version. eg. 'v0.13.0.0'. If you dont care about the version and just want binaries from master, skip this step:
 	
-        git checkout v0.12.1.0
+        git checkout v0.13.0.0
 
 * If you are on a 64-bit system, run:
 
@@ -310,7 +310,7 @@ We expect to add Toklio into the ports tree in the near future, which will aid i
 
 This has been tested on OpenBSD 5.8.
 
-You will need to add a few packages to your system. `pkg_add db cmake gcc gcc-libs g++ miniupnpc gtest`.
+You will need to add a few packages to your system. `pkg_add db cmake gcc gcc-libs g++ gtest`.
 
 The doxygen and graphviz packages are optional and require the xbase set.
 
@@ -323,7 +323,7 @@ To build: `env CC=egcc CXX=eg++ CPP=ecpp DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/pat
 
 #### OpenBSD >= 6.2
 
-You will need to add a few packages to your system. `pkg_add cmake miniupnpc zeromq libiconv`.
+You will need to add a few packages to your system. `pkg_add cmake zeromq libiconv`.
 
 The doxygen and graphviz packages are optional and require the xbase set.
 
@@ -407,13 +407,24 @@ Then you can run make as usual.
 
 ### On Linux for Android (using docker):
 
-        # Build image (select android64.Dockerfile for aarch64)
-        cd utils/build_scripts/ && docker build -f android32.Dockerfile -t Toklio-android .
+        # Build image
+        docker build -f utils/build_scripts/android32.Dockerfile -t monero-android .
         # Create container
-        docker create -it --name Toklio-android Toklio-android bash
+        docker create -it --name monero-android monero-android bash
         # Get binaries
-        docker cp Toklio-android:/opt/android/Toklio/build/release/bin .
+        docker cp monero-android:/opt/android/Toklio/build/release/bin .
 
+### Building portable statically linked binaries (Cross Compiling)
+
+By default, in either dynamically or statically linked builds, binaries target the specific host processor on which the build happens and are not portable to other processors. Portable binaries can be built using the following targets:
+
+* ```make release-static-linux-x86_64``` builds binaries on Linux on x86_64 portable across POSIX systems on x86_64 processors
+* ```make release-static-linux-i686``` builds binaries on Linux on x86_64 or i686 portable across POSIX systems on i686 processors
+* ```make release-static-linux-armv8``` builds binaries on Linux portable across POSIX systems on armv8 processors
+* ```make release-static-linux-armv7``` builds binaries on Linux portable across POSIX systems on armv7 processors
+* ```make release-static-linux-armv6``` builds binaries on Linux portable across POSIX systems on armv6 processors
+* ```make release-static-win64``` builds binaries on 64-bit Windows portable across 64-bit Windows systems
+* ```make release-static-win32``` builds binaries on 64-bit or 32-bit Windows portable across 32-bit Windows systems
 ### Building portable statically linked binaries
 
 By default, in either dynamically or statically linked builds, binaries target the specific host processor on which the build happens and are not portable to other processors. Portable binaries can be built using the following targets:
@@ -447,7 +458,7 @@ To run in background:
 To run as a systemd service, copy
 [tokliod.service](utils/systemd/tokliod.service) to `/etc/systemd/system/` and
 [tokliod.conf](utils/conf/tokliod.conf) to `/etc/`. The [example
-service](utils/systemd/tokliod.service) assumes that the user `Toklio` exists
+service](utils/systemd/tokliod.service) assumes that the user `toklio` exists
 and its home is the data directory specified in the [example
 config](utils/conf/tokliod.conf).
 
@@ -479,6 +490,8 @@ setting the following configuration parameters and environment variables:
    as well.
 * Do NOT pass `--detach` when running through torsocks with systemd, (see
   [utils/systemd/tokliod.service](utils/systemd/tokliod.service) for details).
+* If you use the wallet with a Tor daemon via the loopback IP (eg, 127.0.0.1:9050),
+  then use `--untrusted-daemon` unless it is your own hidden service.
 
 Example command line to start tokliod through Tor:
 

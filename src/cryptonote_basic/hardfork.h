@@ -262,4 +262,3 @@ namespace cryptonote
   };
 
 }  // namespace cryptonote
-
