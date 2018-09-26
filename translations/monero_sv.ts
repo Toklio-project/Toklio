@@ -1703,7 +1703,7 @@ Om argumentet &quot;tag_description&quot; anges, så tilldelas taggen &lt;taggna
  confirm-missing-payment-id &lt;1|0>
  ask-password &lt;1|0>
  unit &lt;monero|millinero|micronero|nanonero|piconero>
-   Set the default Toklio (sub-)unit.
+   Set the default monero (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
@@ -1738,7 +1738,7 @@ Om argumentet &quot;tag_description&quot; anges, så tilldelas taggen &lt;taggna
  confirm-missing-payment-id &lt;1|0>
  ask-password &lt;1|0>
  unit &lt;monero|millinero|micronero|nanonero|piconero>
-   Ange standardvärde för Toklioenhet.
+   Ange standardvärde för moneroenhet.
  min-outputs-count [n]
    Försök att behålla åtminstone så många utgångar med åtminstone värdet min-outputs-value.
  min-outputs-value [n]

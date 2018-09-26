@@ -1586,7 +1586,7 @@ If the &quot;tag_description&quot; argument is specified, the tag &lt;tag_name&g
  confirm-missing-payment-id &lt;1|0&gt;
  ask-password &lt;1|0&gt;
  unit &lt;monero|millinero|micronero|nanonero|piconero&gt;
-   Set the default Toklio (sub-)unit.
+   Set the default monero (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
