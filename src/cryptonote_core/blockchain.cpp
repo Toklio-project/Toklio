@@ -92,26 +92,26 @@ static const struct {
   // version 1 from the start of the blockchain
   { 1, 1, 0, 1524824336 },
 
-  // version 2 starts from block 20, which is on or around the 20th of March, 2016. Fork time finalised on 2015-09-20. No fork voting occurs for the v2 fork.
+  // version 2 starts from block 1009827, which is on or around the 20th of March, 2016. Fork time finalised on 2015-09-20. No fork voting occurs for the v2 fork.
   { 2, 20, 0, 1524825021 },
 
-  // version 3 starts from block 40, which is on or around the 24th of September, 2016. Fork time finalised on 2016-03-21.
+  // version 3 starts from block 1141317, which is on or around the 24th of September, 2016. Fork time finalised on 2016-03-21.
   { 3, 40, 0, 1524827823 },
   
-  // version 4 starts from block 60, which is on or around the 5th of January, 2017. Fork time finalised on 2016-09-18.
+  // version 4 starts from block 1220516, which is on or around the 5th of January, 2017. Fork time finalised on 2016-09-18.
   { 4, 60, 0, 1524829628 },
   
-  // version 5 starts from block 80, which is on or around the 15th of April, 2017. Fork time finalised on 2017-03-14.
+  // version 5 starts from block 1288616, which is on or around the 15th of April, 2017. Fork time finalised on 2017-03-14.
   { 5, 80, 0, 1524834991 },  
 
-  // version 6 starts from block 100, which is on or around the 16th of September, 2017. Fork time finalised on 2017-08-18.
+  // version 6 starts from block 1400000, which is on or around the 16th of September, 2017. Fork time finalised on 2017-08-18.
   { 6, 100, 0, 1524836386 },
 
-  // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
+  // version 7 starts from block 1546000, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
   { 7, 120, 0, 1524838215 },
   // version 8 starts from block 1685555, which is on or around the 18th of October, 2018. Fork time finalised on 2018-09-02.
   { 8, 128000, 0, 1535889547 },
-   // version 9 starts from block 1686275, which is on or around the 19th of October, 2018. Fork time finalised on 2018-09-02.
+  // version 9 starts from block 1686275, which is on or around the 19th of October, 2018. Fork time finalised on 2018-09-02.
   { 9, 128720, 0, 1535889548 },
 };
 static const uint64_t mainnet_hard_fork_version_1_till = 19;
@@ -125,25 +125,17 @@ static const struct {
   // version 1 from the start of the blockchain
   { 1, 1, 0, 1341378000 },
 
-  // version 2 starts from block 20, which is on or around the 20th of March, 2016. Fork time finalised on 2015-09-20. No fork voting occurs for the v2 fork.
+  // version 2 starts from block 624634, which is on or around the 23rd of November, 2015. Fork time finalised on 2015-11-20. No fork voting occurs for the v2 fork.
   { 2, 20, 0, 1442763710 },
 
-  // version 3 starts from block 40, which is on or around the 24th of September, 2016. Fork time finalised on 2016-03-21.
+  // versions 3-5 were passed in rapid succession from September 18th, 2016
   { 3, 40, 0, 1458558528 },
-  
-  // version 4 starts from block 60, which is on or around the 5th of January, 2017. Fork time finalised on 2016-09-18.
   { 4, 60, 0, 1483574400 },
-  
-  // version 5 starts from block 80, which is on or around the 15th of April, 2017. Fork time finalised on 2017-03-14.
   { 5, 80, 0, 1489520158 },  
-
-  // version 6 starts from block 100, which is on or around the 16th of September, 2017. Fork time finalised on 2017-08-18.
   { 6, 100, 0, 1503046577 },
-
-  // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
   { 7, 120, 0, 1521303150 },
-  { 8, 170, 0, 1515967498 },
-  { 9, 200, 0, 1515967498 },
+  { 8, 190, 0, 1515967498 },
+  { 9, 210, 0, 1515967498 },
 };
 static const uint64_t testnet_hard_fork_version_1_till = 19;
 
@@ -156,25 +148,15 @@ static const struct {
   // version 1 from the start of the blockchain
   { 1, 1, 0, 1341378000 },
 
-  // version 2 starts from block 20, which is on or around the 20th of March, 2016. Fork time finalised on 2015-09-20. No fork voting occurs for the v2 fork.
+  // versions 2-7 in rapid succession from March 13th, 2018
   { 2, 20, 0, 1442763710 },
-
-  // version 3 starts from block 40, which is on or around the 24th of September, 2016. Fork time finalised on 2016-03-21.
   { 3, 40, 0, 1458558528 },
-  
-  // version 4 starts from block 60, which is on or around the 5th of January, 2017. Fork time finalised on 2016-09-18.
   { 4, 60, 0, 1483574400 },
-  
-  // version 5 starts from block 80, which is on or around the 15th of April, 2017. Fork time finalised on 2017-03-14.
   { 5, 80, 0, 1489520158 },  
-
-  // version 6 starts from block 100, which is on or around the 16th of September, 2017. Fork time finalised on 2017-08-18.
   { 6, 100, 0, 1503046577 },
-
-  // version 7 starts from block 120, which is on or around the 6th of April, 2018. Fork time finalised on 2018-03-17.
   { 7, 120, 0, 1521303150 },
-  { 8, 170, 0, 1515967498 },
-  { 9, 200, 0, 1515967498 },
+  { 8, 190, 0, 1515967498 },
+  { 9, 210, 0, 1515967498 },
 };
 
 //------------------------------------------------------------------
@@ -657,6 +639,7 @@ block Blockchain::pop_block_from_blockchain()
 
   update_next_cumulative_weight_limit();
   m_tx_pool.on_blockchain_dec(m_db->height()-1, get_tail_id());
+  invalidate_block_template_cache();
 
   return popped_block;
 }
@@ -1284,6 +1267,7 @@ bool Blockchain::create_block_template(block& b, const account_public_address& m
   {
     return false;
   }
+  pool_cookie = m_tx_pool.cookie();
 #if defined(DEBUG_CREATE_BLOCK_TEMPLATE)
   size_t real_txs_weight = 0;
   uint64_t real_fee = 0;
@@ -1301,7 +1285,7 @@ bool Blockchain::create_block_template(block& b, const account_public_address& m
     real_fee += cur_tx.fee;
     if (cur_tx.weight != get_transaction_weight(cur_tx.tx))
     {
-      LOG_ERROR("Creating block template: error: invalid transaction size");
+      LOG_ERROR("Creating block template: error: invalid transaction weight");
     }
     if (cur_tx.tx.version == 1)
     {
@@ -1323,7 +1307,7 @@ bool Blockchain::create_block_template(block& b, const account_public_address& m
       }
     }
   }
-  if (txs_size != real_txs_size)
+  if (txs_weight != real_txs_weight)
   {
     LOG_ERROR("Creating block template: error: wrongly calculated transaction weight");
   }
@@ -1340,10 +1324,10 @@ bool Blockchain::create_block_template(block& b, const account_public_address& m
 #endif
 
   /*
-   two-phase miner transaction generation: we don't know exact block size until we prepare block, but we don't know reward until we know
-   block size, so first miner transaction generated with fake amount of money, and with phase we know think we know expected block size
+   two-phase miner transaction generation: we don't know exact block weight until we prepare block, but we don't know reward until we know
+   block weight, so first miner transaction generated with fake amount of money, and with phase we know think we know expected block weight
    */
-  //make blocks coin-base tx looks close to real coinbase tx to get truthful blob size
+  //make blocks coin-base tx looks close to real coinbase tx to get truthful blob weight
   uint8_t hf_version = m_hardfork->get_current_version();
   size_t max_outs = hf_version >= 4 ? 1 : 11;
   bool r = construct_miner_tx(height, median_weight, already_generated_coins, txs_weight, fee, miner_address, b.miner_tx, ex_nonce, max_outs, hf_version);
@@ -1363,7 +1347,7 @@ bool Blockchain::create_block_template(block& b, const account_public_address& m
     {
       cumulative_weight = txs_weight + coinbase_weight;
 #if defined(DEBUG_CREATE_BLOCK_TEMPLATE)
-    MDEBUG("Creating block template: miner tx weight " << coinbase_weight <<
+      MDEBUG("Creating block template: miner tx weight " << coinbase_weight <<
           ", cumulative weight " << cumulative_weight << " is greater than before");
 #endif
       continue;
@@ -1398,6 +1382,8 @@ bool Blockchain::create_block_template(block& b, const account_public_address& m
     MDEBUG("Creating block template: miner tx weight " << coinbase_weight <<
         ", cumulative weight " << cumulative_weight << " is now good");
 #endif
+
+    cache_block_template(b, miner_address, ex_nonce, diffic, expected_reward, pool_cookie);
     return true;
   }
   LOG_ERROR("Failed to create_block_template with " << 10 << " tries");
@@ -1736,7 +1722,6 @@ size_t Blockchain::get_alternative_blocks_count() const
 //------------------------------------------------------------------
 // This function adds the output specified by <amount, i> to the result_outs container
 // unlocked and other such checks should be done by here.
-
 uint64_t Blockchain::get_num_mature_outputs(uint64_t amount) const
 {
   uint64_t num_outs = m_db->get_num_outputs(amount);
@@ -2506,7 +2491,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
     const size_t min_mixin = hf_version >= HF_VERSION_MIN_MIXIN_10 ? 10 : hf_version >= HF_VERSION_MIN_MIXIN_6 ? 6 : hf_version >= HF_VERSION_MIN_MIXIN_4 ? 4 : 2;
     for (const auto& txin : tx.vin)
     {
-      // non txin_to_key inputs will be rejected belownon txin_to_key inputs will be rejected below
+      // non txin_to_key inputs will be rejected below
       if (txin.type() == typeid(txin_to_key))
       {
         const txin_to_key& in_to_key = boost::get<txin_to_key>(txin);
@@ -2531,7 +2516,7 @@ bool Blockchain::check_tx_inputs(transaction& tx, tx_verification_context &tvc, 
           mixin = in_to_key.key_offsets.size() - 1;
       }
     }
-    
+
     if (hf_version >= HF_VERSION_MIN_MIXIN_10 && mixin != 10)
     {
       MERROR_VER("Tx " << get_transaction_hash(tx) << " has invalid ring size (" << (mixin + 1) << "), it should be 11");
@@ -2908,7 +2893,8 @@ uint64_t Blockchain::get_dynamic_base_fee(uint64_t block_reward, size_t median_b
   if (median_block_weight < min_block_weight)
     median_block_weight = min_block_weight;
   uint64_t hi, lo;
-   if (version >= HF_VERSION_PER_BYTE_FEE)
+
+  if (version >= HF_VERSION_PER_BYTE_FEE)
   {
     lo = mul128(block_reward, DYNAMIC_FEE_REFERENCE_TRANSACTION_WEIGHT, &hi);
     div128_32(hi, lo, min_block_weight, &hi, &lo);
@@ -2919,7 +2905,6 @@ uint64_t Blockchain::get_dynamic_base_fee(uint64_t block_reward, size_t median_b
   }
 
   const uint64_t fee_base = version >= 5 ? DYNAMIC_FEE_PER_KB_BASE_FEE_V5 : DYNAMIC_FEE_PER_KB_BASE_FEE;
-
 
   uint64_t unscaled_fee_base = (fee_base * min_block_weight / median_block_weight);
   lo = mul128(unscaled_fee_base, block_reward, &hi);
@@ -2977,7 +2962,8 @@ bool Blockchain::check_fee(size_t tx_weight, uint64_t fee) const
       fee_per_kb = get_dynamic_base_fee(base_reward, median, version);
     }
     MDEBUG("Using " << print_money(fee_per_kb) << "/kB fee");
-     needed_fee = tx_weight / 1024;
+
+    needed_fee = tx_weight / 1024;
     needed_fee += (tx_weight % 1024) ? 1 : 0;
     needed_fee *= fee_per_kb;
   }
@@ -4086,7 +4072,7 @@ bool Blockchain::prepare_handle_incoming_blocks(const std::vector<block_complete
         } while(0); \
 
   // generate sorted tables for all amounts and absolute offsets
-   size_t tx_index = 0;
+  size_t tx_index = 0;
   for (const auto &entry : blocks_entry)
   {
     if (m_cancel)
@@ -4102,8 +4088,7 @@ bool Blockchain::prepare_handle_incoming_blocks(const std::vector<block_complete
 
       if (!parse_and_validate_tx_base_from_blob(tx_blob, tx))
         SCAN_TABLE_QUIT("Could not parse tx from incoming blocks.");
-        cryptonote::get_transaction_prefix_hash(tx, tx_prefix_hash);
-
+      cryptonote::get_transaction_prefix_hash(tx, tx_prefix_hash);
 
       auto its = m_scan_table.find(tx_prefix_hash);
       if (its != m_scan_table.end())
@@ -4191,8 +4176,6 @@ bool Blockchain::prepare_handle_incoming_blocks(const std::vector<block_complete
 
   // now generate a table for each tx_prefix and k_image hashes
   tx_index = 0;
-
-  // now generate a table for each tx_prefix and k_image hashes
   for (const auto &entry : blocks_entry)
   {
     if (m_cancel)
@@ -4209,7 +4192,7 @@ bool Blockchain::prepare_handle_incoming_blocks(const std::vector<block_complete
       auto its = m_scan_table.find(tx_prefix_hash);
       if (its == m_scan_table.end())
         SCAN_TABLE_QUIT("Tx not found on scan table from incoming blocks.");
- 
+
       for (const auto &txin : tx.vin)
       {
         const txin_to_key &in_to_key = boost::get < txin_to_key > (txin);
@@ -4303,7 +4286,7 @@ void Blockchain::set_user_options(uint64_t maxthreads, bool sync_on_blocks, uint
   }
   m_db_sync_mode = sync_mode;
   m_fast_sync = fast_sync;
-  m_db_sync_on_blocks = sync_on_blocks; 
+  m_db_sync_on_blocks = sync_on_blocks;
   m_db_sync_threshold = sync_threshold;
   m_max_prepare_blocks_threads = maxthreads;
 }
@@ -4324,6 +4307,7 @@ HardFork::State Blockchain::get_hard_fork_state() const
 {
   return m_hardfork->get_state();
 }
+
 const std::vector<HardFork::Params>& Blockchain::get_hard_fork_heights(network_type nettype)
 {
   static const std::vector<HardFork::Params> mainnet_heights = []()
@@ -4411,7 +4395,7 @@ void Blockchain::cancel()
 }
 
 #if defined(PER_BLOCK_CHECKPOINT)
-static const char expected_block_hashes_hash[] = "0924bc1c47aae448321fde949554be192878dd800e6489379865218f84eacbca";
+static const char expected_block_hashes_hash[] = "954cb2bbfa2fe6f74b2cdd22a1a4c767aea249ad47ad4f7c9445f0f03260f511";
 void Blockchain::load_compiled_in_block_hashes()
 {
   const bool testnet = m_nettype == TESTNET;
@@ -4542,7 +4526,8 @@ void Blockchain::invalidate_block_template_cache()
   MDEBUG("Invalidating block template cache");
   m_btc_valid = false;
 }
- void Blockchain::cache_block_template(const block &b, const cryptonote::account_public_address &address, const blobdata &nonce, const difficulty_type &diff, uint64_t expected_reward, uint64_t pool_cookie)
+
+void Blockchain::cache_block_template(const block &b, const cryptonote::account_public_address &address, const blobdata &nonce, const difficulty_type &diff, uint64_t expected_reward, uint64_t pool_cookie)
 {
   MDEBUG("Setting block template cache");
   m_btc = b;
@@ -4553,7 +4538,6 @@ void Blockchain::invalidate_block_template_cache()
   m_btc_pool_cookie = pool_cookie;
   m_btc_valid = true;
 }
-
 
 namespace cryptonote {
 template bool Blockchain::get_transactions(const std::vector<crypto::hash>&, std::vector<transaction>&, std::vector<crypto::hash>&) const;
