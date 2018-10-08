@@ -330,10 +330,14 @@ namespace
     std::stringstream prompt;
     prompt << sw::tr("For URL: ") << url
            << ", " << dnssec_str << std::endl
-           << sw::tr(" Monero Address = ") << addresses[0]
+           << sw::tr(" Toklio Address = ") << addresses[0]
            << std::endl
            << sw::tr("Is this OK? (Y/n) ")
+    ;
+    // prompt the user for confirmation given the dns query and dnssec status
+    std::string confirm_dns_ok = input_line(prompt.str());
     if (std::cin.eof())
+    {
       return {};
     }
     if (!command_line::is_yes(confirm_dns_ok))
@@ -4170,6 +4174,7 @@ void simple_wallet::on_money_received(uint64_t height, const crypto::hash &txid,
     if (find_tx_extra_field_by_type(tx_extra_fields, extra_nonce))
     {
       crypto::hash8 payment_id8 = crypto::null_hash8;
+      crypto::hash payment_id = crypto::null_hash;
       if (get_encrypted_payment_id_from_tx_extra_nonce(extra_nonce.nonce, payment_id8))
         message_writer() <<
           tr("NOTE: this transaction uses an encrypted payment ID: consider using subaddresses instead");
@@ -4177,6 +4182,7 @@ void simple_wallet::on_money_received(uint64_t height, const crypto::hash &txid,
         message_writer(console_color_red, false) <<
           tr("WARNING: this transaction uses an unencrypted payment ID: consider using subaddresses instead");
    }
+  }
   if (m_auto_refresh_refreshing)
     m_cmd_binder.print_prompt();
   else
@@ -4864,7 +4870,7 @@ bool simple_wallet::transfer_main(int transfer_type, const std::vector<std::stri
     }
     else
     {
-      if (boost::starts_with(local_args[i], "monero:"))
+      if (boost::starts_with(local_args[i], "Toklio:"))
         fail_msg_writer() << tr("Invalid last argument: ") << local_args.back() << ": " << error;
       else
         fail_msg_writer() << tr("Invalid last argument: ") << local_args.back();
@@ -8180,6 +8186,5 @@ int main(int argc, char* argv[])
     w.deinit();
   }
   return 0;
-  //CATCH_ENTRY_L0("main", 1);
-}
   CATCH_ENTRY_L0("main", 1);
+}
