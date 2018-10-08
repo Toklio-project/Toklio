@@ -408,11 +408,11 @@ Then you can run make as usual.
 ### On Linux for Android (using docker):
 
         # Build image
-        docker build -f utils/build_scripts/android32.Dockerfile -t monero-android .
+        docker build -f utils/build_scripts/android32.Dockerfile -t toklio-android .
         # Create container
-        docker create -it --name monero-android monero-android bash
+        docker create -it --name toklio-android toklio-android bash
         # Get binaries
-        docker cp monero-android:/opt/android/Toklio/build/release/bin .
+        docker cp toklio-android:/opt/android/Toklio/build/release/bin .
 
 ### Building portable statically linked binaries (Cross Compiling)
 
@@ -557,11 +557,11 @@ There are two tools available:
 
 * ASAN
 
-Configure Monero with the -D SANITIZE=ON cmake flag, eg:
+Configure Toklio with the -D SANITIZE=ON cmake flag, eg:
 
     cd build/debug && cmake -D SANITIZE=ON -D CMAKE_BUILD_TYPE=Debug ../..
 
-You can then run the monero tools normally. Performance will typically halve.
+You can then run the toklio tools normally. Performance will typically halve.
 
 * valgrind
 
