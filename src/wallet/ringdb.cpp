@@ -475,11 +475,6 @@ bool ringdb::blackballed(const std::pair<uint64_t, uint64_t> &output)
   return blackball_worker(outputs, BLACKBALL_QUERY);
 }
 
-bool ringdb::blackballed(const std::pair<uint64_t, uint64_t> &output)
-{
-  return blackball_worker(std::vector<std::pair<uint64_t, uint64_t>>(), BLACKBALL_CLEAR);
-}
-
 bool ringdb::clear_blackballs()
 {
   return blackball_worker(std::vector<std::pair<uint64_t, uint64_t>>(), BLACKBALL_CLEAR);
