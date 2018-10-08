@@ -1770,3 +1770,4 @@ skip:
     m_core.stop();
   }
 } // namespace
+

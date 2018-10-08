@@ -96,6 +96,9 @@ namespace {
             throw runtime_error("Multisig wallet is not finalized yet");
         }
     }
+    void checkMultisigWalletReady(const std::unique_ptr<tools::wallet2> &wallet) {
+        return checkMultisigWalletReady(wallet.get());
+    }
 
     void checkMultisigWalletNotReady(const tools::wallet2* wallet) {
         if (!wallet) {
@@ -110,6 +113,9 @@ namespace {
         if (ready) {
             throw runtime_error("Multisig wallet is already finalized");
         }
+    }
+    void checkMultisigWalletNotReady(const std::unique_ptr<tools::wallet2> &wallet) {
+        return checkMultisigWalletNotReady(wallet.get());
     }
 }
 
@@ -376,15 +382,15 @@ WalletImpl::WalletImpl(NetworkType nettype, uint64_t kdf_rounds)
     , m_rebuildWalletCache(false)
     , m_is_connected(false)
 {
-    m_wallet = new tools::wallet2(static_cast<cryptonote::network_type>(nettype), kdf_rounds, true);
-    m_history = new TransactionHistoryImpl(this);
-    m_wallet2Callback = new Wallet2CallbackImpl(this);
-    m_wallet->callback(m_wallet2Callback);
+    m_wallet.reset(new tools::wallet2(static_cast<cryptonote::network_type>(nettype), kdf_rounds, true));
+    m_history.reset(new TransactionHistoryImpl(this));
+    m_wallet2Callback.reset(new Wallet2CallbackImpl(this));
+    m_wallet->callback(m_wallet2Callback.get());
     m_refreshThreadDone = false;
     m_refreshEnabled = false;
-    m_addressBook = new AddressBookImpl(this);
-    m_subaddress = new SubaddressImpl(this);
-    m_subaddressAccount = new SubaddressAccountImpl(this);
+    m_addressBook.reset(new AddressBookImpl(this));
+    m_subaddress.reset(new SubaddressImpl(this));
+    m_subaddressAccount.reset(new SubaddressAccountImpl(this));
 
 
     m_refreshIntervalMillis = DEFAULT_REFRESH_INTERVAL_MILLIS;
@@ -399,18 +405,13 @@ WalletImpl::~WalletImpl()
 {
 
     LOG_PRINT_L1(__FUNCTION__);
+    m_wallet->callback(NULL);
     // Pause refresh thread - prevents refresh from starting again
     pauseRefresh();
     // Close wallet - stores cache and stops ongoing refresh operation 
     close(false); // do not store wallet as part of the closing activities
     // Stop refresh thread
     stopRefresh();
-    delete m_wallet2Callback;
-    delete m_history;
-    delete m_addressBook;
-    delete m_subaddress;
-    delete m_subaddressAccount;
-    delete m_wallet;
     LOG_PRINT_L1(__FUNCTION__ << " finished");
 }
 
@@ -609,7 +610,7 @@ bool WalletImpl::recoverFromKeysWithPassword(const std::string &path,
             LOG_PRINT_L1("Generated new view only wallet from keys");
         }
         if(has_spendkey && !has_viewkey) {
-           m_wallet->generate(path, password, spendkey, true, false, false);
+           m_wallet->generate(path, password, spendkey, true, false);
            setSeedLanguage(language);
            LOG_PRINT_L1("Generated deterministic wallet from spend key with seed language: " + language);
         }
@@ -1187,6 +1188,20 @@ string WalletImpl::makeMultisig(const vector<string>& info, uint32_t threshold) 
     return string();
 }
 
+std::string WalletImpl::exchangeMultisigKeys(const std::vector<std::string> &info) {
+    try {
+        clearStatus();
+        checkMultisigWalletNotReady(m_wallet);
+
+        return m_wallet->exchange_multisig_keys(epee::wipeable_string(m_password), info);
+    } catch (const exception& e) {
+        LOG_ERROR("Error on exchanging multisig keys: ") << e.what();
+        setStatusError(string(tr("Failed to make multisig: ")) + e.what());
+    }
+
+    return string();
+}
+
 bool WalletImpl::finalizeMultisig(const vector<string>& extraMultisigInfo) {
     try {
         clearStatus();
@@ -1385,7 +1400,7 @@ PendingTransaction *WalletImpl::createTransaction(const string &dst_addr, const 
                     for (uint32_t index = 0; index < m_wallet->get_num_subaddresses(subaddr_account); ++index)
                         subaddr_indices.insert(index);
                 }
-                transaction->m_pending_tx = m_wallet->create_transactions_all(0, info.address, info.is_subaddress, fake_outs_count, 0 /* unlock_time */,
+                transaction->m_pending_tx = m_wallet->create_transactions_all(0, info.address, info.is_subaddress, 1, fake_outs_count, 0 /* unlock_time */,
                                                                           adjusted_priority,
                                                                           extra, subaddr_account, subaddr_indices);
             }
@@ -1551,22 +1566,22 @@ void WalletImpl::disposeTransaction(PendingTransaction *t)
 
 TransactionHistory *WalletImpl::history()
 {
-    return m_history;
+    return m_history.get();
 }
 
 AddressBook *WalletImpl::addressBook()
 {
-    return m_addressBook;
+    return m_addressBook.get();
 }
 
 Subaddress *WalletImpl::subaddress()
 {
-    return m_subaddress;
+    return m_subaddress.get();
 }
 
 SubaddressAccount *WalletImpl::subaddressAccount()
 {
-    return m_subaddressAccount;
+    return m_subaddressAccount.get();
 }
 
 void WalletImpl::setListener(WalletListener *l)
@@ -2147,6 +2162,28 @@ bool WalletImpl::blackballOutputs(const std::vector<std::string> &outputs, bool 
     if (!ret)
     {
         setStatusError(tr("Failed to set blackballed outputs"));
+        return false;
+    }
+    return true;
+}
+
+bool WalletImpl::blackballOutput(const std::string &amount, const std::string &offset)
+{
+    uint64_t raw_amount, raw_offset;
+    if (!epee::string_tools::get_xtype_from_string(raw_amount, amount))
+    {
+        setStatusError(tr("Failed to parse output amount"));
+        return false;
+    }
+    if (!epee::string_tools::get_xtype_from_string(raw_offset, offset))
+    {
+        setStatusError(tr("Failed to parse output offset"));
+        return false;
+    }
+    bool ret = m_wallet->blackball_output(std::make_pair(raw_amount, raw_offset));
+    if (!ret)
+    {
+        setStatusError(tr("Failed to blackball output"));
         return false;
     }
     return true;

@@ -246,7 +246,7 @@ int main(int argc, char const * argv[])
         if (has_rpc_arg || use_rpc_env)
         {
           login = tools::login::parse(
-          has_rpc_arg ? command_line::get_arg(vm, arg.rpc_login) : std::string(env_rpc_login), false, [](bool verify) {
+            has_rpc_arg ? command_line::get_arg(vm, arg.rpc_login) : std::string(env_rpc_login), false, [](bool verify) {
 #ifdef HAVE_READLINE
         rdln::suspend_readline pause_readline;
 #endif

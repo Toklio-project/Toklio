@@ -1028,15 +1028,13 @@ bool bulletproof_VERIFY(const std::vector<const Bulletproof*> &proofs)
     CHECK_AND_ASSERT_MES(proof.L.size() == proof.R.size(), false, "Mismatched L and R sizes");
     CHECK_AND_ASSERT_MES(proof.L.size() > 0, false, "Empty proof");
 
-    max_length = std::max(max_length, proof.L.size());
-  }
-  CHECK_AND_ASSERT_MES(max_length < 32, false, "At least one proof is too large");
+
+    CHECK_AND_ASSERT_MES(proof.V.size() >= 1, false, "V does not have at least one element");
   size_t maxMN = 1u << max_length;
 
   const size_t logN = 6;
   const size_t N = 1 << logN;
   rct::key tmp;
-
   // setup weighted aggregates
   rct::key Z0 = rct::identity();
   rct::key z1 = rct::zero();
@@ -1262,6 +1260,8 @@ bool bulletproof_VERIFY(const Bulletproof &proof)
   std::vector<const Bulletproof*> proofs;
   proofs.push_back(&proof);
   return bulletproof_VERIFY(proofs);
+}
+
 }
 
 }

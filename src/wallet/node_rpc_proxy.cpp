@@ -218,4 +218,38 @@ boost::optional<std::string> NodeRPCProxy::get_fee_quantization_mask(uint64_t &f
   return boost::optional<std::string>();
 }
 
+boost::optional<std::string> NodeRPCProxy::get_fee_quantization_mask(uint64_t &fee_quantization_mask) const
+{
+  uint64_t height;
+
+  boost::optional<std::string> result = get_height(height);
+  if (result)
+    return result;
+
+  if (m_dynamic_base_fee_estimate_cached_height != height)
+  {
+    cryptonote::COMMAND_RPC_GET_BASE_FEE_ESTIMATE::request req_t = AUTO_VAL_INIT(req_t);
+    cryptonote::COMMAND_RPC_GET_BASE_FEE_ESTIMATE::response resp_t = AUTO_VAL_INIT(resp_t);
+
+    m_daemon_rpc_mutex.lock();
+    req_t.grace_blocks = m_dynamic_base_fee_estimate_grace_blocks;
+    bool r = net_utils::invoke_http_json_rpc("/json_rpc", "get_fee_estimate", req_t, resp_t, m_http_client, rpc_timeout);
+    m_daemon_rpc_mutex.unlock();
+    CHECK_AND_ASSERT_MES(r, std::string("Failed to connect to daemon"), "Failed to connect to daemon");
+    CHECK_AND_ASSERT_MES(resp_t.status != CORE_RPC_STATUS_BUSY, resp_t.status, "Failed to connect to daemon");
+    CHECK_AND_ASSERT_MES(resp_t.status == CORE_RPC_STATUS_OK, resp_t.status, "Failed to get fee estimate");
+    m_dynamic_base_fee_estimate = resp_t.fee;
+    m_dynamic_base_fee_estimate_cached_height = height;
+    m_fee_quantization_mask = resp_t.quantization_mask;
+  }
+
+  fee_quantization_mask = m_fee_quantization_mask;
+  if (fee_quantization_mask == 0)
+  {
+    MERROR("Fee quantization mask is 0, forcing to 1");
+    fee_quantization_mask = 1;
+  }
+  return boost::optional<std::string>();
+}
+
 }

@@ -401,7 +401,8 @@ static bool for_all_transactions(const std::string &filename, uint64_t &start_id
   }
 
   mdb_cursor_close(cur);
-  mdb_txn_commit(txn);
+  dbr = mdb_txn_commit(txn);
+  if (dbr) throw std::runtime_error("Failed to commit db transaction: " + std::string(mdb_strerror(dbr)));
   tx_active = false;
   mdb_dbi_close(env, dbi);
   mdb_env_close(env);
@@ -471,7 +472,8 @@ static uint64_t find_first_diverging_transaction(const std::string &first_filena
   for (int i = 0; i < 2; ++i)
   {
     mdb_cursor_close(cur[i]);
-    mdb_txn_commit(txn[i]);
+    dbr = mdb_txn_commit(txn[i]);
+    if (dbr) throw std::runtime_error("Failed to query transaction: " + std::string(mdb_strerror(dbr)));
     tx_active[i] = false;
     mdb_dbi_close(env[i], dbi[i]);
     mdb_env_close(env[i]);
@@ -534,12 +536,15 @@ static uint64_t get_num_spent_outputs()
   return count;
 }
 
-static void add_spent_output(MDB_cursor *cur, const output_data &od)
+static bool add_spent_output(MDB_cursor *cur, const output_data &od)
 {
   MDB_val k = {sizeof(od.amount), (void*)&od.amount};
   MDB_val v = {sizeof(od.offset), (void*)&od.offset};
-  int dbr = mdb_cursor_put(cur, &k, &v, 0);
-  CHECK_AND_ASSERT_THROW_MES(!dbr || dbr == MDB_KEYEXIST, "Failed to add spent output: " + std::string(mdb_strerror(dbr)));
+  int dbr = mdb_cursor_put(cur, &k, &v, MDB_NODUPDATA);
+  if (dbr == MDB_KEYEXIST)
+    return false;
+  CHECK_AND_ASSERT_THROW_MES(!dbr, "Failed to add spent output: " + std::string(mdb_strerror(dbr)));
+  return true;
 }
 
 static bool is_output_spent(MDB_cursor *cur, const output_data &od)
@@ -675,7 +680,7 @@ static uint64_t get_ring_subset_instances(MDB_txn *txn, uint64_t amount, const s
   uint64_t extra = 0;
   std::vector<uint64_t> subset;
   subset.reserve(ring.size());
-  for (uint64_t mask = 1; mask < (1u << ring.size()) - 1; ++mask)
+  for (uint64_t mask = 1; mask < (((uint64_t)1) << ring.size()) - 1; ++mask)
   {
     subset.resize(0);
     for (size_t i = 0; i < ring.size(); ++i)
@@ -798,7 +803,7 @@ static void open_db(const std::string &filename, MDB_env **env, MDB_txn **txn, M
   dbr = mdb_env_set_maxdbs(*env, 1);
   CHECK_AND_ASSERT_THROW_MES(!dbr, "Failed to set max env dbs: " + std::string(mdb_strerror(dbr)));
   const std::string actual_filename = filename;
-  MINFO("Opening Toklio blockchain at " << actual_filename);
+  MINFO("Opening monero blockchain at " << actual_filename);
   dbr = mdb_env_open(*env, actual_filename.c_str(), flags, 0664);
   CHECK_AND_ASSERT_THROW_MES(!dbr, "Failed to open rings database file '"
       + actual_filename + "': " + std::string(mdb_strerror(dbr)));
@@ -1024,7 +1029,7 @@ int main(int argc, char* argv[])
   const command_line::arg_descriptor<bool> arg_rct_only  = {"rct-only", "Only work on ringCT outputs", false};
   const command_line::arg_descriptor<bool> arg_check_subsets  = {"check-subsets", "Check ring subsets (very expensive)", false};
   const command_line::arg_descriptor<bool> arg_verbose  = {"verbose", "Verbose output)", false};
-  const command_line::arg_descriptor<std::vector<std::string> > arg_inputs = {"inputs", "Path to Toklio DB, and path to any fork DBs"};
+  const command_line::arg_descriptor<std::vector<std::string> > arg_inputs = {"inputs", "Path to Monero DB, and path to any fork DBs"};
   const command_line::arg_descriptor<std::string> arg_db_sync_mode = {
     "db-sync-mode"
   , "Specify sync option, using format [safe|fast|fastest]:[nrecords_per_sync]." 
@@ -1066,12 +1071,12 @@ int main(int argc, char* argv[])
 
   if (command_line::get_arg(vm, command_line::arg_help))
   {
-    std::cout << "Toklio '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")" << ENDL << ENDL;
+    std::cout << "Monero '" << MONERO_RELEASE_NAME << "' (v" << MONERO_VERSION_FULL << ")" << ENDL << ENDL;
     std::cout << desc_options << std::endl;
     return 1;
   }
 
-  mlog_configure(mlog_get_default_log_path("toklio-blockchain-blackball.log"), true);
+  mlog_configure(mlog_get_default_log_path("monero-blockchain-blackball.log"), true);
   if (!command_line::is_arg_defaulted(vm, arg_log_level))
     mlog_set_log(command_line::get_arg(vm, arg_log_level).c_str());
   else
@@ -1151,8 +1156,8 @@ int main(int argc, char* argv[])
       if (!is_output_spent(cur, output_data(output.first, output.second)))
       {
         blackballs.push_back(output);
-        add_spent_output(cur, output_data(output.first, output.second));
-        inc_stat(txn, output.first ? "pre-rct-extra" : "rct-ring-extra");
+        if (add_spent_output(cur, output_data(output.first, output.second)))
+          inc_stat(txn, output.first ? "pre-rct-extra" : "rct-ring-extra");
       }
     }
     if (!blackballs.empty())
@@ -1214,8 +1219,8 @@ int main(int argc, char* argv[])
             std::cout << "\r" << start_idx << "/" << n_txes << "         \r" << std::flush;
           }
           blackballs.push_back(output);
-          add_spent_output(cur, output_data(txin.amount, absolute[0]));
-          inc_stat(txn, txin.amount ? "pre-rct-ring-size-1" : "rct-ring-size-1");
+          if (add_spent_output(cur, output_data(txin.amount, absolute[0])))
+            inc_stat(txn, txin.amount ? "pre-rct-ring-size-1" : "rct-ring-size-1");
         }
         else if (n == 0 && instances == new_ring.size())
         {
@@ -1228,8 +1233,8 @@ int main(int argc, char* argv[])
               std::cout << "\r" << start_idx << "/" << n_txes << "         \r" << std::flush;
             }
             blackballs.push_back(output);
-            add_spent_output(cur, output_data(txin.amount, absolute[o]));
-            inc_stat(txn, txin.amount ? "pre-rct-duplicate-rings" : "rct-duplicate-rings");
+            if (!add_spent_output(cur, output_data(txin.amount, absolute[o])))
+              inc_stat(txn, txin.amount ? "pre-rct-duplicate-rings" : "rct-duplicate-rings");
           }
         }
         else if (n == 0 && opt_check_subsets && get_ring_subset_instances(txn, txin.amount, new_ring) >= new_ring.size())
@@ -1243,8 +1248,8 @@ int main(int argc, char* argv[])
               std::cout << "\r" << start_idx << "/" << n_txes << "         \r" << std::flush;
             }
             blackballs.push_back(output);
-            add_spent_output(cur, output_data(txin.amount, absolute[o]));
-            inc_stat(txn, txin.amount ? "pre-rct-subset-rings" : "rct-subset-rings");
+            if (add_spent_output(cur, output_data(txin.amount, absolute[o])))
+              inc_stat(txn, txin.amount ? "pre-rct-subset-rings" : "rct-subset-rings");
           }
         }
         else if (n > 0 && get_relative_ring(txn, txin.k_image, relative_ring))
@@ -1279,8 +1284,8 @@ int main(int argc, char* argv[])
                 std::cout << "\r" << start_idx << "/" << n_txes << "         \r" << std::flush;
               }
               blackballs.push_back(output);
-              add_spent_output(cur, output_data(txin.amount, common[0]));
-              inc_stat(txn, txin.amount ? "pre-rct-key-image-attack" : "rct-key-image-attack");
+              if (add_spent_output(cur, output_data(txin.amount, common[0])))
+                inc_stat(txn, txin.amount ? "pre-rct-key-image-attack" : "rct-key-image-attack");
             }
             else
             {
@@ -1391,9 +1396,9 @@ int main(int argc, char* argv[])
                 absolute.size() << "-ring where all other outputs are known to be spent");
           }
           blackballs.push_back(output);
-          add_spent_output(cur, output_data(od.amount, last_unknown));
+          if (add_spent_output(cur, output_data(od.amount, last_unknown)))
+            inc_stat(txn, od.amount ? "pre-rct-chain-reaction" : "rct-chain-reaction");
           work_spent.push_back(output_data(od.amount, last_unknown));
-          inc_stat(txn, od.amount ? "pre-rct-chain-reaction" : "rct-chain-reaction");
         }
       }
 
