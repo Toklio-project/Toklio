@@ -47,7 +47,6 @@ using namespace epee;
 #include "rpc/rpc_args.h"
 #include "core_rpc_server_error_codes.h"
 #include "p2p/net_node.h"
-#include "get_output_distribution_cache.h"
 #include "version.h"
 
 #undef MONERO_DEFAULT_LOG_CATEGORY
@@ -1927,7 +1926,7 @@ namespace cryptonote
   bool core_rpc_server::on_update(const COMMAND_RPC_UPDATE::request& req, COMMAND_RPC_UPDATE::response& res)
   {
     PERF_TIMER(on_update);
-    static const char software[] = "monero";
+    static const char software[] = "Toklio";
 #ifdef BUILD_TAG
     static const char buildtag[] = BOOST_PP_STRINGIZE(BUILD_TAG);
     static const char subdir[] = "cli";
@@ -2143,27 +2142,6 @@ namespace cryptonote
           }
           continue;
         }
-
-        // this is a slow operation, so we have precomputed caches of common cases
-        bool found = false;
-        for (const auto &slot: get_output_distribution_cache)
-        {
-          if (slot.amount == amount && slot.from_height == req.from_height && slot.to_height == req.to_height)
-          {
-            res.distributions.push_back({amount, slot.start_height, slot.distribution, slot.base});
-            found = true;
-            if (req.cumulative)
-            {
-              auto &distribution = res.distributions.back().distribution;
-              distribution[0] += slot.base;
-              for (size_t n = 1; n < distribution.size(); ++n)
-                distribution[n] += distribution[n-1];
-            }
-            break;
-          }
-        }
-        if (found)
-          continue;
 
         std::vector<uint64_t> distribution;
         uint64_t start_height, base;
