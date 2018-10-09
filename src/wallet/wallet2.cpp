@@ -1306,8 +1306,8 @@ void wallet2::scan_output(const cryptonote::transaction &tx, const crypto::publi
     if (!m_encrypt_keys_after_refresh)
     {
       boost::optional<epee::wipeable_string> pwd = m_callback->on_get_password("output received");
-      THROW_WALLET_EXCEPTION_IF(!pwd, error::password_needed, tr("Password is needed to compute key image for incoming monero"));
-      THROW_WALLET_EXCEPTION_IF(!verify_password(*pwd), error::password_needed, tr("Invalid password: password is needed to compute key image for incoming monero"));
+      THROW_WALLET_EXCEPTION_IF(!pwd, error::password_needed, tr("Password is needed to compute key image for incoming Toklio"));
+      THROW_WALLET_EXCEPTION_IF(!verify_password(*pwd), error::password_needed, tr("Invalid password: password is needed to compute key image for incoming Toklio"));
       decrypt_keys(*pwd);
       m_encrypt_keys_after_refresh = *pwd;
     }
@@ -5563,10 +5563,7 @@ bool wallet2::sign_tx(unsigned_tx_set &exported_txs, std::vector<wallet2::pendin
     rct::RangeProofType range_proof_type = rct::RangeProofBorromean;
     if (sd.use_bulletproofs)
     {
-      range_proof_type = rct::RangeProofBulletproof;
-      for (const rct::Bulletproof &proof: ptx.tx.rct_signatures.p.bulletproofs)
-        if (proof.V.size() > 1)
-          range_proof_type = rct::RangeProofPaddedBulletproof;
+      range_proof_type = rct::RangeProofPaddedBulletproof;
     }
     crypto::secret_key tx_key;
     std::vector<crypto::secret_key> additional_tx_keys;
@@ -6510,33 +6507,6 @@ bool wallet2::is_output_blackballed(const std::pair<uint64_t, uint64_t> &output)
     return false;
   try { return m_ringdb->blackballed(output); }
   catch (const std::exception &e) { return false; }
-}
-
-bool wallet2::lock_keys_file()
-{
-  if (m_keys_file_locker)
-  {
-    MDEBUG(m_keys_file << " is already locked.");
-    return false;
-  }
-  m_keys_file_locker.reset(new tools::file_locker(m_keys_file));
-  return true;
-}
-
-bool wallet2::unlock_keys_file()
-{
-  if (!m_keys_file_locker)
-  {
-    MDEBUG(m_keys_file << " is already unlocked.");
-    return false;
-  }
-  m_keys_file_locker.reset();
-  return true;
-}
-
-bool wallet2::is_keys_file_locked() const
-{
-  return m_keys_file_locker->locked();
 }
 
 bool wallet2::lock_keys_file()
@@ -11637,10 +11607,7 @@ uint64_t wallet2::get_segregation_fork_height() const
   {
     // All four MoneroPulse domains have DNSSEC on and valid
     static const std::vector<std::string> dns_urls = {
-        "segheights.moneropulse.org",
-        "segheights.moneropulse.net",
-        "segheights.moneropulse.co",
-        "segheights.moneropulse.se"
+        "segheights.tokl.io",
     };
 
     const uint64_t current_height = get_blockchain_current_height();
@@ -11675,6 +11642,5 @@ uint64_t wallet2::get_segregation_fork_height() const
 //----------------------------------------------------------------------------------------------------
 void wallet2::generate_genesis(cryptonote::block& b) const {
   cryptonote::generate_genesis_block(b, get_config(m_nettype).GENESIS_TX, get_config(m_nettype).GENESIS_NONCE);
-}
 }
 }
