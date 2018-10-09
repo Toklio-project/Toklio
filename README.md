@@ -8,6 +8,10 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
 - Web: [tokl.io](https://tokl.io)
 
 
+## Announcements
+
+- You can subscribe to an [announcement listserv](https://lists.getmonero.org) to get critical announcements from the Monero core team. The announcement list can be very helpful for knowing when software updates are needed.
+
 ## Build
 
 ### IMPORTANT 

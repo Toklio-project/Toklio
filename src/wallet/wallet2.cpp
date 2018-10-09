@@ -1833,20 +1833,6 @@ void wallet2::process_new_transaction(const crypto::hash &txid, const cryptonote
       return;
     }
 
-    uint64_t total_received_2 = sub_change;
-    for (const auto& i : tx_money_got_in_outs)
-      total_received_2 += i.second;
-    if (total_received_1 != total_received_2)
-    {
-      const el::Level level = el::Level::Warning;
-      MCLOG_RED(level, "global", "**********************************************************************");
-      MCLOG_RED(level, "global", "Consistency failure in amounts received");
-      MCLOG_RED(level, "global", "Check transaction " << txid);
-      MCLOG_RED(level, "global", "**********************************************************************");
-      exit(1);
-      return;
-    }
-
     for (const auto& i : tx_money_got_in_outs)
     {
       payment_details payment;
@@ -6553,6 +6539,33 @@ bool wallet2::is_keys_file_locked() const
   return m_keys_file_locker->locked();
 }
 
+bool wallet2::lock_keys_file()
+{
+  if (m_keys_file_locker)
+  {
+    MDEBUG(m_keys_file << " is already locked.");
+    return false;
+  }
+  m_keys_file_locker.reset(new tools::file_locker(m_keys_file));
+  return true;
+}
+
+bool wallet2::unlock_keys_file()
+{
+  if (!m_keys_file_locker)
+  {
+    MDEBUG(m_keys_file << " is already unlocked.");
+    return false;
+  }
+  m_keys_file_locker.reset();
+  return true;
+}
+
+bool wallet2::is_keys_file_locked() const
+{
+  return m_keys_file_locker->locked();
+}
+
 bool wallet2::tx_add_fake_output(std::vector<std::vector<tools::wallet2::get_outs_entry>> &outs, uint64_t global_index, const crypto::public_key& output_public_key, const rct::key& mask, uint64_t real_index, bool unlocked) const
 {
   if (!unlocked) // don't add locked outs
@@ -9244,16 +9257,6 @@ void wallet2::discard_unmixable_outputs()
     m_transfers[idx].m_spent = true;
   }
 }
-//----------------------------------------------------------------------------------------------------
-void wallet2::discard_unmixable_outputs(bool trusted_daemon)
-{
-  // may throw
-  std::vector<size_t> unmixable_outputs = select_available_unmixable_outputs(trusted_daemon);
-  for (size_t idx : unmixable_outputs)
-  {
-    m_transfers[idx].m_spent = true;
-  }
-}
 
 bool wallet2::get_tx_key(const crypto::hash &txid, crypto::secret_key &tx_key, std::vector<crypto::secret_key> &additional_tx_keys) const
 {
@@ -11672,5 +11675,6 @@ uint64_t wallet2::get_segregation_fork_height() const
 //----------------------------------------------------------------------------------------------------
 void wallet2::generate_genesis(cryptonote::block& b) const {
   cryptonote::generate_genesis_block(b, get_config(m_nettype).GENESIS_TX, get_config(m_nettype).GENESIS_NONCE);
+}
 }
 }

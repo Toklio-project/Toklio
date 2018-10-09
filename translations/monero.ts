@@ -4239,6 +4239,9 @@ Grand total:
         <source>Give threshold and participants at once as M/N</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>genms</name>
     <message>
         <location filename="../src/gen_multisig/gen_multisig.cpp" line="72"/>
         <source>How many participants will share parts of the multisig wallet</source>
@@ -4343,6 +4346,9 @@ Grand total:
         <source>Generate new wallet from device and save it to &lt;arg&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>sw</name>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="121"/>
         <source>Generate incoming-only wallet from view key</source>
