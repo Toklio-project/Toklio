@@ -389,7 +389,7 @@ namespace cryptonote
     return m_blockchain_storage.get_alternative_blocks_count();
   }
   //-----------------------------------------------------------------------------------------------
-  bool core::init(const boost::program_options::variables_map& vm, const char *config_subdir, const cryptonote::test_options *test_options, const GetCheckpointsCallback get_checkpoints/* = nullptr */)
+  bool core::init(const boost::program_options::variables_map& vm, const char *config_subdir, const cryptonote::test_options *test_options)
   {
     start_time = std::time(nullptr);
 
@@ -567,7 +567,7 @@ namespace cryptonote
       regtest_hard_forks
     };
     const difficulty_type fixed_difficulty = command_line::get_arg(vm, arg_fixed_difficulty);
-    r = m_blockchain_storage.init(db.release(), m_nettype, m_offline, regtest ? &regtest_test_options : test_options, fixed_difficulty, get_checkpoints);
+    r = m_blockchain_storage.init(db.release(), m_nettype, m_offline, regtest ? &regtest_test_options : test_options, fixed_difficulty);
 
     r = m_mempool.init(max_txpool_weight);
     CHECK_AND_ASSERT_MES(r, false, "Failed to initialize memory pool");
@@ -856,16 +856,19 @@ namespace cryptonote
     }
     waiter.wait(&tpool);
     it = tx_blobs.begin();
+    std::vector<bool> already_have(tx_blobs.size(), false);
     for (size_t i = 0; i < tx_blobs.size(); i++, ++it) {
       if (!results[i].res)
         continue;
       if(m_mempool.have_tx(results[i].hash))
       {
         LOG_PRINT_L2("tx " << results[i].hash << "already have transaction in tx_pool");
+        already_have[i] = true;
       }
       else if(m_blockchain_storage.have_tx(results[i].hash))
       {
         LOG_PRINT_L2("tx " << results[i].hash << " already have transaction in blockchain");
+        already_have[i] = true;
       }
       else
       {
@@ -887,7 +890,7 @@ namespace cryptonote
     std::vector<tx_verification_batch_info> tx_info;
     tx_info.reserve(tx_blobs.size());
     for (size_t i = 0; i < tx_blobs.size(); i++) {
-      if (!results[i].res)
+      if (!results[i].res || already_have[i])
         continue;
       tx_info.push_back({&results[i].tx, results[i].hash, tvc[i], results[i].res});
     }
@@ -897,6 +900,8 @@ namespace cryptonote
     bool ok = true;
     it = tx_blobs.begin();
     for (size_t i = 0; i < tx_blobs.size(); i++, ++it) {
+      if (already_have[i])
+        continue;
       if (!results[i].res)
       {
         ok = false;

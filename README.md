@@ -85,14 +85,13 @@ library archives (`.a`).
 | GTest        | 1.5           | YES      | `libgtest-dev`^    | `gtest`      | `gtest-devel`     | YES      | Test suite     |
 | Doxygen      | any           | NO       | `doxygen`          | `doxygen`    | `doxygen`         | YES      | Documentation  |
 | Graphviz     | any           | NO       | `graphviz`         | `graphviz`   | `graphviz`        | YES      | Documentation  |
-| pcsclite     | ?             | NO       | `libpcsclite-dev`  | ?            | `pcsc-lite pcsc-lite-devel` | NO | Ledger     |          
 
 
 [^] On Debian/Ubuntu `libgtest-dev` only includes sources and headers. You must
 build the library binary manually. This can be done with the following command ```sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake . && sudo make && sudo mv libg* /usr/lib/ ```
 
 Debian / Ubuntu one liner for all dependencies  
-``` sudo apt update && sudo apt install build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpcsclite-dev libpgm-dev```
+``` sudo apt update && sudo apt install build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpgm-dev```
 
 ### Cloning the repository
 
@@ -407,14 +406,16 @@ Then you can run make as usual.
 
 ### On Linux for Android (using docker):
 
-        # Build image
+        # Build image (for ARM 32-bit)
         docker build -f utils/build_scripts/android32.Dockerfile -t toklio-android .
+        # Build image (for ARM 64-bit)
+        docker build -f utils/build_scripts/android64.Dockerfile -t toklio-android .
         # Create container
         docker create -it --name toklio-android toklio-android bash
         # Get binaries
-        docker cp toklio-android:/opt/android/Toklio/build/release/bin .
+        docker cp toklio-android:/src/build/release/bin .
 
-### Building portable statically linked binaries (Cross Compiling)
+### Building portable statically linked binaries
 
 By default, in either dynamically or statically linked builds, binaries target the specific host processor on which the build happens and are not portable to other processors. Portable binaries can be built using the following targets:
 
@@ -427,15 +428,24 @@ By default, in either dynamically or statically linked builds, binaries target t
 * ```make release-static-win32``` builds binaries on 64-bit or 32-bit Windows portable across 32-bit Windows systems
 ### Building portable statically linked binaries
 
-By default, in either dynamically or statically linked builds, binaries target the specific host processor on which the build happens and are not portable to other processors. Portable binaries can be built using the following targets:
+### Cross Compiling
 
-* ```make release-static-linux-x86_64``` builds binaries on Linux on x86_64 portable across POSIX systems on x86_64 processors
-* ```make release-static-linux-i686``` builds binaries on Linux on x86_64 or i686 portable across POSIX systems on i686 processors
-* ```make release-static-linux-armv8``` builds binaries on Linux portable across POSIX systems on armv8 processors
-* ```make release-static-linux-armv7``` builds binaries on Linux portable across POSIX systems on armv7 processors
-* ```make release-static-linux-armv6``` builds binaries on Linux portable across POSIX systems on armv6 processors
-* ```make release-static-win64``` builds binaries on 64-bit Windows portable across 64-bit Windows systems
-* ```make release-static-win32``` builds binaries on 64-bit or 32-bit Windows portable across 32-bit Windows systems
+You can also cross-compile static binaries on Linux for Windows and macOS with the `depends` system. Go to `contrib/depends` and type:
+
+* ```make HOST=x86_64-linux-gnu``` for 64-bit linux binaries.
+* ```make HOST=x86_64-w64-mingw32``` for 64-bit windows binaries. Requires: python3 nsis g++-mingw-w64-x86-64 wine1.6 bc
+* ```make HOST=x86_64-apple-darwin11``` for darwin binaries. Requires: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev
+* ```make HOST=i686-linux-gnu``` for 32-bit linux binaries. Requires: g++-multilib bc
+* ```make HOST=i686-w64-mingw32``` for 32-bit windows binaries. Requires: python3 nsis g++-mingw-w64-i686
+* ```make HOST=arm-linux-gnueabihf``` for armv6 binaries. Requires: g++-arm-linux-gnueabihf
+
+The required packages are the names for each toolchain on apt. Depending on your distro, they may have different names.
+Then go back to the source dir and type: 
+
+* ```cmake -DCMAKE_TOOLCHAIN_FILE=`pwd`/contrib/depends/<chosen triplet>/share/toolchain.cmake```
+Where <chosen triplet> is one of the above mentioned targets.
+
+Using `depends` might also be easier to compile Toklio on Windows than using MSys. Activate Windows Subsystem for Linux (WSL) with a distro (for example Ubuntu), install the apt build-essentials and follow the `depends` steps as depicted above.
 
 ## Running tokliod
 
