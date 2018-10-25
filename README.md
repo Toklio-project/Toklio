@@ -275,7 +275,7 @@ application.
 
 * If you would like a specific [version/tag](https://github.com/Toklio-project/Toklio/tags), do a git checkout for that version. eg. 'v0.13.0.0'. If you dont care about the version and just want binaries from master, skip this step:
 	
-        git checkout v0.13.0.0
+        git checkout v0.13.0.4
 
 * If you are on a 64-bit system, run:
 

@@ -1508,7 +1508,7 @@ This transaction will unlock on block %llu, in approximately %s days (assuming 2
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="2283"/>
-        <source>Donate &lt;amount&gt; to the development team (donate.getmonero.org).</source>
+        <source>Donate &lt;amount&gt; to the development team (donate.tokl.io).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3419,7 +3419,7 @@ Transaction </source>
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="5799"/>
-        <source>Donating %s %s to The Monero Project (donate.getmonero.org or %s).</source>
+        <source>Donating %s %s to The Toklio Project (donate.tokl.io or %s).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3916,7 +3916,7 @@ Outputs per *: </source>
  confirm-missing-payment-id &lt;1|0&gt;
  ask-password &lt;0|1|2   (or never|action|decrypt)&gt;
  unit &lt;monero|millinero|micronero|nanonero|piconero&gt;
-   Set the default monero (sub-)unit.
+   Set the default Toklio (sub-)unit.
  min-outputs-count [n]
    Try to keep at least that many outputs of value at least min-outputs-value.
  min-outputs-value [n]
@@ -3932,12 +3932,12 @@ Outputs per *: </source>
  auto-low-priority &lt;1|0&gt;
    Whether to automatically use the low priority fee level when it&apos;s safe to do so.
  segregate-pre-fork-outputs &lt;1|0&gt;
-   Set this if you intend to spend outputs on both Monero AND a key reusing fork.
+   Set this if you intend to spend outputs on both Toklio AND a key reusing fork.
  key-reuse-mitigation2 &lt;1|0&gt;
-   Set this if you are not sure whether you will spend on a key reusing Monero fork later.
+   Set this if you are not sure whether you will spend on a key reusing Toklio fork later.
 subaddress-lookahead &lt;major&gt;:&lt;minor&gt;
    Set the lookahead sizes for the subaddress hash table.
-   Set this if you are not sure whether you will spend on a key reusing Monero fork later.
+   Set this if you are not sure whether you will spend on a key reusing Toklio fork later.
  segregation-height &lt;n&gt;
    Set to the height of a key reusing fork you want to use, 0 to use default.</source>
         <translation type="unfinished"></translation>
@@ -4425,7 +4425,7 @@ Grand total:
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="333"/>
-        <source> Monero Address = </source>
+        <source> Toklio Address = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4586,9 +4586,9 @@ Grand total:
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="8074"/>
-        <source>This is the command line monero wallet. It needs to connect to a monero
+        <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.
-WARNING: Do not reuse your Monero keys on another fork, UNLESS this fork has key reuse mitigations built in. Doing so will harm your privacy.</source>
+WARNING: Do not reuse your Toklio keys on another fork, UNLESS this fork has key reuse mitigations built in. Doing so will harm your privacy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4608,7 +4608,7 @@ WARNING: Do not reuse your Monero keys on another fork, UNLESS this fork has key
     </message>
     <message>
         <location filename="../src/simplewallet/simplewallet.cpp" line="133"/>
-        <source>The newly created transaction will not be relayed to the monero network</source>
+        <source>The newly created transaction will not be relayed to the Toklio network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4841,12 +4841,12 @@ WARNING: Do not reuse your Monero keys on another fork, UNLESS this fork has key
     </message>
     <message>
         <location filename="../src/wallet/wallet2.cpp" line="1271"/>
-        <source>Password is needed to compute key image for incoming monero</source>
+        <source>Password is needed to compute key image for incoming Toklio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/wallet/wallet2.cpp" line="1272"/>
-        <source>Invalid password: password is needed to compute key image for incoming monero</source>
+        <source>Invalid password: password is needed to compute key image for incoming Toklio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4926,7 +4926,7 @@ WARNING: Do not reuse your Monero keys on another fork, UNLESS this fork has key
     </message>
     <message>
         <location filename="../src/wallet/wallet_rpc_server.cpp" line="3495"/>
-        <source>This is the RPC Toklio wallet. It needs to connect to a monero
+        <source>This is the RPC Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5039,7 +5039,7 @@ daemon to work correctly.</source>
     </message>
     <message>
         <location filename="../src/wallet/wallet_args.cpp" line="144"/>
-        <source>This is the command line Toklio wallet. It needs to connect to a monero
+        <source>This is the command line Toklio wallet. It needs to connect to a Toklio
 daemon to work correctly.</source>
         <translation type="unfinished"></translation>
     </message>
