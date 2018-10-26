@@ -87,6 +87,9 @@ namespace hw {
     public:
       bool hid_verbose = false;
 
+      static const unsigned int  OR_SELECT = 1;
+      static const unsigned int  AND_SELECT = 2;
+
       static const unsigned short DEFAULT_CHANNEL     = 0x0001;
       static const unsigned char  DEFAULT_TAG         = 0x01;
       static const unsigned int   DEFAULT_PACKET_SIZE = 64;
