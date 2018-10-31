@@ -333,7 +333,7 @@ application.
 
 * If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.13.0.0'. If you dont care about the version and just want binaries from master, skip this step:
 	
-        git checkout v0.13.0.0
+        git checkout v0.13.0.4
 
 * If you are on a 64-bit system, run:
 
@@ -464,12 +464,14 @@ Then you can run make as usual.
 
 ### On Linux for Android (using docker):
 
-        # Build image
+        # Build image (for ARM 32-bit)
         docker build -f utils/build_scripts/android32.Dockerfile -t monero-android .
+        # Build image (for ARM 64-bit)
+        docker build -f utils/build_scripts/android64.Dockerfile -t monero-android .
         # Create container
         docker create -it --name monero-android monero-android bash
         # Get binaries
-        docker cp monero-android:/opt/android/monero/build/release/bin .
+        docker cp monero-android:/src/build/release/bin .
 
 ### Building portable statically linked binaries (Cross Compiling)
 
