@@ -113,8 +113,8 @@ invokes cmake commands as needed.
 * Install the dependencies
 * Change to the root of the source code directory, change to the most recent release branch, and build:
 
-        cd Toklio
-        git checkout v0.13.0.0
+        cd monero
+        git checkout release-v0.13.0-toklwallet
         make
 
     *Optional*: If your machine has several cores and enough memory, enable
@@ -174,9 +174,9 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 ```
 * Clone Toklio and checkout most recent release version:
 ```
-        git clone https://github.com/Toklio-project/Toklio.git
-	cd Toklio
-	git checkout tags/v0.13.0.0
+        git clone https://github.com/monero-project/monero.git
+	cd monero
+	git checkout release-v0.13.0-toklwallet
 ```
 * Build:
 ```
