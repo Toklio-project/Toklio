@@ -9,8 +9,8 @@ base_dir=`pwd`
 
 build_type=release # or debug
 
-archs=(arm arm64 x86 x86_64)
-
+#archs=(arm arm64 x86 x86_64)
+archs=(arm64 x86_64)
 for arch in ${archs[@]}; do
 	ldflags=""
     case ${arch} in
