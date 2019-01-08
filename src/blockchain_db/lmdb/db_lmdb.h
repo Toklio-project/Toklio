@@ -243,7 +243,7 @@ public:
   virtual uint64_t get_num_outputs(const uint64_t& amount) const;
 
   virtual output_data_t get_output_key(const uint64_t& amount, const uint64_t& index);
-  virtual void get_output_key(const uint64_t &amount, const std::vector<uint64_t> &offsets, std::vector<output_data_t> &outputs, bool allow_partial = false);
+  virtual void get_output_key(const epee::span<const uint64_t> &amounts, const std::vector<uint64_t> &offsets, std::vector<output_data_t> &outputs, bool allow_partial = false);
 
   virtual tx_out_index get_output_tx_and_index_from_global(const uint64_t& index) const;
   virtual void get_output_tx_and_index_from_global(const std::vector<uint64_t> &global_indices,
@@ -256,7 +256,7 @@ public:
 
   virtual bool has_key_image(const crypto::key_image& img) const;
 
-  virtual void add_txpool_tx(const transaction &tx, const txpool_tx_meta_t& meta);
+  virtual void add_txpool_tx(const crypto::hash &txid, const cryptonote::blobdata &blob, const txpool_tx_meta_t& meta);
   virtual void update_txpool_tx(const crypto::hash &txid, const txpool_tx_meta_t& meta);
   virtual uint64_t get_txpool_tx_count(bool include_unrelayed_txes = true) const;
   virtual bool txpool_has_tx(const crypto::hash &txid) const;
@@ -345,6 +345,8 @@ private:
 
   void remove_output(const uint64_t amount, const uint64_t& out_index);
 
+  virtual void prune_outputs(uint64_t amount);
+
   virtual void add_spent_key(const crypto::key_image& k_image);
 
   virtual void remove_spent_key(const crypto::key_image& k_image);
@@ -357,25 +359,7 @@ private:
   virtual void check_hard_fork_info();
   virtual void drop_hard_fork_info();
 
-  /**
-   * @brief convert a tx output to a blob for storage
-   *
-   * @param output the output to convert
-   *
-   * @return the resultant blob
-   */
-  blobdata output_to_blob(const tx_out& output) const;
-
-  /**
-   * @brief convert a tx output blob to a tx output
-   *
-   * @param blob the blob to convert
-   *
-   * @return the resultant tx output
-   */
-  tx_out output_from_blob(const blobdata& blob) const;
-
-  void check_open() const;
+  inline void check_open() const;
 
   virtual bool is_read_only() const;
 

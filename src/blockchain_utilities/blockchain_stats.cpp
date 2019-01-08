@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 /*
  * The default output can be plotted with GnuPlot using these commands:
 set key autotitle columnhead
-set title "Monero Blockchain Growth"
+set title "Toklio Blockchain Growth"
 set timefmt "%Y-%m-%d"
 set xdata time
 set xrange ["2014-04-17":*]
@@ -234,7 +234,7 @@ plot 'stats.csv' index "DATA" using (timecolumn(1,"%Y-%m-%d")):4 with lines, '' 
     }
     time_t tt = blk.timestamp;
     char timebuf[64];
-    gmtime_r(&tt, &currtm);
+    epee::misc_utils::get_gmt_time(tt, currtm);
     if (!prevtm.tm_year)
       prevtm = currtm;
     // catch change of day

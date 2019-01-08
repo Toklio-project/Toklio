@@ -567,8 +567,8 @@ bool t_rpc_command_executor::print_blockchain_info(uint64_t start_block_index, u
   for (auto & header : res.headers)
   {
     if (!first)
-      std::cout << std::endl;
-    std::cout
+      tools::msg_writer() << "" << std::endl;
+    tools::msg_writer()
       << "height: " << header.height << ", timestamp: " << header.timestamp
       << ", size: " << header.block_size << ", weight: " << header.block_weight << ", transactions: " << header.num_txes << std::endl
       << "major version: " << (unsigned)header.major_version << ", minor version: " << (unsigned)header.minor_version << std::endl
@@ -1313,7 +1313,7 @@ bool t_rpc_command_executor::out_peers(uint64_t limit)
 		}
 	}
 
-	std::cout << "Max number of out peers set to " << limit << std::endl;
+	tools::msg_writer() << "Max number of out peers set to " << limit << std::endl;
 
 	return true;
 }
@@ -1345,7 +1345,7 @@ bool t_rpc_command_executor::in_peers(uint64_t limit)
 		}
 	}
 
-	std::cout << "Max number of in peers set to " << limit << std::endl;
+	tools::msg_writer() << "Max number of in peers set to " << limit << std::endl;
 
 	return true;
 }
@@ -1965,6 +1965,33 @@ bool t_rpc_command_executor::sync_info()
     }
 
     return true;
+}
+
+bool t_rpc_command_executor::pop_blocks(uint64_t num_blocks)
+{
+  cryptonote::COMMAND_RPC_POP_BLOCKS::request req;
+  cryptonote::COMMAND_RPC_POP_BLOCKS::response res;
+  std::string fail_message = "pop_blocks failed";
+
+  req.nblocks = num_blocks;
+  if (m_is_rpc)
+  {
+    if (!m_rpc_client->rpc_request(req, res, "/pop_blocks", fail_message.c_str()))
+    {
+      return true;
+    }
+  }
+  else
+  {
+    if (!m_rpc_server->on_pop_blocks(req, res) || res.status != CORE_RPC_STATUS_OK)
+    {
+      tools::fail_msg_writer() << make_error(fail_message, res.status);
+      return true;
+    }
+  }
+  tools::success_msg_writer() << "new height: " << res.height;
+
+  return true;
 }
 
 }// namespace daemonize

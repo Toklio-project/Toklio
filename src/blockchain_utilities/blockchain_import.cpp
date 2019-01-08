@@ -396,7 +396,7 @@ int import_from_file(cryptonote::core& core, const std::string& import_file_path
     {
       std::cout << refresh_string << "block " << h-1
         << " / " << block_stop
-        << std::flush;
+        << "\r" << std::flush;
       std::cout << ENDL << ENDL;
       MINFO("Specified block number reached - stopping.  block: " << h-1 << "  total blocks: " << h);
       quit = 1;
@@ -432,7 +432,7 @@ int import_from_file(cryptonote::core& core, const std::string& import_file_path
         {
           std::cout << refresh_string << "block " << h-1
             << " / " << block_stop
-            << std::flush;
+            << "\r" << std::flush;
         }
 
         if (opt_verify)
@@ -764,7 +764,7 @@ int main(int argc, char* argv[])
 #else
   const GetCheckpointsCallback& get_checkpoints = nullptr;
 #endif
-  if (!core.init(vm, nullptr, nullptr, get_checkpoints))
+  if (!core.init(vm, nullptr, get_checkpoints))
   {
     std::cerr << "Failed to initialize core" << ENDL;
     return 1;

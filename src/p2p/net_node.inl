@@ -1324,12 +1324,19 @@ namespace nodetool
   template<class t_payload_net_handler>
   bool node_server<t_payload_net_handler>::check_incoming_connections()
   {
-    if (m_offline || m_hide_my_port)
+    if (m_offline)
       return true;
     if (get_incoming_connections_count() == 0)
     {
-      const el::Level level = el::Level::Warning;
-      MCLOG_RED(level, "global", "No incoming connections - check firewalls/routers allow port " << get_this_peer_port());
+      if (m_hide_my_port || m_config.m_net_config.max_in_connection_count == 0)
+      {
+        MGINFO("Incoming connections disabled, enable them for full connectivity");
+      }
+      else
+      {
+        const el::Level level = el::Level::Warning;
+        MCLOG_RED(level, "global", "No incoming connections - check firewalls/routers allow port " << get_this_peer_port());
+      }
     }
     return true;
   }
@@ -1357,7 +1364,7 @@ namespace nodetool
   }
   //-----------------------------------------------------------------------------------
   template<class t_payload_net_handler>
-  bool node_server<t_payload_net_handler>::fix_time_delta(std::list<peerlist_entry>& local_peerlist, time_t local_time, int64_t& delta)
+  bool node_server<t_payload_net_handler>::fix_time_delta(std::vector<peerlist_entry>& local_peerlist, time_t local_time, int64_t& delta)
   {
     //fix time delta
     time_t now = 0;
@@ -1377,10 +1384,10 @@ namespace nodetool
   }
   //-----------------------------------------------------------------------------------
   template<class t_payload_net_handler>
-  bool node_server<t_payload_net_handler>::handle_remote_peerlist(const std::list<peerlist_entry>& peerlist, time_t local_time, const epee::net_utils::connection_context_base& context)
+  bool node_server<t_payload_net_handler>::handle_remote_peerlist(const std::vector<peerlist_entry>& peerlist, time_t local_time, const epee::net_utils::connection_context_base& context)
   {
     int64_t delta = 0;
-    std::list<peerlist_entry> peerlist_ = peerlist;
+    std::vector<peerlist_entry> peerlist_ = peerlist;
     if(!fix_time_delta(peerlist_, local_time, delta))
       return false;
     LOG_DEBUG_CC(context, "REMOTE PEERLIST: TIME_DELTA: " << delta << ", remote peerlist size=" << peerlist_.size());
@@ -1762,8 +1769,8 @@ namespace nodetool
   template<class t_payload_net_handler>
   bool node_server<t_payload_net_handler>::log_peerlist()
   {
-    std::list<peerlist_entry> pl_white;
-    std::list<peerlist_entry> pl_gray;
+    std::vector<peerlist_entry> pl_white;
+    std::vector<peerlist_entry> pl_gray;
     m_peerlist.get_peerlist_full(pl_gray, pl_white);
     MINFO(ENDL << "Peerlist white:" << ENDL << print_peerlist_to_string(pl_white) << ENDL << "Peerlist gray:" << ENDL << print_peerlist_to_string(pl_gray) );
     return true;
