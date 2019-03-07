@@ -332,9 +332,9 @@ application.
 	
         cd monero
 
-* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.14.0.0'. If you dont care about the version and just want binaries from master, skip this step:
+* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.14.0.1'. If you dont care about the version and just want binaries from master, skip this step:
 	
-        git checkout v0.14.0.0
+        git checkout v0.14.0.1
 
 * If you are on a 64-bit system, run:
 
