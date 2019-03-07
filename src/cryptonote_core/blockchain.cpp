@@ -114,6 +114,8 @@ static const struct {
   { 8, 128000, 0, 1540774800 },
   // version 9 starts from block 1686275, which is on or around the 19th of October, 2018. Fork time finalised on 2018-09-02.
   { 9, 128720, 0, 1540861200 },
+  { 10, 204775, 0, 1552404226 },
+  { 11, 205495, 0, 1552490626 },
 };
 static const uint64_t mainnet_hard_fork_version_1_till = 19;
 
