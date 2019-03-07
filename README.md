@@ -95,6 +95,9 @@ build the library binary manually. This can be done with the following command `
 Debian / Ubuntu one liner for all dependencies  
 ``` sudo apt update && sudo apt install build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpgm-dev```
 
+FreeBSD one liner for required to build dependencies
+```pkg install git gmake cmake pkgconf boost-libs cppzmq libsodium```
+
 ### Cloning the repository
 
 Clone recursively to pull-in needed submodule(s):
@@ -115,8 +118,8 @@ invokes cmake commands as needed.
 * Install the dependencies
 * Change to the root of the source code directory, change to the most recent release branch, and build:
 
-        cd Toklio
-        git checkout v0.13.0.0
+        cd monero
+        git checkout release-v0.14
         make
 
     *Optional*: If your machine has several cores and enough memory, enable
