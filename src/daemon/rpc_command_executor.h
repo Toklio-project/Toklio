@@ -6,7 +6,7 @@
 
 */
 
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -109,6 +109,8 @@ public:
 
   bool stop_mining();
 
+  bool mining_status();
+
   bool stop_daemon();
 
   bool print_status();
@@ -158,6 +160,8 @@ public:
   bool prune_blockchain();
 
   bool check_blockchain_pruning();
+
+  bool print_net_stats();
 };
 
 } // namespace daemonize

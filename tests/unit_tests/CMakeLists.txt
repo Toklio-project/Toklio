@@ -1,4 +1,4 @@
-# Copyright (c) 2014-2018, The Monero Project
+# Copyright (c) 2014-2019, The Monero Project
 #
 # All rights reserved.
 #
@@ -43,6 +43,7 @@ set(unit_tests_sources
   crypto.cpp
   decompose_amount_into_digits.cpp
   device.cpp
+  difficulty.cpp
   dns_resolver.cpp
   epee_boosted_tcp_server.cpp
   epee_levin_protocol_handler_async.cpp
@@ -52,10 +53,12 @@ set(unit_tests_sources
   json_serialization.cpp
   get_xtype_from_string.cpp
   hashchain.cpp
+  hmac_keccak.cpp
   http.cpp
   keccak.cpp
   logging.cpp
   long_term_block_weight.cpp
+  lmdb.cpp
   main.cpp
   memwipe.cpp
   mlocker.cpp
@@ -69,6 +72,7 @@ set(unit_tests_sources
   parse_amount.cpp
   pruning.cpp
   random.cpp
+  rolling_median.cpp
   serialization.cpp
   sha256.cpp
   slow_memmem.cpp
@@ -101,6 +105,7 @@ target_link_libraries(unit_tests
     cryptonote_protocol
     cryptonote_core
     blockchain_db
+    lmdb_lib
     rpc
     net
     serialization

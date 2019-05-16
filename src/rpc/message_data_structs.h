@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018, The Monero Project
+// Copyright (c) 2016-2019, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -30,6 +30,7 @@
 
 #include "crypto/hash.h"
 #include "cryptonote_basic/cryptonote_basic.h"
+#include "cryptonote_basic/difficulty.h"
 #include "ringct/rctSigs.h"
 #include "rpc/rpc_handler.h"
 
@@ -78,6 +79,7 @@ namespace rpc
     uint64_t id;
     uint32_t ip;
     uint16_t port;
+    uint16_t rpc_port;
     uint64_t last_seen;
     uint32_t pruning_seed;
   };
@@ -164,6 +166,7 @@ namespace rpc
     uint64_t height;
     uint64_t depth;
     crypto::hash hash;
+    cryptonote::difficulty_type wide_difficulty;
     uint64_t difficulty;
     uint64_t reward;
   };
@@ -172,6 +175,7 @@ namespace rpc
   {
     uint64_t height;
     uint64_t target_height;
+    cryptonote::difficulty_type wide_difficulty;
     uint64_t difficulty;
     uint64_t target;
     uint64_t tx_count;
@@ -186,6 +190,7 @@ namespace rpc
     bool stagenet;
     std::string nettype;
     crypto::hash top_block_hash;
+    cryptonote::difficulty_type wide_cumulative_difficulty;
     uint64_t cumulative_difficulty;
     uint64_t block_size_limit;
     uint64_t block_weight_limit;

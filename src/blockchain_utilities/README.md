@@ -1,6 +1,6 @@
 # Toklio Blockchain Utilities
 
-Copyright (c) 2014-2018, The Monero Project
+Copyright (c) 2014-2019, The Monero Project
 
 ## Introduction
 
@@ -79,7 +79,7 @@ LMDB flags (more than one may be specified):
 
 ## Examples:
 
-```
+```bash
 $ toklio-blockchain-import --database lmdb#fastest
 
 $ toklio-blockchain-import --database lmdb#nosync

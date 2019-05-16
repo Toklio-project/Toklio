@@ -33,6 +33,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/read.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/endian/conversion.hpp>
 #include <boost/system/error_code.hpp>
@@ -45,6 +46,7 @@
 #include "net/error.h"
 #include "net/net_utils_base.h"
 #include "net/socks.h"
+#include "net/socks_connect.h"
 #include "net/parse.h"
 #include "net/tor_address.h"
 #include "p2p/net_peerlist_boost_serialization.h"
@@ -544,7 +546,7 @@ namespace
             connected(false)
         {
             acceptor.open(boost::asio::ip::tcp::v4());
-            acceptor.bind(stream_type::endpoint{boost::asio::ip::tcp::v4(), 0});
+            acceptor.bind(stream_type::endpoint{boost::asio::ip::address_v4::loopback(), 0});
             acceptor.listen();
             acceptor.async_accept(server, [this] (boost::system::error_code error) {
                 this->connected = true;
@@ -619,7 +621,8 @@ TEST(socks_client, connect_command)
     ASSERT_TRUE(test_client->set_connect_command("example.com", 8080));
     EXPECT_FALSE(test_client->buffer().empty());
     ASSERT_TRUE(net::socks::client::connect_and_send(std::move(test_client), io.acceptor.local_endpoint()));
-    while (!io.connected);
+    while (!io.connected)
+        ASSERT_FALSE(called);
 
     const std::uint8_t expected_bytes[] = {
         4, 1, 0x1f, 0x90, 0x00, 0x00, 0x00, 0x01, 0x00,
@@ -655,7 +658,8 @@ TEST(socks_client, connect_command_failed)
     );
     EXPECT_FALSE(test_client->buffer().empty());
     ASSERT_TRUE(net::socks::client::connect_and_send(std::move(test_client), io.acceptor.local_endpoint()));
-    while (!io.connected);
+    while (!io.connected)
+        ASSERT_FALSE(called);
 
     const std::uint8_t expected_bytes[] = {
         4, 1, 0x0b, 0xb8, 0x00, 0x00, 0x13, 0x88, 0x00
@@ -711,7 +715,8 @@ TEST(socks_client, resolve_command)
     ASSERT_TRUE(test_client->set_resolve_command("example.com"));
     EXPECT_FALSE(test_client->buffer().empty());
     ASSERT_TRUE(net::socks::client::connect_and_send(test_client, io.acceptor.local_endpoint()));
-    while (!io.connected);
+    while (!io.connected)
+        ASSERT_EQ(0u, test_client->called_);
 
     const std::uint8_t expected_bytes[] = {
         4, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
@@ -742,4 +747,95 @@ TEST(socks_client, resolve_command)
     while (test_client->called_ == 1);
 }
 
+TEST(socks_connector, host)
+{
+    io_thread io{};
+    boost::asio::steady_timer timeout{io.io_service};
+    timeout.expires_from_now(std::chrono::seconds{5});
+
+    boost::unique_future<boost::asio::ip::tcp::socket> sock =
+        net::socks::connector{io.acceptor.local_endpoint()}("example.com", "8080", timeout);
+
+    while (!io.connected)
+        ASSERT_FALSE(sock.is_ready());
+    const std::uint8_t expected_bytes[] = {
+        4, 1, 0x1f, 0x90, 0x00, 0x00, 0x00, 0x01, 0x00,
+        'e', 'x', 'a', 'm', 'p', 'l', 'e', '.', 'c', 'o', 'm', 0x00
+    };
+
+    std::uint8_t actual_bytes[sizeof(expected_bytes)];
+    boost::asio::read(io.server, boost::asio::buffer(actual_bytes));
+    EXPECT_TRUE(std::memcmp(expected_bytes, actual_bytes, sizeof(actual_bytes)) == 0);
+
+    const std::uint8_t reply_bytes[] = {0, 90, 0, 0, 0, 0, 0, 0};
+    boost::asio::write(io.server, boost::asio::buffer(reply_bytes));
+
+    ASSERT_EQ(boost::future_status::ready, sock.wait_for(boost::chrono::seconds{3}));
+    EXPECT_TRUE(sock.get().is_open());
+}
+
+TEST(socks_connector, ipv4)
+{
+    io_thread io{};
+    boost::asio::steady_timer timeout{io.io_service};
+    timeout.expires_from_now(std::chrono::seconds{5});
+
+    boost::unique_future<boost::asio::ip::tcp::socket> sock =
+        net::socks::connector{io.acceptor.local_endpoint()}("250.88.125.99", "8080", timeout);
+
+    while (!io.connected)
+        ASSERT_FALSE(sock.is_ready());
+    const std::uint8_t expected_bytes[] = {
+        4, 1, 0x1f, 0x90, 0xfa, 0x58, 0x7d, 0x63, 0x00
+    };
+
+    std::uint8_t actual_bytes[sizeof(expected_bytes)];
+    boost::asio::read(io.server, boost::asio::buffer(actual_bytes));
+    EXPECT_TRUE(std::memcmp(expected_bytes, actual_bytes, sizeof(actual_bytes)) == 0);
+
+    const std::uint8_t reply_bytes[] = {0, 90, 0, 0, 0, 0, 0, 0};
+    boost::asio::write(io.server, boost::asio::buffer(reply_bytes));
+
+    ASSERT_EQ(boost::future_status::ready, sock.wait_for(boost::chrono::seconds{3}));
+    EXPECT_TRUE(sock.get().is_open());
+}
+
+TEST(socks_connector, error)
+{
+    io_thread io{};
+    boost::asio::steady_timer timeout{io.io_service};
+    timeout.expires_from_now(std::chrono::seconds{5});
+
+    boost::unique_future<boost::asio::ip::tcp::socket> sock =
+        net::socks::connector{io.acceptor.local_endpoint()}("250.88.125.99", "8080", timeout);
+
+    while (!io.connected)
+        ASSERT_FALSE(sock.is_ready());
+    const std::uint8_t expected_bytes[] = {
+        4, 1, 0x1f, 0x90, 0xfa, 0x58, 0x7d, 0x63, 0x00
+    };
+
+    std::uint8_t actual_bytes[sizeof(expected_bytes)];
+    boost::asio::read(io.server, boost::asio::buffer(actual_bytes));
+    EXPECT_TRUE(std::memcmp(expected_bytes, actual_bytes, sizeof(actual_bytes)) == 0);
+
+    const std::uint8_t reply_bytes[] = {0, 91, 0, 0, 0, 0, 0, 0};
+    boost::asio::write(io.server, boost::asio::buffer(reply_bytes));
+
+    ASSERT_EQ(boost::future_status::ready, sock.wait_for(boost::chrono::seconds{3}));
+    EXPECT_THROW(sock.get().is_open(), boost::system::system_error);
+}
+
+TEST(socks_connector, timeout)
+{
+    io_thread io{};
+    boost::asio::steady_timer timeout{io.io_service};
+    timeout.expires_from_now(std::chrono::milliseconds{10});
+
+    boost::unique_future<boost::asio::ip::tcp::socket> sock =
+        net::socks::connector{io.acceptor.local_endpoint()}("250.88.125.99", "8080", timeout);
+
+    ASSERT_EQ(boost::future_status::ready, sock.wait_for(boost::chrono::seconds{3}));
+    EXPECT_THROW(sock.get().is_open(), boost::system::system_error);
+}
 

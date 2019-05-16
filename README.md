@@ -1,7 +1,27 @@
 # Toklio
 
-Copyright (c) 2014-2018 The Monero Project.   
+Copyright (c) 2014-2019 The Monero Project.   
 Portions Copyright (c) 2012-2013 The Cryptonote developers.
+
+## Table of Contents
+
+  - [Development resources](#development-resources)
+  - [Vulnerability response](#vulnerability-response)
+  - [Research](#research)
+  - [Announcements](#announcements)
+  - [Translations](#translations)
+  - [Build](#build)
+    - [IMPORTANT](#important)
+  - [Coverage](#coverage)
+  - [Introduction](#introduction)
+  - [About this project](#about-this-project)
+  - [Supporting the project](#supporting-the-project)
+  - [License](#license)
+  - [Contributing](#contributing)
+  - [Scheduled software upgrades](#scheduled-software-upgrades)
+  - [Release staging schedule and protocol](#release-staging-schedule-and-protocol)
+  - [Compiling Monero from source](#compiling-monero-from-source)
+    - [Dependencies](#dependencies)
 
 ## Development resources
 
@@ -20,6 +40,8 @@ Toklio is a private, secure, untraceable, decentralised digital currency. You ar
 **Security:** Using the power of a distributed peer-to-peer consensus network, every transaction on the network is cryptographically secured. Individual wallets have a 25 word mnemonic seed that is only displayed once, and can be written down to backup the wallet. Wallet files are encrypted with a passphrase to ensure they are useless if stolen.
 
 **Untraceability:** By taking advantage of ring signatures, a special property of a certain type of cryptography, Toklio is able to ensure that transactions are not only untraceable, but have an optional measure of ambiguity that ensures that transactions cannot easily be tied back to an individual user or computer.
+
+**Decentralization:** The utility of monero depends on its decentralised peer-to-peer consensus network - anyone should be able to run the monero software, validate the integrity of the blockchain, and participate in all aspects of the monero network using consumer-grade commodity hardware. Decentralization of the monero network is maintained by software development that minimizes the costs of running the monero software and inhibits the proliferation of specialized, non-commodity hardware.  
 
 ## About this project
 
@@ -92,8 +114,12 @@ library archives (`.a`).
 build the library binary manually. This can be done with the following command ```sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake . && sudo make && sudo mv libg* /usr/lib/ ```
 [2] libnorm-dev is needed if your zmq library was built with libnorm, and not needed otherwise
 
-Debian / Ubuntu one liner for all dependencies  
+Install all dependencies at once on Debian/Ubuntu:
+
 ``` sudo apt update && sudo apt install build-essential cmake pkg-config libboost-all-dev libssl-dev libzmq3-dev libunbound-dev libsodium-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpgm-dev```
+
+Install all dependencies at once on macOS with the provided Brewfile:
+``` brew update && brew bundle --file=contrib/brew/Brewfile ```
 
 FreeBSD one liner for required to build dependencies
 ```pkg install git gmake cmake pkgconf boost-libs cppzmq libsodium```
@@ -113,21 +139,23 @@ If you already have a repo cloned, initialize and update:
 Toklio uses the CMake build system and a top-level [Makefile](Makefile) that
 invokes cmake commands as needed.
 
-#### On Linux and OS X
+#### On Linux and macOS
 
 * Install the dependencies
 * Change to the root of the source code directory, change to the most recent release branch, and build:
 
-        cd monero
-        git checkout release-v0.14
-        make
+    ```bash
+    cd monero
+    git checkout release-v0.14
+    make
+    ```
 
     *Optional*: If your machine has several cores and enough memory, enable
     parallel build by running `make -j<number of threads>` instead of `make`. For
     this to be worthwhile, the machine should have one core and about 2GB of RAM
     available per thread.
 
-    *Note*: If cmake can not find zmq.hpp file on OS X, installing `zmq.hpp` from
+    *Note*: If cmake can not find zmq.hpp file on macOS, installing `zmq.hpp` from
     https://github.com/zeromq/cppzmq to `/usr/local/include` should fix that error.
 
     *Note*: The instructions above will compile the most stable release of the
@@ -144,23 +172,31 @@ invokes cmake commands as needed.
 
 * **Optional**: build and run the test suite to verify the binaries:
 
-        make release-test
+    ```bash
+    make release-test
+    ```
 
     *NOTE*: `core_tests` test may take a few hours to complete.
 
 * **Optional**: to build binaries suitable for debugging:
 
-         make debug
+    ```bash
+    make debug
+    ```
 
 * **Optional**: to build statically-linked binaries:
 
-         make release-static
+    ```bash
+    make release-static
+    ```
 
 Dependencies need to be built with -fPIC. Static libraries usually aren't, so you may have to build them yourself with -fPIC. Refer to their documentation for how to build them.
 
 * **Optional**: build documentation in `doc/html` (omit `HAVE_DOT=YES` if `graphviz` is not installed):
 
-        HAVE_DOT=YES doxygen Doxyfile
+    ```bash
+    HAVE_DOT=YES doxygen Doxyfile
+    ```
 
 #### On the Raspberry Pi
 
@@ -181,12 +217,14 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 ```
         git clone https://github.com/Toklio-project/Toklio.git
 	cd Toklio
-	git checkout tags/v0.13.0.0
+	git checkout release-v0.13
 ```
 * Build:
-```
-        make release
-```
+
+    ```bash
+    make release
+    ```
+
 * Wait 4-6 hours
 
 * The resulting executables can be found in `build/release/bin`
@@ -203,28 +241,33 @@ If you are using the older Raspbian Jessie image, compiling Toklio is a bit more
 
 * As before, `apt-get update && apt-get upgrade` to install all of the latest software, and increase the system swap size
 
-```
-	sudo /etc/init.d/dphys-swapfile stop  
-	sudo nano /etc/dphys-swapfile  
-	CONF_SWAPSIZE=2048  
-	sudo /etc/init.d/dphys-swapfile start  
-```
+    ```bash
+    sudo /etc/init.d/dphys-swapfile stop
+    sudo nano /etc/dphys-swapfile
+    CONF_SWAPSIZE=2048
+    sudo /etc/init.d/dphys-swapfile start
+    ```
+
 
 * Then, install the dependencies for Toklio except `libunwind` and `libboost-all-dev`
 
 * Install the latest version of boost (this may first require invoking `apt-get remove --purge libboost*` to remove a previous version if you're not using a clean install):
-```
-	cd  
-	wget https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.bz2  
-	tar xvfo boost_1_64_0.tar.bz2  
-	cd boost_1_64_0  
-	./bootstrap.sh  
-	sudo ./b2  
-```
+
+    ```bash
+    cd
+    wget https://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.bz2
+    tar xvfo boost_1_64_0.tar.bz2
+    cd boost_1_64_0
+    ./bootstrap.sh
+    sudo ./b2
+    ```
+
 * Wait ~8 hours
-```
-	sudo ./bjam cxxflags=-fPIC cflags=-fPIC -a install
-```
+
+    ```bash    
+    sudo ./bjam cxxflags=-fPIC cflags=-fPIC -a install
+    ```
+
 * Wait ~4 hours
 
 * From here, follow the [general Raspberry Pi instructions](#on-the-raspberry-pi) from the "Clone Toklio and checkout most recent release version" step.
@@ -243,24 +286,32 @@ application.
 * Open the MSYS shell via the `MSYS2 Shell` shortcut
 * Update packages using pacman:  
 
-        pacman -Syu  
+    ```bash
+    pacman -Syu
+    ```
 
 * Exit the MSYS shell using Alt+F4  
 * Edit the properties for the `MSYS2 Shell` shortcut changing "msys2_shell.bat" to "msys2_shell.cmd -mingw64" for 64-bit builds or "msys2_shell.cmd -mingw32" for 32-bit builds
 * Restart MSYS shell via modified shortcut and update packages again using pacman:  
 
-        pacman -Syu  
+    ```bash
+    pacman -Syu
+    ```
 
 
 * Install dependencies:
 
     To build for 64-bit Windows:
 
-        pacman -S mingw-w64-x86_64-toolchain make mingw-w64-x86_64-cmake mingw-w64-x86_64-boost mingw-w64-x86_64-openssl mingw-w64-x86_64-zeromq mingw-w64-x86_64-libsodium mingw-w64-x86_64-hidapi
+    ```bash
+    pacman -S mingw-w64-x86_64-toolchain make mingw-w64-x86_64-cmake mingw-w64-x86_64-boost mingw-w64-x86_64-openssl mingw-w64-x86_64-zeromq mingw-w64-x86_64-libsodium mingw-w64-x86_64-hidapi
+    ```
 
     To build for 32-bit Windows:
 
-        pacman -S mingw-w64-i686-toolchain make mingw-w64-i686-cmake mingw-w64-i686-boost mingw-w64-i686-openssl mingw-w64-i686-zeromq mingw-w64-i686-libsodium mingw-w64-i686-hidapi
+    ```bash
+    pacman -S mingw-w64-i686-toolchain make mingw-w64-i686-cmake mingw-w64-i686-boost mingw-w64-i686-openssl mingw-w64-i686-zeromq mingw-w64-i686-libsodium mingw-w64-i686-hidapi
+    ```
 
 * Open the MingW shell via `MinGW-w64-Win64 Shell` shortcut on 64-bit Windows
   or `MinGW-w64-Win64 Shell` shortcut on 32-bit Windows. Note that if you are
@@ -270,7 +321,9 @@ application.
 
 * To git clone, run:
 
-        git clone --recursive https://github.com/Toklio-project/Toklio.git
+    ```bash
+    git clone --recursive https://github.com/monero-project/monero.git
+    ```
 
 **Building**
 
@@ -278,27 +331,41 @@ application.
 	
         cd Toklio
 
-* If you would like a specific [version/tag](https://github.com/Toklio-project/Toklio/tags), do a git checkout for that version. eg. 'v0.13.0.0'. If you dont care about the version and just want binaries from master, skip this step:
+    ```bash
+    cd Toklio
+    ```
+
+* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.14.1.0'. If you don't care about the version and just want binaries from master, skip this step:
 	
-        git checkout v0.13.0.4
+    ```bash
+    git checkout release-v0.13
+    ```
 
 * If you are on a 64-bit system, run:
 
-        make release-static-win64
+    ```bash
+    make release-static-win64
+    ```
 
 * If you are on a 32-bit system, run:
 
-        make release-static-win32
+    ```bash
+    make release-static-win32
+    ```
 
 * The resulting executables can be found in `build/release/bin`
 
 * **Optional**: to build Windows binaries suitable for debugging on a 64-bit system, run:
 
-        make debug-static-win64
+    ```bash
+    make debug-static-win64
+    ```
 
 * **Optional**: to build Windows binaries suitable for debugging on a 32-bit system, run:
 
-        make debug-static-win32
+    ```bash
+    make debug-static-win32
+    ```
 
 * The resulting executables can be found in `build/debug/bin`
 
@@ -338,7 +405,7 @@ We assume you are compiling with a non-root user and you have `doas` enabled.
 
 Note: do not use the boost package provided by OpenBSD, as we are installing boost to `/usr/local`.
 
-```
+```bash
 # Create boost building directory
 mkdir ~/boost
 cd ~/boost
@@ -374,7 +441,7 @@ Build the cppzmq bindings.
 
 We assume you are compiling with a non-root user and you have `doas` enabled.
 
-```
+```bash
 # Create cppzmq building directory
 mkdir ~/cppzmq
 cd ~/cppzmq
@@ -394,7 +461,10 @@ cmake ..
 doas make install
 ```
 
-Build Toklio: `env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local make release-static`
+Build toklio:
+```bash
+env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local make release-static
+```
 
 #### OpenBSD >= 6.4
 
@@ -417,23 +487,27 @@ Then you need to increase the data ulimit size to 2GB and try again: `ulimit -d 
 
 The default Solaris linker can't be used, you have to install GNU ld, then run cmake manually with the path to your copy of GNU ld:
 
-        mkdir -p build/release
-        cd build/release
-        cmake -DCMAKE_LINKER=/path/to/ld -D CMAKE_BUILD_TYPE=Release ../..
-        cd ../..
+```bash
+mkdir -p build/release
+cd build/release
+cmake -DCMAKE_LINKER=/path/to/ld -D CMAKE_BUILD_TYPE=Release ../..
+cd ../..
+```
 
 Then you can run make as usual.
 
 ### On Linux for Android (using docker):
 
-        # Build image (for ARM 32-bit)
-        docker build -f utils/build_scripts/android32.Dockerfile -t toklio-android .
-        # Build image (for ARM 64-bit)
-        docker build -f utils/build_scripts/android64.Dockerfile -t toklio-android .
-        # Create container
-        docker create -it --name toklio-android toklio-android bash
-        # Get binaries
-        docker cp toklio-android:/src/build/release/bin .
+```bash
+# Build image (for ARM 32-bit)
+docker build -f utils/build_scripts/android32.Dockerfile -t toklio-android .
+# Build image (for ARM 64-bit)
+docker build -f utils/build_scripts/android64.Dockerfile -t toklio-android .
+# Create container
+docker create -it --name toklio-android toklio-android bash
+# Get binaries
+docker cp toklio-android:/src/build/release/bin .
+```
 
 ### Building portable statically linked binaries
 
@@ -453,24 +527,85 @@ By default, in either dynamically or statically linked builds, binaries target t
 You can also cross-compile static binaries on Linux for Windows and macOS with the `depends` system.
 
 * ```make depends target=x86_64-linux-gnu``` for 64-bit linux binaries.
-* ```make depends target=x86_64-w64-mingw32``` for 64-bit windows binaries. Requires: python3 g++-mingw-w64-x86-64 wine1.6 bc
-* ```make depends target=x86_64-apple-darwin11``` for macOS binaries. Requires: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev
-* ```make depends target=i686-linux-gnu``` for 32-bit linux binaries. Requires: g++-multilib bc
-* ```make depends target=i686-w64-mingw32``` for 32-bit windows binaries. Requires: python3 g++-mingw-w64-i686
-* ```make depends target=arm-linux-gnueabihf``` for armv7 binaries. Requires: g++-arm-linux-gnueabihf
-* ```make depends target=aarch64-linux-gnu``` for armv8 binaries. Requires: g++-aarch64-linux-gnu
+* ```make depends target=x86_64-w64-mingw32``` for 64-bit windows binaries.
+  * Requires: `python3 g++-mingw-w64-x86-64 wine1.6 bc`
+* ```make depends target=x86_64-apple-darwin11``` for macOS binaries.
+  * Requires: `cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python-dev`
+* ```make depends target=i686-linux-gnu``` for 32-bit linux binaries.
+  * Requires: `g++-multilib bc`
+* ```make depends target=i686-w64-mingw32``` for 32-bit windows binaries.
+  * Requires: `python3 g++-mingw-w64-i686`
+* ```make depends target=arm-linux-gnueabihf``` for armv7 binaries.
+  * Requires: `g++-arm-linux-gnueabihf`
+* ```make depends target=aarch64-linux-gnu``` for armv8 binaries.
+  * Requires: `g++-aarch64-linux-gnu`
 
 The required packages are the names for each toolchain on apt. Depending on your distro, they may have different names.
 
-Using `depends` might also be easier to compile Toklio on Windows than using MSys. Activate Windows Subsystem for Linux (WSL) with a distro (for example Ubuntu), install the apt build-essentials and follow the `depends` steps as depicted above.
+Using `depends` might also be easier to compile Monero on Windows than using MSYS. Activate Windows Subsystem for Linux (WSL) with a distro (for example Ubuntu), install the apt build-essentials and follow the `depends` steps as depicted above.
 
-## Running tokliod
+The produced binaries still link libc dynamically. If the binary is compiled on a current distribution, it might not run on an older distribution with an older installation of libc. Passing `-DBACKCOMPAT=ON` to cmake will make sure that the binary will run on systems having at least libc version 2.17.
+
+## Installing Monero from a package
+
+**DISCLAIMER: These packages are not part of this repository or maintained by this project's contributors, and as such, do not go through the same review process to ensure their trustworthiness and security.**
+
+Packages are available for
+
+* Ubuntu and [snap supported](https://snapcraft.io/docs/core/install) systems, via a community contributed build.
+
+    ```bash
+    snap install monero --beta
+    ```
+
+Installing a snap is very quick. Snaps are secure. They are isolated with all of their dependencies. Snaps also auto update when a new version is released.
+
+* Arch Linux (via [AUR](https://aur.archlinux.org/)):
+  - Stable release: [`monero`](https://aur.archlinux.org/packages/monero)
+  - Bleeding edge: [`monero-git`](https://aur.archlinux.org/packages/monero-git)
+
+* Void Linux:
+
+    ```bash
+    xbps-install -S monero
+    ```
+
+* GuixSD
+
+    ```bash
+    guix package -i monero
+    ```
+
+* Docker
+
+    ```bash
+    # Build using all available cores
+    docker build -t monero .
+    
+    # or build using a specific number of cores (reduce RAM requirement)
+    docker build --build-arg NPROC=1 -t monero .
+    
+    # either run in foreground
+    docker run -it -v /monero/chain:/root/.bitmonero -v /monero/wallet:/wallet -p 18080:18080 monero
+    
+    # or in background
+    docker run -it -d -v /monero/chain:/root/.bitmonero -v /monero/wallet:/wallet -p 18080:18080 monero
+    ```
+
+* The build needs 3 GB space.
+* Wait one  hour or more
+
+Packaging for your favorite distribution would be a welcome contribution!
+
+## Running monerod
 
 The build places the binary in `bin/` sub-directory within the build directory
 from which cmake was invoked (repository root by default). To run in
 foreground:
 
-    ./bin/tokliod
+```bash
+./bin/tokliod
+```
 
 To list all available options, run `./bin/tokliod --help`.  Options can be
 specified either on the command line or in a configuration file passed by the
@@ -522,7 +657,9 @@ setting the following configuration parameters and environment variables:
 
 Example command line to start tokliod through Tor:
 
-    DNS_PUBLIC=tcp torsocks tokliod --p2p-bind-ip 127.0.0.1 --no-igd
+```bash
+DNS_PUBLIC=tcp torsocks tokliod --p2p-bind-ip 127.0.0.1 --no-igd
+```
 
 ### Using Tor on Tails
 
@@ -530,26 +667,28 @@ TAILS ships with a very restrictive set of firewall rules. Therefore, you need
 to add a rule to allow this connection too, in addition to telling torsocks to
 allow inbound connections. Full example:
 
-    sudo iptables -I OUTPUT 2 -p tcp -d 127.0.0.1 -m tcp --dport 18081 -j ACCEPT
-    DNS_PUBLIC=tcp torsocks ./tokliod --p2p-bind-ip 127.0.0.1 --no-igd --rpc-bind-ip 127.0.0.1 \
-        --data-dir /home/amnesia/Persistent/your/directory/to/the/blockchain
+```bash
+sudo iptables -I OUTPUT 2 -p tcp -d 127.0.0.1 -m tcp --dport 18081 -j ACCEPT
+DNS_PUBLIC=tcp torsocks ./tokliod --p2p-bind-ip 127.0.0.1 --no-igd --rpc-bind-ip 127.0.0.1 \
+    --data-dir /home/amnesia/Persistent/your/directory/to/the/blockchain
+```
 
 ## Debugging
 
-This section contains general instructions for debugging failed installs or problems encountered with Toklio. First ensure you are running the latest version built from the Github repo.
+This section contains general instructions for debugging failed installs or problems encountered with Monero. First, ensure you are running the latest version built from the Github repo.
 
 ### Obtaining stack traces and core dumps on Unix systems
 
 We generally use the tool `gdb` (GNU debugger) to provide stack trace functionality, and `ulimit` to provide core dumps in builds which crash or segfault.
 
-* To use gdb in order to obtain a stack trace for a build that has stalled:
+* To use `gdb` in order to obtain a stack trace for a build that has stalled:
 
 Run the build.
 
 Once it stalls, enter the following command:
 
-```
-gdb /path/to/tokliod `pidof tokliod` 
+```bash
+gdb /path/to/tokliod `pidof tokliod`
 ```
 
 Type `thread apply all bt` within gdb in order to obtain the stack trace
@@ -566,11 +705,13 @@ When it terminates with an output along the lines of "Segmentation fault (core d
 
 You can now analyse this core dump with `gdb` as follows:
 
-`gdb /path/to/tokliod /path/to/dumpfile`
+```bash
+gdb /path/to/tokliod /path/to/dumpfile`
+```
 
 Print the stack trace with `bt`
 
-* To run Toklio within gdb:
+#### To run monero within gdb:
 
 Type `gdb /path/to/tokliod`
 
@@ -582,15 +723,17 @@ Type `run` to run tokliod
 
 There are two tools available:
 
-* ASAN
+#### ASAN
 
 Configure Toklio with the -D SANITIZE=ON cmake flag, eg:
 
-    cd build/debug && cmake -D SANITIZE=ON -D CMAKE_BUILD_TYPE=Debug ../..
+```bash
+cd build/debug && cmake -D SANITIZE=ON -D CMAKE_BUILD_TYPE=Debug ../..
+```
 
 You can then run the toklio tools normally. Performance will typically halve.
 
-* valgrind
+#### valgrind
 
 Run with `valgrind /path/to/tokliod`. It will be slow.
 
@@ -600,7 +743,9 @@ Instructions for debugging suspected blockchain corruption as per @HYC
 
 There is an `mdb_stat` command in the LMDB source that can print statistics about the database but it's not routinely built. This can be built with the following command:
 
-`cd ~/Toklio/external/db_drivers/liblmdb && make`
+```bash
+cd ~/Toklio/external/db_drivers/liblmdb && make
+```
 
 The output of `mdb_stat -ea <path to blockchain dir>` will indicate inconsistencies in the blocks, block_heights and block_info table.
 

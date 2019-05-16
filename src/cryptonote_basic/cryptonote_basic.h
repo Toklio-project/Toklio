@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -422,6 +422,8 @@ namespace cryptonote
       FIELDS(*static_cast<block_header *>(this))
       FIELD(miner_tx)
       FIELD(tx_hashes)
+      if (tx_hashes.size() > CRYPTONOTE_MAX_TX_PER_BLOCK)
+        return false;
     END_SERIALIZE()
   };
 

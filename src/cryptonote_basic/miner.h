@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -34,6 +34,7 @@
 #include <boost/logic/tribool_fwd.hpp>
 #include <atomic>
 #include "cryptonote_basic.h"
+#include "verification_context.h"
 #include "difficulty.h"
 #include "math_helper.h"
 #ifdef _WIN32
@@ -45,7 +46,7 @@ namespace cryptonote
 
   struct i_miner_handler
   {
-    virtual bool handle_block_found(block& b) = 0;
+    virtual bool handle_block_found(block& b, block_verification_context &bvc) = 0;
     virtual bool get_block_template(block& b, const account_public_address& adr, difficulty_type& diffic, uint64_t& height, uint64_t& expected_reward, const blobdata& ex_nonce) = 0;
   protected:
     ~i_miner_handler(){};
@@ -61,7 +62,7 @@ namespace cryptonote
     ~miner();
     bool init(const boost::program_options::variables_map& vm, network_type nettype);
     static void init_options(boost::program_options::options_description& desc);
-    bool set_block_template(const block& bl, const difficulty_type& diffic, uint64_t height);
+    bool set_block_template(const block& bl, const difficulty_type& diffic, uint64_t height, uint64_t block_reward);
     bool on_block_chain_update();
     bool start(const account_public_address& adr, size_t threads_count, const boost::thread::attributes& attrs, bool do_background = false, bool ignore_battery = false);
     uint64_t get_speed() const;
@@ -85,6 +86,7 @@ namespace cryptonote
     bool set_idle_threshold(uint8_t idle_threshold);
     uint8_t get_mining_target() const;
     bool set_mining_target(uint8_t mining_target);
+    uint64_t get_block_reward() const { return m_block_reward; }
 
     static constexpr uint8_t  BACKGROUND_MINING_DEFAULT_IDLE_THRESHOLD_PERCENTAGE       = 90;
     static constexpr uint8_t  BACKGROUND_MINING_MIN_IDLE_THRESHOLD_PERCENTAGE           = 50;
@@ -124,6 +126,7 @@ namespace cryptonote
     uint64_t m_height;
     volatile uint32_t m_thread_index; 
     volatile uint32_t m_threads_total;
+    std::atomic<uint32_t> m_threads_active;
     std::atomic<int32_t> m_pausers_count;
     epee::critical_section m_miners_count_lock;
 
@@ -169,5 +172,6 @@ namespace cryptonote
     static bool get_process_time(uint64_t& total_time);
     static uint8_t get_percent_of_total(uint64_t some_time, uint64_t total_time);
     static boost::logic::tribool on_battery_power();
+    std::atomic<uint64_t> m_block_reward;
   };
 }

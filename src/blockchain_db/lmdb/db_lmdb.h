@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2014-2019, The Monero Project
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification, are
@@ -219,6 +219,8 @@ public:
 
   virtual size_t get_block_weight(const uint64_t& height) const;
 
+  virtual std::vector<uint64_t> get_block_weights(uint64_t start_height, size_t count) const;
+
   virtual difficulty_type get_block_cumulative_difficulty(const uint64_t& height) const;
 
   virtual difficulty_type get_block_difficulty(const uint64_t& height) const;
@@ -226,6 +228,8 @@ public:
   virtual uint64_t get_block_already_generated_coins(const uint64_t& height) const;
 
   virtual uint64_t get_block_long_term_weight(const uint64_t& height) const;
+
+  virtual std::vector<uint64_t> get_long_term_block_weights(uint64_t start_height, size_t count) const;
 
   virtual crypto::hash get_block_hash_from_height(const uint64_t& height) const;
 
@@ -306,11 +310,14 @@ public:
   virtual void batch_stop();
   virtual void batch_abort();
 
-  virtual void block_txn_start(bool readonly);
-  virtual void block_txn_stop();
-  virtual void block_txn_abort();
-  virtual bool block_rtxn_start(MDB_txn **mtxn, mdb_txn_cursors **mcur) const;
+  virtual void block_wtxn_start();
+  virtual void block_wtxn_stop();
+  virtual void block_wtxn_abort();
+  virtual bool block_rtxn_start() const;
   virtual void block_rtxn_stop() const;
+  virtual void block_rtxn_abort() const;
+
+  bool block_rtxn_start(MDB_txn **mtxn, mdb_txn_cursors **mcur) const;
 
   virtual void pop_block(block& blk, std::vector<transaction>& txs);
 
@@ -394,6 +401,11 @@ private:
 
   virtual uint64_t get_database_size() const;
 
+  std::vector<uint64_t> get_block_info_64bit_fields(uint64_t start_height, size_t count, off_t offset) const;
+
+  uint64_t get_max_block_size();
+  void add_max_block_size(uint64_t sz);
+
   // fix up anything that may be wrong due to past bugs
   virtual void fixup();
 
@@ -411,6 +423,9 @@ private:
 
   // migrate from DB version 3 to 4
   void migrate_3_4();
+
+  // migrate from DB version 4 to 5
+  void migrate_4_5();
 
   void cleanup_batch();
 
