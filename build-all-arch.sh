@@ -48,12 +48,12 @@ for arch in ${archs[@]}; do
 	make -j4 wallet_api
 	find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;
 
-    TARGET_LIB_DIR=/opt/android/build/monero/$arch/lib
+    TARGET_LIB_DIR=/opt/android/build/Toklio/$arch/lib
     rm -rf $TARGET_LIB_DIR
     mkdir -p $TARGET_LIB_DIR
     cp $OUTPUT_DIR/lib/*.a $TARGET_LIB_DIR
 
-    TARGET_INC_DIR=/opt/android/build/monero/include
+    TARGET_INC_DIR=/opt/android/build/Toklio/include
     rm -rf $TARGET_INC_DIR
     mkdir -p $TARGET_INC_DIR
 	cp -a ../../src/wallet/api/wallet2_api.h $TARGET_INC_DIR
