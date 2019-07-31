@@ -184,6 +184,7 @@ if(NOT MANUAL_SUBMODULES)
       execute_process(COMMAND git rev-parse "HEAD" WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${relative_path} OUTPUT_VARIABLE localHead)
       execute_process(COMMAND git rev-parse "HEAD:${relative_path}" WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} OUTPUT_VARIABLE checkedHead)
       string(COMPARE EQUAL "${localHead}" "${checkedHead}" upToDate)
+      message(STATUS "git rev-parse 'HEAD:${relative_path}' WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} OUTPUT_VARIABLE checkedHead")
       if (upToDate)
         message(STATUS "Submodule '${relative_path}' is up-to-date")
       else()
@@ -672,8 +673,11 @@ else()
     add_cxx_flag_if_supported(-fstack-clash-protection CXX_SECURITY_FLAGS)
   endif()
 
-  add_c_flag_if_supported(-mmitigate-rop C_SECURITY_FLAGS)
-  add_cxx_flag_if_supported(-mmitigate-rop CXX_SECURITY_FLAGS)
+  # Removed in GCC 9.1 (or before ?), but still accepted, so spams the output
+  if (NOT (CMAKE_C_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 9.1))
+    add_c_flag_if_supported(-mmitigate-rop C_SECURITY_FLAGS)
+    add_cxx_flag_if_supported(-mmitigate-rop CXX_SECURITY_FLAGS)
+  endif()
 
   # linker
   if (NOT WIN32)
