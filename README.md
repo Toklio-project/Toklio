@@ -207,18 +207,24 @@ Tested on a Raspberry Pi Zero with a clean install of minimal Raspbian Stretch (
 * Install the dependencies for Toklio from the 'Debian' column in the table above.
 
 * Increase the system swap size:
-```
-	sudo /etc/init.d/dphys-swapfile stop  
-	sudo nano /etc/dphys-swapfile  
-	CONF_SWAPSIZE=2048
-	sudo /etc/init.d/dphys-swapfile start  
-```
-* Clone Toklio and checkout most recent release version:
-```
-        git clone https://github.com/Toklio-project/Toklio.git
-	cd Toklio
-	git checkout release-v0.13
-```
+
+    ```bash
+    sudo /etc/init.d/dphys-swapfile stop  
+    sudo nano /etc/dphys-swapfile  
+    CONF_SWAPSIZE=2048
+    sudo /etc/init.d/dphys-swapfile start
+    ```
+
+* If using an external hard disk without an external power supply, ensure it gets enough power to avoid hardware issues when syncing, by adding the line "max_usb_current=1" to /boot/config.txt
+
+* Clone monero and checkout the most recent release version:
+
+    ```bash
+    git clone https://github.com/Toklio-project/Toklio.git
+    cd Toklio
+    git checkout release-v0.14
+    ```
+
 * Build:
 
     ```bash
@@ -335,10 +341,10 @@ application.
     cd Toklio
     ```
 
-* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.14.1.0'. If you don't care about the version and just want binaries from master, skip this step:
+* If you would like a specific [version/tag](https://github.com/monero-project/monero/tags), do a git checkout for that version. eg. 'v0.14.1.2'. If you don't care about the version and just want binaries from master, skip this step:
 	
     ```bash
-    git checkout release-v0.13
+    git checkout release-v0.14
     ```
 
 * If you are on a 64-bit system, run:

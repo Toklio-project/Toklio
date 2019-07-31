@@ -141,6 +141,7 @@ int main(int argc, char const * argv[])
       command_line::add_arg(core_settings, daemon_args::arg_public_node);
       command_line::add_arg(core_settings, daemon_args::arg_zmq_rpc_bind_ip);
       command_line::add_arg(core_settings, daemon_args::arg_zmq_rpc_bind_port);
+      command_line::add_arg(core_settings, daemon_args::arg_zmq_rpc_disabled);
 
       daemonizer::init_options(hidden_options, visible_options);
       daemonize::t_executor::init_options(core_settings);
@@ -324,7 +325,11 @@ int main(int argc, char const * argv[])
           }
         }
 
-        daemonize::t_command_server rpc_commands{rpc_ip, rpc_port, std::move(login)};
+        auto ssl_options = cryptonote::rpc_args::process_ssl(vm, true);
+        if (!ssl_options)
+          return 1;
+
+        daemonize::t_command_server rpc_commands{rpc_ip, rpc_port, std::move(login), std::move(*ssl_options)};
         if (rpc_commands.process_command_vec(command))
         {
           return 0;

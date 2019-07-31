@@ -54,6 +54,9 @@
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "net"
 
+#define AGGRESSIVE_TIMEOUT_THRESHOLD 120 // sockets
+#define NEW_CONNECTION_TIMEOUT_LOCAL 1200000 // 2 minutes
+#define NEW_CONNECTION_TIMEOUT_REMOTE 10000 // 10 seconds
 #define DEFAULT_TIMEOUT_MS_LOCAL 1800000 // 30 minutes
 #define DEFAULT_TIMEOUT_MS_REMOTE 300000 // 5 minutes
 #define TIMEOUT_EXTRA_MS_PER_BYTE 0.2
@@ -189,7 +192,7 @@ PRAGMA_WARNING_DISABLE_VS(4355)
 
     m_protocol_handler.after_init_connection();
 
-    reset_timer(get_default_timeout(), false);
+    reset_timer(boost::posix_time::milliseconds(m_local ? NEW_CONNECTION_TIMEOUT_LOCAL : NEW_CONNECTION_TIMEOUT_REMOTE), false);
 
     // first read on the raw socket to detect SSL for the server
     buffer_ssl_init_fill = 0;
@@ -324,12 +327,14 @@ PRAGMA_WARNING_DISABLE_VS(4355)
     
     if (!e)
     {
+        double current_speed_down;
 		{
 			CRITICAL_REGION_LOCAL(m_throttle_speed_in_mutex);
 			m_throttle_speed_in.handle_trafic_exact(bytes_transferred);
-			context.m_current_speed_down = m_throttle_speed_in.get_current_speed();
-			context.m_max_speed_down = std::max(context.m_max_speed_down, context.m_current_speed_down);
+			current_speed_down = m_throttle_speed_in.get_current_speed();
 		}
+        context.m_current_speed_down = current_speed_down;
+        context.m_max_speed_down = std::max(context.m_max_speed_down, current_speed_down);
     
     {
 			CRITICAL_REGION_LOCAL(	epee::net_utils::network_throttle_manager::network_throttle_manager::m_lock_get_global_throttle_in );
@@ -599,12 +604,14 @@ PRAGMA_WARNING_DISABLE_VS(4355)
       return false;
     if(m_was_shutdown)
       return false;
+    double current_speed_up;
     {
 		CRITICAL_REGION_LOCAL(m_throttle_speed_out_mutex);
 		m_throttle_speed_out.handle_trafic_exact(cb);
-		context.m_current_speed_up = m_throttle_speed_out.get_current_speed();
-		context.m_max_speed_up = std::max(context.m_max_speed_up, context.m_current_speed_up);
+		current_speed_up = m_throttle_speed_out.get_current_speed();
 	}
+    context.m_current_speed_up = current_speed_up;
+    context.m_max_speed_up = std::max(context.m_max_speed_up, current_speed_up);
 
     //_info("[sock " << socket().native_handle() << "] SEND " << cb);
     context.m_last_send = time(NULL);
@@ -691,7 +698,7 @@ PRAGMA_WARNING_DISABLE_VS(4355)
   {
     unsigned count;
     try { count = host_count(m_host); } catch (...) { count = 0; }
-    const unsigned shift = std::min(std::max(count, 1u) - 1, 8u);
+    const unsigned shift = get_state().sock_count > AGGRESSIVE_TIMEOUT_THRESHOLD ? std::min(std::max(count, 1u) - 1, 8u) : 0;
     boost::posix_time::milliseconds timeout(0);
     if (m_local)
       timeout = boost::posix_time::milliseconds(DEFAULT_TIMEOUT_MS_LOCAL >> shift);
@@ -730,8 +737,6 @@ PRAGMA_WARNING_DISABLE_VS(4355)
   template<class t_protocol_handler>
   void connection<t_protocol_handler>::reset_timer(boost::posix_time::milliseconds ms, bool add)
   {
-    if (m_connection_type != e_connection_type_RPC)
-      return;
     MTRACE("Setting " << ms << " expiry");
     auto self = safe_shared_from_this();
     if(!self)
