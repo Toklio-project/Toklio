@@ -264,16 +264,16 @@ namespace cryptonote
 						     , "checkpoints.moneropulse.co"*/
     };
 
-    static const std::vector<std::string> testnet_dns_urls = { "testpoints.moneropulse.se"
-							     , "testpoints.moneropulse.org"
-							     , "testpoints.moneropulse.net"
-							     , "testpoints.moneropulse.co"
+    static const std::vector<std::string> testnet_dns_urls = { "testpoints.tokl.io"
+							     , "testpoints2.tokl.io"
+							     , "testpoints3.tokl.io"
+							     , "testpoints4.tokl.io"
     };
 
-    static const std::vector<std::string> stagenet_dns_urls = { "stagenetpoints.moneropulse.se"
-                   , "stagenetpoints.moneropulse.org"
-                   , "stagenetpoints.moneropulse.net"
-                   , "stagenetpoints.moneropulse.co"
+    static const std::vector<std::string> stagenet_dns_urls = { "stagenetpoints.tokl.io"
+                   , "stagenetpoints2.tokl.io"
+                   , "stagenetpoints3.tokl.io"
+                   , "stagenetpoints4.tokl.io"
     };
 
     if (!tools::dns_utils::load_txt_records_from_dns(records, nettype == TESTNET ? testnet_dns_urls : nettype == STAGENET ? stagenet_dns_urls : dns_urls))
