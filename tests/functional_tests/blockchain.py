@@ -53,7 +53,8 @@ class BlockchainTest():
     def reset(self):
         print('Resetting blockchain')
         daemon = Daemon()
-        daemon.pop_blocks(1000)
+        res = daemon.get_height()
+        daemon.pop_blocks(res.height - 1)
         daemon.flush_txpool()
 
     def _test_generateblocks(self, blocks):
@@ -77,6 +78,12 @@ class BlockchainTest():
         try: daemon.getblock(height = height)
         except: ok = True
         assert ok
+
+        res = daemon.get_fee_estimate()
+        assert res.fee == 234562
+        assert res.quantization_mask == 10000
+        res = daemon.get_fee_estimate(10)
+        assert res.fee <= 234562
 
         # generate blocks
         res_generateblocks = daemon.generateblocks('42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm', blocks)
@@ -229,6 +236,12 @@ class BlockchainTest():
             assert res.histogram[i].unlocked_instances == 0
             assert res.histogram[i].recent_instances == 0
 
+        res = daemon.get_fee_estimate()
+        assert res.fee == 234560
+        assert res.quantization_mask == 10000
+        res = daemon.get_fee_estimate(10)
+        assert res.fee <= 234560
+
     def _test_alt_chains(self):
         print('Testing alt chains')
         daemon = Daemon()
@@ -317,6 +330,9 @@ class BlockchainTest():
             assert chain.main_chain_parent_block == root_block_hash
         for txid in [alt_blocks[0], alt_blocks[2], alt_blocks[4]]:
           assert len([chain for chain in res.chains if chain.block_hash == txid]) == 1
+
+        print('Saving blockchain explicitely')
+        daemon.save_bc()
 
 
 if __name__ == '__main__':

@@ -26,6 +26,7 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include <algorithm>
 #include <atomic>
 #include <boost/archive/portable_binary_oarchive.hpp>
 #include <boost/archive/portable_binary_iarchive.hpp>
@@ -36,19 +37,30 @@
 #include <boost/asio/steady_timer.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/endian/conversion.hpp>
+#include <boost/range/adaptor/sliced.hpp>
+#include <boost/range/combine.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/thread/scoped_thread.hpp>
 #include <boost/thread/thread.hpp>
+#include <boost/uuid/nil_generator.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <gtest/gtest.h>
+#include <map>
 #include <memory>
+#include <type_traits>
 
+#include "net/dandelionpp.h"
 #include "net/error.h"
 #include "net/net_utils_base.h"
 #include "net/socks.h"
 #include "net/socks_connect.h"
 #include "net/parse.h"
 #include "net/tor_address.h"
+#include "net/zmq.h"
 #include "p2p/net_peerlist_boost_serialization.h"
 #include "serialization/keyvalue_serialization.h"
 #include "storages/portable_storage.h"
@@ -855,5 +867,525 @@ TEST(socks_connector, timeout)
 
     ASSERT_EQ(boost::future_status::ready, sock.wait_for(boost::chrono::seconds{3}));
     EXPECT_THROW(sock.get().is_open(), boost::system::system_error);
+}
+
+TEST(dandelionpp_map, traits)
+{
+    EXPECT_TRUE(std::is_default_constructible<net::dandelionpp::connection_map>());
+    EXPECT_TRUE(std::is_move_constructible<net::dandelionpp::connection_map>());
+    EXPECT_TRUE(std::is_move_assignable<net::dandelionpp::connection_map>());
+    EXPECT_FALSE(std::is_copy_constructible<net::dandelionpp::connection_map>());
+    EXPECT_FALSE(std::is_copy_assignable<net::dandelionpp::connection_map>());
+}
+
+TEST(dandelionpp_map, empty)
+{
+    const net::dandelionpp::connection_map mapper{};
+
+    EXPECT_EQ(mapper.begin(), mapper.end());
+    EXPECT_EQ(0u, mapper.size());
+
+    const net::dandelionpp::connection_map cloned = mapper.clone();
+    EXPECT_EQ(cloned.begin(), cloned.end());
+    EXPECT_EQ(0u, cloned.size());
+}
+
+TEST(dandelionpp_map, zero_stems)
+{
+    std::vector<boost::uuids::uuid> connections{6};
+    std::generate(connections.begin(), connections.end(), boost::uuids::random_generator{});
+
+    net::dandelionpp::connection_map mapper{connections, 0};
+    EXPECT_EQ(mapper.begin(), mapper.end());
+    EXPECT_EQ(0u, mapper.size());
+
+    for (const boost::uuids::uuid& connection : connections)
+        EXPECT_TRUE(mapper.get_stem(connection).is_nil());
+
+    EXPECT_FALSE(mapper.update(connections));
+    EXPECT_EQ(mapper.begin(), mapper.end());
+    EXPECT_EQ(0u, mapper.size());
+
+    for (const boost::uuids::uuid& connection : connections)
+        EXPECT_TRUE(mapper.get_stem(connection).is_nil());
+
+    const net::dandelionpp::connection_map cloned = mapper.clone();
+    EXPECT_EQ(cloned.end(), cloned.begin());
+    EXPECT_EQ(0u, cloned.size());
+}
+
+TEST(dandelionpp_map, dropped_connection)
+{
+    std::vector<boost::uuids::uuid> connections{6};
+    std::generate(connections.begin(), connections.end(), boost::uuids::random_generator{});
+    std::sort(connections.begin(), connections.end());
+
+    // select 3 of 6 outgoing connections
+    net::dandelionpp::connection_map mapper{connections, 3};
+    EXPECT_EQ(3u, mapper.size());
+    EXPECT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    {
+        const net::dandelionpp::connection_map cloned = mapper.clone();
+        EXPECT_EQ(3u, cloned.size());
+        ASSERT_EQ(mapper.end() - mapper.begin(), cloned.end() - cloned.begin());
+        for (auto elem : boost::combine(mapper, cloned))
+            EXPECT_EQ(boost::get<0>(elem), boost::get<1>(elem));
+    }
+    EXPECT_FALSE(mapper.update(connections));
+    EXPECT_EQ(3u, mapper.size());
+    ASSERT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    std::map<boost::uuids::uuid, boost::uuids::uuid> mapping;
+    std::vector<boost::uuids::uuid> in_connections{9};
+    std::generate(in_connections.begin(), in_connections.end(), boost::uuids::random_generator{});
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        std::multimap<boost::uuids::uuid, boost::uuids::uuid> inverse_mapping;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            EXPECT_TRUE(mapping.emplace(connection, out).second);
+            inverse_mapping.emplace(out, connection);
+            used[out]++;
+        }
+
+        EXPECT_EQ(3u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(3u, entry.second);
+
+        for (const boost::uuids::uuid& connection : in_connections)
+            EXPECT_EQ(mapping[connection], mapper.get_stem(connection));
+
+        // drop 1 connection, and select replacement from 1 of unused 3.
+        const boost::uuids::uuid lost_connection = *(++mapper.begin());
+        const auto elem = std::lower_bound(connections.begin(), connections.end(), lost_connection);
+        ASSERT_NE(connections.end(), elem);
+        ASSERT_EQ(lost_connection, *elem);
+        connections.erase(elem);
+
+        EXPECT_TRUE(mapper.update(connections));
+        EXPECT_EQ(3u, mapper.size());
+        ASSERT_EQ(3, mapper.end() - mapper.begin());
+
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_NE(lost_connection, connection);
+        }
+
+        const boost::uuids::uuid newly_mapped = *(++mapper.begin());
+        EXPECT_FALSE(newly_mapped.is_nil());
+        EXPECT_NE(lost_connection, newly_mapped);
+
+        for (auto elems = inverse_mapping.equal_range(lost_connection); elems.first != elems.second; ++elems.first)
+            mapping[elems.first->second] = newly_mapped;
+    }
+    {
+        const net::dandelionpp::connection_map cloned = mapper.clone();
+        EXPECT_EQ(3u, cloned.size());
+        ASSERT_EQ(mapper.end() - mapper.begin(), cloned.end() - cloned.begin());
+        for (auto elem : boost::combine(mapper, cloned))
+            EXPECT_EQ(boost::get<0>(elem), boost::get<1>(elem));
+    }
+    // mappings should remain evenly distributed amongst 2, with 3 sitting in waiting
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid& out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            EXPECT_EQ(mapping[connection], out);
+            used[out]++;
+        }
+
+        EXPECT_EQ(3u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(3u, entry.second);
+    }
+    {
+        const net::dandelionpp::connection_map cloned = mapper.clone();
+        EXPECT_EQ(3u, cloned.size());
+        ASSERT_EQ(mapper.end() - mapper.begin(), cloned.end() - cloned.begin());
+        for (auto elem : boost::combine(mapper, cloned))
+            EXPECT_EQ(boost::get<0>(elem), boost::get<1>(elem));
+    }
+}
+
+TEST(dandelionpp_map, dropped_connection_remapped)
+{
+    boost::uuids::random_generator random_uuid{};
+
+    std::vector<boost::uuids::uuid> connections{3};
+    for (auto &e: connections)
+      e = random_uuid();
+    std::sort(connections.begin(), connections.end());
+
+    // select 3 of 3 outgoing connections
+    net::dandelionpp::connection_map mapper{connections, 3};
+    EXPECT_EQ(3u, mapper.size());
+    EXPECT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    EXPECT_FALSE(mapper.update(connections));
+    EXPECT_EQ(3u, mapper.size());
+    ASSERT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    std::map<boost::uuids::uuid, boost::uuids::uuid> mapping;
+    std::vector<boost::uuids::uuid> in_connections{9};
+    for (auto &e: in_connections)
+      e = random_uuid();
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        std::multimap<boost::uuids::uuid, boost::uuids::uuid> inverse_mapping;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            EXPECT_TRUE(mapping.emplace(connection, out).second);
+            inverse_mapping.emplace(out, connection);
+            used[out]++;
+        }
+
+        EXPECT_EQ(3u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(3u, entry.second);
+
+        for (const boost::uuids::uuid& connection : in_connections)
+            EXPECT_EQ(mapping[connection], mapper.get_stem(connection));
+
+        // drop 1 connection leaving "hole"
+        const boost::uuids::uuid lost_connection = *(++mapper.begin());
+        const auto elem = std::lower_bound(connections.begin(), connections.end(), lost_connection);
+        ASSERT_NE(connections.end(), elem);
+        ASSERT_EQ(lost_connection, *elem);
+        connections.erase(elem);
+
+        EXPECT_TRUE(mapper.update(connections));
+        EXPECT_EQ(2u, mapper.size());
+        EXPECT_EQ(3, mapper.end() - mapper.begin());
+
+        for (auto elems = inverse_mapping.equal_range(lost_connection); elems.first != elems.second; ++elems.first)
+            mapping[elems.first->second] = boost::uuids::nil_uuid();
+    }
+    // remap 3 connections and map 1 new connection to 2 remaining out connections
+    in_connections.resize(10);
+    in_connections[9] = random_uuid();
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid& out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            used[out]++;
+
+            boost::uuids::uuid& expected = mapping[connection];
+            if (!expected.is_nil())
+                EXPECT_EQ(expected, out);
+            else
+                expected = out;
+        }
+
+        EXPECT_EQ(2u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(5u, entry.second);
+    }
+    // select 3 of 3 connections but do not remap existing links
+    connections.resize(3);
+    connections[2] = random_uuid();
+    EXPECT_TRUE(mapper.update(connections));
+    EXPECT_EQ(3u, mapper.size());
+    EXPECT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid& out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            used[out]++;
+
+            EXPECT_EQ(mapping[connection], out);
+        }
+
+        EXPECT_EQ(2u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(5u, entry.second);
+    }
+    // map 8 new incoming connections across 3 outgoing links
+    in_connections.resize(18);
+    for (size_t i = 10; i < in_connections.size(); ++i)
+      in_connections[i] = random_uuid();
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid& out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            used[out]++;
+
+            boost::uuids::uuid& expected = mapping[connection];
+            if (!expected.is_nil())
+                EXPECT_EQ(expected, out);
+            else
+                expected = out;
+        }
+
+        EXPECT_EQ(3u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(6u, entry.second);
+    }
+}
+
+TEST(dandelionpp_map, dropped_all_connections)
+{
+    boost::uuids::random_generator random_uuid{};
+
+    std::vector<boost::uuids::uuid> connections{8};
+    for (auto &e: connections)
+      e = random_uuid();
+    std::sort(connections.begin(), connections.end());
+
+    // select 3 of 8 outgoing connections
+    net::dandelionpp::connection_map mapper{connections, 3};
+    EXPECT_EQ(3u, mapper.size());
+    EXPECT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    EXPECT_FALSE(mapper.update(connections));
+    EXPECT_EQ(3u, mapper.size());
+    ASSERT_EQ(3, mapper.end() - mapper.begin());
+    {
+        std::set<boost::uuids::uuid> used;
+        for (const boost::uuids::uuid& connection : mapper)
+        {
+            EXPECT_FALSE(connection.is_nil());
+            EXPECT_TRUE(used.insert(connection).second);
+            EXPECT_TRUE(std::binary_search(connections.begin(), connections.end(), connection));
+        }
+    }
+    std::vector<boost::uuids::uuid> in_connections{9};
+    for (auto &e: in_connections)
+      e = random_uuid();
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        std::map<boost::uuids::uuid, boost::uuids::uuid> mapping;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            EXPECT_TRUE(mapping.emplace(connection, out).second);
+            used[out]++;
+        }
+
+        EXPECT_EQ(3u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(3u, entry.second);
+
+        for (const boost::uuids::uuid& connection : in_connections)
+            EXPECT_EQ(mapping[connection], mapper.get_stem(connection));
+
+        // drop all connections
+        connections.clear();
+
+        EXPECT_TRUE(mapper.update(connections));
+        EXPECT_EQ(0u, mapper.size());
+        EXPECT_EQ(3, mapper.end() - mapper.begin());
+    }
+    // remap 7 connections to nothing
+    for (const boost::uuids::uuid& connection : boost::adaptors::slice(in_connections, 0, 7))
+        EXPECT_TRUE(mapper.get_stem(connection).is_nil());
+
+    // select 3 of 30 connections, only 7 should be remapped to new indexes (but all to new uuids)
+    connections.resize(30);
+    for (auto &e: connections)
+      e = random_uuid();
+    EXPECT_TRUE(mapper.update(connections));
+    {
+        std::map<boost::uuids::uuid, std::size_t> used;
+        for (const boost::uuids::uuid& connection : in_connections)
+        {
+            const boost::uuids::uuid& out = mapper.get_stem(connection);
+            EXPECT_FALSE(out.is_nil());
+            used[out]++;
+        }
+
+        EXPECT_EQ(3u, used.size());
+        for (const std::pair<boost::uuids::uuid, std::size_t>& entry : used)
+            EXPECT_EQ(3u, entry.second);
+    }
+}
+
+TEST(zmq, error_codes)
+{
+    EXPECT_EQ(
+        std::addressof(net::zmq::error_category()),
+        std::addressof(net::zmq::make_error_code(0).category())
+    );
+    EXPECT_EQ(
+        std::make_error_condition(std::errc::not_a_socket),
+        net::zmq::make_error_code(ENOTSOCK)
+    );
+
+    EXPECT_TRUE(
+        []() -> expect<void>
+        {
+            MONERO_ZMQ_CHECK(zmq_msg_send(nullptr, nullptr, 0));
+            return success();
+        }().matches(std::errc::not_a_socket)
+    );
+
+    bool thrown = false;
+    try
+    {
+        MONERO_ZMQ_THROW("stuff");
+    }
+    catch (const std::system_error& e)
+    {
+        thrown = true;
+        EXPECT_EQ(std::make_error_condition(std::errc::not_a_socket), e.code());
+    }
+    EXPECT_TRUE(thrown);
+}
+
+TEST(zmq, read_write)
+{
+    net::zmq::context context{zmq_init(1)};
+    ASSERT_NE(nullptr, context);
+
+    net::zmq::socket send_socket{zmq_socket(context.get(), ZMQ_REQ)};
+    net::zmq::socket recv_socket{zmq_socket(context.get(), ZMQ_REP)};
+    ASSERT_NE(nullptr, send_socket);
+    ASSERT_NE(nullptr, recv_socket);
+
+    ASSERT_EQ(0u, zmq_bind(recv_socket.get(), "inproc://testing"));
+    ASSERT_EQ(0u, zmq_connect(send_socket.get(), "inproc://testing"));
+
+    std::string message;
+    message.resize(1024);
+    crypto::rand(message.size(), reinterpret_cast<std::uint8_t*>(std::addressof(message[0])));
+
+    ASSERT_TRUE(bool(net::zmq::send(epee::strspan<std::uint8_t>(message), send_socket.get())));
+
+    const expect<std::string> received = net::zmq::receive(recv_socket.get());
+    ASSERT_TRUE(bool(received));
+    EXPECT_EQ(message, *received);
+}
+
+TEST(zmq, read_write_multipart)
+{
+    net::zmq::context context{zmq_init(1)};
+    ASSERT_NE(nullptr, context);
+
+    net::zmq::socket send_socket{zmq_socket(context.get(), ZMQ_REQ)};
+    net::zmq::socket recv_socket{zmq_socket(context.get(), ZMQ_REP)};
+    ASSERT_NE(nullptr, send_socket);
+    ASSERT_NE(nullptr, recv_socket);
+
+    ASSERT_EQ(0u, zmq_bind(recv_socket.get(), "inproc://testing"));
+    ASSERT_EQ(0u, zmq_connect(send_socket.get(), "inproc://testing"));
+
+    std::string message;
+    message.resize(999);
+    crypto::rand(message.size(), reinterpret_cast<std::uint8_t*>(std::addressof(message[0])));
+
+    for (unsigned i = 0; i < 3; ++i)
+    {
+        const expect<std::string> received = net::zmq::receive(recv_socket.get(), ZMQ_DONTWAIT);
+        ASSERT_FALSE(bool(received));
+        EXPECT_EQ(net::zmq::make_error_code(EAGAIN), received.error());
+
+        const epee::span<const std::uint8_t> bytes{
+            reinterpret_cast<const std::uint8_t*>(std::addressof(message[0])) + (i * 333), 333
+        };
+        ASSERT_TRUE(bool(net::zmq::send(bytes, send_socket.get(), (i == 2 ? 0 : ZMQ_SNDMORE))));
+    }
+
+    const expect<std::string> received = net::zmq::receive(recv_socket.get(), ZMQ_DONTWAIT);
+    ASSERT_TRUE(bool(received));
+    EXPECT_EQ(message, *received);
+}
+
+TEST(zmq, read_write_termination)
+{
+    net::zmq::context context{zmq_init(1)};
+    ASSERT_NE(nullptr, context);
+
+    // must be declared before sockets and after context
+    boost::scoped_thread<> thread{};
+
+    net::zmq::socket send_socket{zmq_socket(context.get(), ZMQ_REQ)};
+    net::zmq::socket recv_socket{zmq_socket(context.get(), ZMQ_REP)};
+    ASSERT_NE(nullptr, send_socket);
+    ASSERT_NE(nullptr, recv_socket);
+
+    ASSERT_EQ(0u, zmq_bind(recv_socket.get(), "inproc://testing"));
+    ASSERT_EQ(0u, zmq_connect(send_socket.get(), "inproc://testing"));
+
+    std::string message;
+    message.resize(1024);
+    crypto::rand(message.size(), reinterpret_cast<std::uint8_t*>(std::addressof(message[0])));
+
+    ASSERT_TRUE(bool(net::zmq::send(epee::strspan<std::uint8_t>(message), send_socket.get(), ZMQ_SNDMORE)));
+
+    expect<std::string> received = net::zmq::receive(recv_socket.get(), ZMQ_DONTWAIT);
+    ASSERT_FALSE(bool(received));
+    EXPECT_EQ(net::zmq::make_error_code(EAGAIN), received.error());
+
+    thread = boost::scoped_thread<>{
+        boost::thread{
+            [&context] () { context.reset(); }
+        }
+    };
+
+    received = net::zmq::receive(recv_socket.get());
+    ASSERT_FALSE(bool(received));
+    EXPECT_EQ(net::zmq::make_error_code(ETERM), received.error());
 }
 

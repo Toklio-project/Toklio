@@ -548,7 +548,7 @@ namespace cryptonote
      *
      * @return false if any input is invalid, otherwise true
      */
-    bool check_tx_inputs(transaction& tx, uint64_t& pmax_used_block_height, crypto::hash& max_used_block_id, tx_verification_context &tvc, bool kept_by_block = false);
+    bool check_tx_inputs(transaction& tx, uint64_t& pmax_used_block_height, crypto::hash& max_used_block_id, tx_verification_context &tvc, bool kept_by_block = false) const;
 
     /**
      * @brief get fee quantization mask
@@ -615,7 +615,7 @@ namespace cryptonote
      *
      * @return false if any outputs do not conform, otherwise true
      */
-    bool check_tx_outputs(const transaction& tx, tx_verification_context &tvc);
+    bool check_tx_outputs(const transaction& tx, tx_verification_context &tvc) const;
 
     /**
      * @brief gets the block weight limit based on recent blocks
@@ -761,13 +761,6 @@ namespace cryptonote
      * @return the HardFork object
      */
     HardFork::State get_hard_fork_state() const;
-
-    /**
-     * @brief gets the hardfork heights of given network
-     *
-     * @return the HardFork object
-     */
-    static const std::vector<HardFork::Params>& get_hard_fork_heights(network_type nettype);
 
     /**
      * @brief gets the current hardfork version in use/voted for
@@ -950,9 +943,9 @@ namespace cryptonote
     /**
      * @brief returns a set of known alternate chains
      *
-     * @return a list of chains
+     * @return a vector of chains
      */
-    std::list<std::pair<block_extended_info,std::vector<crypto::hash>>> get_alternative_chains() const;
+    std::vector<std::pair<block_extended_info,std::vector<crypto::hash>>> get_alternative_chains() const;
 
     void add_txpool_tx(const crypto::hash &txid, const cryptonote::blobdata &blob, const txpool_tx_meta_t &meta);
     void update_txpool_tx(const crypto::hash &txid, const txpool_tx_meta_t &meta);
@@ -1020,7 +1013,6 @@ namespace cryptonote
     // metadata containers
     std::unordered_map<crypto::hash, std::unordered_map<crypto::key_image, std::vector<output_data_t>>> m_scan_table;
     std::unordered_map<crypto::hash, crypto::hash> m_blocks_longhash_table;
-    std::unordered_map<crypto::hash, std::unordered_map<crypto::key_image, bool>> m_check_txin_table;
 
     // SHA-3 hashes for each block and for fast pow checking
     std::vector<crypto::hash> m_blocks_hash_of_hashes;
@@ -1127,7 +1119,7 @@ namespace cryptonote
      *
      * @return false if any output is not yet unlocked, or is missing, otherwise true
      */
-    bool check_tx_input(size_t tx_version,const txin_to_key& txin, const crypto::hash& tx_prefix_hash, const std::vector<crypto::signature>& sig, const rct::rctSig &rct_signatures, std::vector<rct::ctkey> &output_keys, uint64_t* pmax_related_block_height);
+    bool check_tx_input(size_t tx_version,const txin_to_key& txin, const crypto::hash& tx_prefix_hash, const std::vector<crypto::signature>& sig, const rct::rctSig &rct_signatures, std::vector<rct::ctkey> &output_keys, uint64_t* pmax_related_block_height) const;
 
     /**
      * @brief validate a transaction's inputs and their keys
@@ -1149,7 +1141,7 @@ namespace cryptonote
      *
      * @return false if any validation step fails, otherwise true
      */
-    bool check_tx_inputs(transaction& tx, tx_verification_context &tvc, uint64_t* pmax_used_block_height = NULL);
+    bool check_tx_inputs(transaction& tx, tx_verification_context &tvc, uint64_t* pmax_used_block_height = NULL) const;
 
     /**
      * @brief performs a blockchain reorganization according to the longest chain rule
@@ -1246,10 +1238,11 @@ namespace cryptonote
      *
      * @param b the block containing the miner transaction
      * @param height the height at which the block will be added
+     * @param hf_version the consensus rules to apply
      *
      * @return false if anything is found wrong with the miner transaction, otherwise true
      */
-    bool prevalidate_miner_transaction(const block& b, uint64_t height);
+    bool prevalidate_miner_transaction(const block& b, uint64_t height, uint8_t hf_version);
 
     /**
      * @brief validates a miner (coinbase) transaction
@@ -1429,7 +1422,7 @@ namespace cryptonote
      * @param result false if the ring signature is invalid, otherwise true
      */
     void check_ring_signature(const crypto::hash &tx_prefix_hash, const crypto::key_image &key_image,
-        const std::vector<rct::ctkey> &pubkeys, const std::vector<crypto::signature> &sig, uint64_t &result);
+        const std::vector<rct::ctkey> &pubkeys, const std::vector<crypto::signature> &sig, uint64_t &result) const;
 
     /**
      * @brief loads block hashes from compiled-in data set
@@ -1449,7 +1442,7 @@ namespace cryptonote
      * can be reconstituted by the receiver. This function expands
      * that implicit data.
      */
-    bool expand_transaction_2(transaction &tx, const crypto::hash &tx_prefix_hash, const std::vector<std::vector<rct::ctkey>> &pubkeys);
+    bool expand_transaction_2(transaction &tx, const crypto::hash &tx_prefix_hash, const std::vector<std::vector<rct::ctkey>> &pubkeys) const;
 
     /**
      * @brief invalidates any cached block template

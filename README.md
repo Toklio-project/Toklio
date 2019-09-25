@@ -10,7 +10,7 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
   - [Research](#research)
   - [Announcements](#announcements)
   - [Translations](#translations)
-  - [Build](#build)
+  - [Build Status](#build-status)
     - [IMPORTANT](#important)
   - [Coverage](#coverage)
   - [Introduction](#introduction)
@@ -22,6 +22,10 @@ Portions Copyright (c) 2012-2013 The Cryptonote developers.
   - [Release staging schedule and protocol](#release-staging-schedule-and-protocol)
   - [Compiling Monero from source](#compiling-monero-from-source)
     - [Dependencies](#dependencies)
+  - [Internationalization](#Internationalization)
+  - [Using Tor](#Using Tor)
+  - [Debugging](#Debugging)
+  - [Known issues](#known-issues)
 
 ## Development resources
 
@@ -95,7 +99,7 @@ library archives (`.a`).
 | pkg-config   | any           | NO       | `pkg-config`       | `base-devel` | `pkgconf`         | NO       |                |
 | Boost        | 1.58          | NO       | `libboost-all-dev` | `boost`      | `boost-devel`     | NO       | C++ libraries  |
 | OpenSSL      | basically any | NO       | `libssl-dev`       | `openssl`    | `openssl-devel`   | NO       | sha256 sum     |
-| libzmq       | 3.0.0         | NO       | `libzmq3-dev`      | `zeromq`     | `cppzmq-devel`    | NO       | ZeroMQ library |
+| libzmq       | 3.0.0         | NO       | `libzmq3-dev`      | `zeromq`     | `zeromq-devel`    | NO       | ZeroMQ library |
 | OpenPGM      | ?             | NO       | `libpgm-dev`       | `libpgm`     | `openpgm-devel`   | NO       | For ZeroMQ     |
 | libnorm[2]   | ?             | NO       | `libnorm-dev`      |              |               `   | YES      | For ZeroMQ     |
 | libunbound   | 1.4.16        | YES      | `libunbound-dev`   | `unbound`    | `unbound-devel`   | NO       | DNS resolver   |
@@ -476,7 +480,8 @@ env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local make release-static
 
 You will need to add a few packages to your system. `pkg_add cmake gmake zeromq cppzmq libiconv boost`.
 
-The doxygen and graphviz packages are optional and require the xbase set.
+The `doxygen` and `graphviz` packages are optional and require the xbase set.
+Running the test suite also requires `py-requests` package.
 
 Build monero: `env DEVELOPER_LOCAL_TOOLS=1 BOOST_ROOT=/usr/local gmake release-static`
 
@@ -545,6 +550,8 @@ You can also cross-compile static binaries on Linux for Windows and macOS with t
   * Requires: `g++-arm-linux-gnueabihf`
 * ```make depends target=aarch64-linux-gnu``` for armv8 binaries.
   * Requires: `g++-aarch64-linux-gnu`
+* ```make depends target=riscv64-linux-gnu``` for RISC V 64 bit binaries.
+  * Requires: `g++-riscv64-linux-gnu`
 
 The required packages are the names for each toolchain on apt. Depending on your distro, they may have different names.
 
@@ -558,13 +565,12 @@ The produced binaries still link libc dynamically. If the binary is compiled on 
 
 Packages are available for
 
-* Ubuntu and [snap supported](https://snapcraft.io/docs/core/install) systems, via a community contributed build.
+* Debian Bullseye and Sid
 
     ```bash
-    snap install monero --beta
+    sudo apt install monero
     ```
-
-Installing a snap is very quick. Snaps are secure. They are isolated with all of their dependencies. Snaps also auto update when a new version is released.
+More info and versions in the [Debian package tracker](https://tracker.debian.org/pkg/monero).
 
 * Arch Linux (via [AUR](https://aur.archlinux.org/)):
   - Stable release: [`monero`](https://aur.archlinux.org/packages/monero)
@@ -716,6 +722,12 @@ gdb /path/to/tokliod /path/to/dumpfile`
 ```
 
 Print the stack trace with `bt`
+
+ * If a program crashed and cores are managed by systemd, the following can also get a stack trace for that crash:
+
+```bash
+coredumpctl -1 gdb
+```
 
 #### To run monero within gdb:
 

@@ -354,7 +354,7 @@ namespace cryptonote
 
     if (shuffle_outs)
     {
-      std::shuffle(destinations.begin(), destinations.end(), std::default_random_engine(crypto::rand<unsigned int>()));
+      std::shuffle(destinations.begin(), destinations.end(), crypto::random_device{});
     }
 
     // sort ins by their key image
@@ -647,7 +647,7 @@ namespace cryptonote
     )
   {
     //genesis block
-    bl = boost::value_initialized<block>();
+    bl = {};
 
     blobdata tx_bl;
     bool r = string_tools::parse_hexstr_to_binbuff(genesis_tx, tx_bl);

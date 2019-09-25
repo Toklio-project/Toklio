@@ -55,7 +55,7 @@
     if (ELPP->vRegistry()->allowed(level, cat)) { \
       init; \
       if (test) \
-        el::base::Writer(level, __FILE__, __LINE__, ELPP_FUNC, el::base::DispatchAction::NormalLog).construct(cat) << x; \
+        el::base::Writer(level, el::Color::Default, __FILE__, __LINE__, ELPP_FUNC, el::base::DispatchAction::NormalLog).construct(cat) << x; \
     } \
   } while(0)
 
@@ -134,7 +134,7 @@ namespace cryptonote
 
     if(context.m_state == cryptonote_connection_context::state_synchronizing)
     {
-      NOTIFY_REQUEST_CHAIN::request r = boost::value_initialized<NOTIFY_REQUEST_CHAIN::request>();
+      NOTIFY_REQUEST_CHAIN::request r = {};
       context.m_needed_objects.clear();
       m_core.get_short_chain_history(r.block_ids);
       handler_request_blocks_history( r.block_ids ); // change the limit(?), sleep(?)
@@ -342,11 +342,6 @@ namespace cryptonote
 
     if(m_core.have_block(hshd.top_id))
     {
-      if (target > m_core.get_current_blockchain_height())
-      {
-        MINFO(context << "peer is not ahead of us and we're syncing, disconnecting");
-        return false;
-      }
       context.m_state = cryptonote_connection_context::state_normal;
       if(is_inital && target == m_core.get_current_blockchain_height())
         on_connection_synchronized();
@@ -370,7 +365,7 @@ namespace cryptonote
     uint64_t max_block_height = std::max(hshd.current_height,m_core.get_current_blockchain_height());
     uint64_t last_block_v1 = m_core.get_nettype() == TESTNET ? 624633 : m_core.get_nettype() == MAINNET ? 1009826 : (uint64_t)-1;
     uint64_t diff_v2 = max_block_height > last_block_v1 ? std::min(abs_diff, max_block_height - last_block_v1) : 0;
-    MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global", context <<  "Sync data returned a new top block candidate: " << m_core.get_current_blockchain_height() << " -> " << hshd.current_height
+    MCLOG(is_inital ? el::Level::Info : el::Level::Debug, "global", el::Color::Yellow, context <<  "Sync data returned a new top block candidate: " << m_core.get_current_blockchain_height() << " -> " << hshd.current_height
       << " [Your node is " << abs_diff << " blocks (" << ((abs_diff - diff_v2) / (24 * 60 * 60 / DIFFICULTY_TARGET_V1)) + (diff_v2 / (24 * 60 * 60 / DIFFICULTY_TARGET_V2)) << " days) "
       << (0 <= diff ? std::string("behind") : std::string("ahead"))
       << "] " << ENDL << "SYNCHRONIZATION started");
@@ -426,7 +421,7 @@ namespace cryptonote
     template<class t_core>
     bool t_cryptonote_protocol_handler<t_core>::get_payload_sync_data(blobdata& data)
   {
-    CORE_SYNC_DATA hsd = boost::value_initialized<CORE_SYNC_DATA>();
+    CORE_SYNC_DATA hsd = {};
     get_payload_sync_data(hsd);
     epee::serialization::store_t_to_binary(hsd, data);
     return true;
@@ -438,7 +433,7 @@ namespace cryptonote
     MLOGIF_P2P_MESSAGE(crypto::hash hash; cryptonote::block b; bool ret = cryptonote::parse_and_validate_block_from_blob(arg.b.block, b, &hash);, ret, "Received NOTIFY_NEW_BLOCK " << hash << " (height " << arg.current_blockchain_height << ", " << arg.b.txs.size() << " txes)");
     if(context.m_state != cryptonote_connection_context::state_normal)
       return 1;
-    if(!is_synchronized()) // can happen if a peer connection goes to normal but another thread still hasn't finished adding queued blocks
+    if(!is_synchronized() || m_no_sync) // can happen if a peer connection goes to normal but another thread still hasn't finished adding queued blocks
     {
       LOG_DEBUG_CC(context, "Received new block while syncing, ignored");
       return 1;
@@ -468,7 +463,7 @@ namespace cryptonote
       }
     }
 
-    block_verification_context bvc = boost::value_initialized<block_verification_context>();
+    block_verification_context bvc = {};
     m_core.handle_incoming_block(arg.b.block, pblocks.empty() ? NULL : &pblocks[0], bvc); // got block from handle_notify_new_block
     if (!m_core.cleanup_handle_incoming_blocks(true))
     {
@@ -491,7 +486,7 @@ namespace cryptonote
     {
       context.m_needed_objects.clear();
       context.m_state = cryptonote_connection_context::state_synchronizing;
-      NOTIFY_REQUEST_CHAIN::request r = boost::value_initialized<NOTIFY_REQUEST_CHAIN::request>();
+      NOTIFY_REQUEST_CHAIN::request r = {};
       m_core.get_short_chain_history(r.block_ids);
       handler_request_blocks_history( r.block_ids ); // change the limit(?), sleep(?)
       MLOG_P2P_MESSAGE("-->>NOTIFY_REQUEST_CHAIN: m_block_ids.size()=" << r.block_ids.size() );
@@ -508,7 +503,7 @@ namespace cryptonote
     MLOGIF_P2P_MESSAGE(crypto::hash hash; cryptonote::block b; bool ret = cryptonote::parse_and_validate_block_from_blob(arg.b.block, b, &hash);, ret, "Received NOTIFY_NEW_FLUFFY_BLOCK " << hash << " (height " << arg.current_blockchain_height << ", " << arg.b.txs.size() << " txes)");
     if(context.m_state != cryptonote_connection_context::state_normal)
       return 1;
-    if(!is_synchronized()) // can happen if a peer connection goes to normal but another thread still hasn't finished adding queued blocks
+    if(!is_synchronized() || m_no_sync) // can happen if a peer connection goes to normal but another thread still hasn't finished adding queued blocks
     {
       LOG_DEBUG_CC(context, "Received new block while syncing, ignored");
       return 1;
@@ -740,7 +735,7 @@ namespace cryptonote
           return 1;
         }
           
-        block_verification_context bvc = boost::value_initialized<block_verification_context>();
+        block_verification_context bvc = {};
         m_core.handle_incoming_block(arg.b.block, pblocks.empty() ? NULL : &pblocks[0], bvc); // got block from handle_notify_new_block
         if (!m_core.cleanup_handle_incoming_blocks(true))
         {
@@ -768,7 +763,7 @@ namespace cryptonote
         {
           context.m_needed_objects.clear();
           context.m_state = cryptonote_connection_context::state_synchronizing;
-          NOTIFY_REQUEST_CHAIN::request r = boost::value_initialized<NOTIFY_REQUEST_CHAIN::request>();
+          NOTIFY_REQUEST_CHAIN::request r = {};
           m_core.get_short_chain_history(r.block_ids);
           handler_request_blocks_history( r.block_ids ); // change the limit(?), sleep(?)
           MLOG_P2P_MESSAGE("-->>NOTIFY_REQUEST_CHAIN: m_block_ids.size()=" << r.block_ids.size() );
@@ -899,7 +894,7 @@ namespace cryptonote
     // while syncing, core will lock for a long time, so we ignore
     // those txes as they aren't really needed anyway, and avoid a
     // long block before replying
-    if(!is_synchronized())
+    if(!is_synchronized() || m_no_sync)
     {
       LOG_DEBUG_CC(context, "Received new tx while syncing, ignored");
       return 1;
@@ -1307,7 +1302,7 @@ namespace cryptonote
             // process block
 
             TIME_MEASURE_START(block_process_time);
-            block_verification_context bvc = boost::value_initialized<block_verification_context>();
+            block_verification_context bvc = {};
 
             m_core.handle_incoming_block(block_entry.block, pblocks.empty() ? NULL : &pblocks[blockidx], bvc, false); // <--- process block
 
@@ -2011,7 +2006,7 @@ skip:
     if(context.m_last_response_height < context.m_remote_blockchain_height-1)
     {//we have to fetch more objects ids, request blockchain entry
 
-      NOTIFY_REQUEST_CHAIN::request r = boost::value_initialized<NOTIFY_REQUEST_CHAIN::request>();
+      NOTIFY_REQUEST_CHAIN::request r = {};
       m_core.get_short_chain_history(r.block_ids);
       CHECK_AND_ASSERT_MES(!r.block_ids.empty(), false, "Short chain history is empty");
 
@@ -2228,69 +2223,11 @@ skip:
   template<class t_core>
   bool t_cryptonote_protocol_handler<t_core>::relay_transactions(NOTIFY_NEW_TRANSACTIONS::request& arg, cryptonote_connection_context& exclude_context)
   {
-    const bool hide_tx_broadcast =
-      1 < m_p2p->get_zone_count() && exclude_context.m_remote_address.get_zone() == epee::net_utils::zone::invalid;
-
-    if (hide_tx_broadcast)
-      MDEBUG("Attempting to conceal origin of tx via anonymity network connection(s)");
+    for(auto& tx_blob : arg.txs)
+      m_core.on_transaction_relayed(tx_blob);
 
     // no check for success, so tell core they're relayed unconditionally
-    const bool pad_transactions = m_core.pad_transactions() || hide_tx_broadcast;
-    size_t bytes = pad_transactions ? 9 /* header */ + 4 /* 1 + 'txs' */ + tools::get_varint_data(arg.txs.size()).size() : 0;
-    for(auto tx_blob_it = arg.txs.begin(); tx_blob_it!=arg.txs.end(); ++tx_blob_it)
-    {
-      m_core.on_transaction_relayed(*tx_blob_it);
-      if (pad_transactions)
-        bytes += tools::get_varint_data(tx_blob_it->size()).size() + tx_blob_it->size();
-    }
-
-    if (pad_transactions)
-    {
-      // stuff some dummy bytes in to stay safe from traffic volume analysis
-      static constexpr size_t granularity = 1024;
-      size_t padding = granularity - bytes % granularity;
-      const size_t overhead = 2 /* 1 + '_' */ + tools::get_varint_data(padding).size();
-      if (overhead > padding)
-        padding = 0;
-      else
-        padding -= overhead;
-      arg._ = std::string(padding, ' ');
-
-      std::string arg_buff;
-      epee::serialization::store_t_to_binary(arg, arg_buff);
-
-      // we probably lowballed the payload size a bit, so added a but too much. Fix this now.
-      size_t remove = arg_buff.size() % granularity;
-      if (remove > arg._.size())
-        arg._.clear();
-      else
-        arg._.resize(arg._.size() - remove);
-      // if the size of _ moved enough, we might lose byte in size encoding, we don't care
-    }
-
-    std::vector<std::pair<epee::net_utils::zone, boost::uuids::uuid>> connections;
-    m_p2p->for_each_connection([hide_tx_broadcast, &exclude_context, &connections](connection_context& context, nodetool::peerid_type peer_id, uint32_t support_flags)
-    {
-      const epee::net_utils::zone current_zone = context.m_remote_address.get_zone();
-      const bool broadcast_to_peer =
-        peer_id &&
-        (hide_tx_broadcast != bool(current_zone == epee::net_utils::zone::public_)) &&
-	exclude_context.m_connection_id != context.m_connection_id;
-
-      if (broadcast_to_peer)
-        connections.push_back({current_zone, context.m_connection_id});
-
-      return true;
-    });
-
-    if (connections.empty())
-      MERROR("Transaction not relayed - no" << (hide_tx_broadcast ? " privacy": "") << " peers available");
-    else
-    {
-      std::string fullBlob;
-      epee::serialization::store_t_to_binary(arg, fullBlob);
-      m_p2p->relay_notify_to_list(NOTIFY_NEW_TRANSACTIONS::ID, epee::strspan<uint8_t>(fullBlob), std::move(connections));
-    }
+    m_p2p->send_txs(std::move(arg.txs), exclude_context.m_remote_address.get_zone(), exclude_context.m_connection_id, m_core.pad_transactions());
     return true;
   }
   //------------------------------------------------------------------------------------------------------------------------
